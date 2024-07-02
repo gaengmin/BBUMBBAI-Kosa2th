@@ -1,0 +1,13 @@
+package org.kosa.project;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class KosaProject2ndApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(KosaProject2ndApplication.class, args);
+    }
+
+}
