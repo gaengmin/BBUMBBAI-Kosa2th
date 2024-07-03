@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kosa.project.repository.mapper.UserMapper">
-        <insert id="save" parameterType="org.kosa.project.service.UserDto">
+        <insert id="save" parameterType="org.kosa.project.service.dto.UserRegisterForm">
                 insert into users(phone_number, name, password, birth, myself_memo)
                 values(#{phoneNumber}, #{name}, #{password}, #{birth}, #{myselfMemo})
         </insert>

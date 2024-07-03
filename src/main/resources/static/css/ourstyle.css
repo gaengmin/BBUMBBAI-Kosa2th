@@ -1,0 +1,8 @@
+.border-none {
+    border: none !important;     
+}
+
+.no-outline:focus {
+    outline: none !important;
+    box-shadow: none; 
+}
