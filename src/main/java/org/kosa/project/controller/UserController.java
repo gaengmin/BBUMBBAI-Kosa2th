@@ -13,4 +13,9 @@ public class UserController {
         System.out.println("홈 호출");
         return "home";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "loginForm";
+    }
 }
