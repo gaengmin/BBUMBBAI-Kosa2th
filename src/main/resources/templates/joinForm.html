@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <head th:replace="~{head :: headerFragment}">
-    </head>
-</head>
+
+<head th:replace="~{head :: headerFragment}"/>
+
+
 <body>
     <div th:replace="~{nav :: navFragment}"></div>
     <main class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form id="join_form" class="needs-validation" novalidate>
+                <form id="join_form" class="needs-validation" method="post" th:action="@{/users/join}" enctype="multipart/form-data" th:object="${userRegisterForm}">
                     <div class="mb-3">
                         <label class="form-label" for="email">이메일</label>
-                        <input class="form-control" type="email" id="email" required/>
+                        <input class="form-control" th:field="*{email}" type="email" id="email" required/>
                         <div class="invalid-feedback">
                             이메일을 입력해주세요.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="password">패스워드</label>
-                        <input class="form-control" type="password" id="password" required/>
+                        <input class="form-control" th:field="*{password}" type="password" id="password" required/>
                         <div class="invalid-feedback">
                             패스워드를 입력해주세요.
                         </div>
@@ -35,27 +33,27 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="user_name">닉네임</label>
-                        <input class="form-control" type="text" id="user_name" required/>
+                        <input class="form-control" th:field="*{userName}" type="text" id="user_name" required/>
                         <div class="invalid-feedback">
                             닉네임을 입력해주세요.
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="phone_number">전화번호</label>
-                        <input class="form-control" type="text" id="phone_number"/>
+                        <input class="form-control" th:field="*{phoneNumber}" type="text" id="phone_number"/>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="myself-memo">자기소개</label>
-                        <textarea class="form-control" id="myself-memo" rows="5"></textarea>
+                        <textarea class="form-control" th:field="*{introduce}" id="myself-memo" rows="5"></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="birthdate">생년월일</label>
-                        <input class="form-control" type="date" id="birthdate" name="birthdate" min="1920-01-01" max="2024-12-31"/>
+                        <input class="form-control" th:field="*{birthDate}" type="date" id="birthdate" name="birthdate" min="1920-01-01" max="2024-12-31"/>
                     </div>
 
                     <div class="mb-3">
                         <label for="profile_image" class="form-label">프로필 이미지</label>
-                        <input class="form-control" type="file" id="profile_image"/>
+                        <input class="form-control" th:field="*{profileImg}" type="file" id="profile_image"/>
                     </div>
 
                     <div id="preview_image" class="mb-3">
@@ -70,10 +68,9 @@
         </div>
     </main>
 
-    <script src="js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{js/bootstrap.bundle.min.js}"></script>
     <script>
         (() => {
-            'use strict'
 
             // Fetch all the forms we want to apply custom Bootstrap validation styles to
             const forms = document.querySelectorAll('.needs-validation')

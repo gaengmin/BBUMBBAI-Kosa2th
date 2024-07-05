@@ -4,4 +4,30 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kosa.project.repository.mapper.UserMapper">
 
+        <insert id = "insertUser" parameterType="org.kosa.project.service.dto.UserRegisterForm">
+            insert into users(email, phone_number, user_name, password, birth, myself_memo, profile_img_url)
+            values (#{email},#{phoneNumber}, #{userName}, #{password}, #{birthDate}, #{introduce}, #{profileImgUrl})
+        </insert>
+
+        <select id="findUserProfileById" resultType="org.kosa.project.service.dto.UserProfileDto" parameterType="java.lang.Long">
+            select user_id as userId, email, user_name as userName, phone_number as phoneNumber, myself_memo as introduction, profile_img_url as profileImgUrl
+            from users
+            where user_id = #{userId}
+        </select>
+
+        <select id="findUserByEmail" resultType="org.kosa.project.service.dto.UserDetailDto" parameterType="String">
+            select email,password,user_id as userID, user_name as userName
+            from users
+            where email = #{email}
+        </select>
 </mapper>
+
+<!--
+    private Long userId;
+    private String email;
+    private String userName;
+    private String phoneNumber;
+    private String profileImgUrl;
+    private String introduction;
+
+ -->
