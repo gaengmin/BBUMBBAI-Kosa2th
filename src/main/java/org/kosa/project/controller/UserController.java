@@ -1,32 +1,27 @@
 package org.kosa.project.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.kosa.project.service.FileUploadService;
+import org.kosa.project.config.annotation.UserFileServiceQualifier;
+import org.kosa.project.service.fileupload.FileUploadService;
 import org.kosa.project.service.UserService;
-import org.kosa.project.service.dto.LoginForm;
 import org.kosa.project.service.dto.UserProfileDto;
 import org.kosa.project.service.dto.UserRegisterForm;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/users")
-@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final FileUploadService fileUploadService;
+
+    public UserController(UserService userService, @UserFileServiceQualifier FileUploadService fileUploadService) {
+        this.userService = userService;
+        this.fileUploadService = fileUploadService;
+        System.out.println(fileUploadService.getClass());
+    }
 
     @GetMapping("/join")
     public String joinForm(Model model) {

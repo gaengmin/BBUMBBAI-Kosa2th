@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th=http://www.thymeleaf.org
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .img-container {
+            width: 100%;
+            height: 200px; /* 원하는 높이로 설정 */
+            overflow: hidden;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 200px; /* 원하는 높이로 설정 */
+            object-fit: cover; /* 이미지 비율을 유지하면서 크기 조정 */
+        }
+    </style>
+</head>
+<body>
+<main class="mt-5 pt-5">
+    <div class="container">
+        <!-- justify-content-center / d-flex justify-content-center 를 씀으로써 카드폼 가운데 정렬 -->
+        <div class="row justify-content-center">
+            <div class="col-12 text-center">
+                <h2>현재 모집 중인 뿜빠이</h2>
+            </div>
+            <!-- Pagination controls -->
+            <div>
+                <ul style="list-style-type: none; padding: 0;">
+                    <!-- Previous Page Link -->
+                    <li style="display: inline; margin-right: 10px;"
+                        th:if="${currentPage > 1}">
+                        <a th:href="@{/meeting/list(page=${currentPage - 1})}">이전</a>
+                    </li>
+                    <!-- Page Number Links -->
+                    <li style="display: inline; margin-right: 10px;"
+                        th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
+                        th:class="${pageNum == currentPage ? 'active' : ''}">
+                        <a th:href="@{'/meeting/list?page=' + ${pageNum}}">[[${pageNum}]]</a>
+                    </li>
+                    <!-- Next Page Link -->
+                    <li style="display: inline; margin-right: 10px;"
+                        th:if="${currentPage < totalPages}">
+                        <a th:href="@{/meeting/list(page=${currentPage + 1})}">다음</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-12 text-center">
+                <button type="button" class="btn btn-outline-primary" onclick="location.href='/meeting/insertMeeting'">
+                    뿜빠이생성
+                </button>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mt-5 d-flex justify-content-center"
+                 th:if="${not #lists.isEmpty(list)}"
+                 th:each="meetingList : ${list}">
+                <div class="card" style="width: 18rem;">
+                    <img th:src="@{/imgs/{filename}(filename=${meetingList.fileName})}" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="|카테고리 : ${meetingList.getCategory().getDisplayName()}|"></h5>
+                        <h5 class="card-title" th:text="${meetingList.getSubject}"></h5>
+                        <p class="card-text"
+                           th:text="'모 집 인 원 : '+${meetingList.getTotalMember()}+' / 현 재 원 : '+${meetingList.getPresentMember()}"/>
+                        <a th:href="@{detailMeeting(meetingId=${meetingList.meetingId})}" class="btn btn-primary">모임
+                            알아보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

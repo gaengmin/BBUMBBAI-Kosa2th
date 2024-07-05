@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kosa.project.repository.mapper.MeetingMapper">
+    <insert id="save" parameterType="org.kosa.project.service.dto.MeetingRegisterDto">
+        INSERT INTO MEETING (category, subject, context, total_member, file_name)
+        VALUES (#{category}, #{subject}, #{context}, #{totalMember}, #{fileUploadUrl})
+    </insert>
+
+    <resultMap id="MeetingDetailDtoResultMap" type="org.kosa.project.service.dto.MeetingDetailDto">
+        <id property="meetingId" column="meeting_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="regionId" column="region_id"/>
+        <result property="category" column="category"/>
+        <result property="subject" column="subject"/>
+        <result property="context" column="context"/>
+        <result property="fileName" column="file_name"/>
+        <result property="totalMember" column="total_member"/>
+        <result property="presentMember" column="present_member"/>
+        <result property="meetingStatus" column="status"/>
+        <result property="regDate" column="reg_dt"/>
+    </resultMap>
+    <select id="meetingList" resultMap="MeetingDetailDtoResultMap">
+        select *
+        from (select meeting_id,
+                     user_id,
+                     category,
+                     subject,
+                     context,
+                     readcount,
+                     file_name,
+                     total_member,
+                     present_member,
+                     status,
+                     reg_dt,
+                     row_number() over (order by meeting_id desc, reg_dt desc) as rnum
+              from meeting)
+        where rnum between #{startRow} and #{endRow}
+    </select>
+
+    <!--    <select id="meetingList" resultMap="MeetingDetailDtoResultMap">
+            select meeting_id,
+                   user_id,
+                   category,
+                   subject,
+                   context,
+                   readcount,
+                   file_name,
+                   total_member,
+                   present_member,
+                   status,
+                   reg_dt
+            from meeting
+            order by meeting_id desc
+        </select>-->
+
+
+    <select id="detailMeeting" resultMap="MeetingDetailDtoResultMap" parameterType="long">
+        select meeting_id,
+               user_id,
+               region_id,
+               category,
+               subject,
+               context,
+               readcount,
+               file_name,
+               total_member,
+               present_member,
+               status,
+               reg_dt
+        from meeting
+        where meeting_id = #{meetingId}
+    </select>
+
+
+    <select id="countMeetings" resultType="int">
+        SELECT COUNT(*)
+        FROM meeting
+    </select>
+
+</mapper>
+

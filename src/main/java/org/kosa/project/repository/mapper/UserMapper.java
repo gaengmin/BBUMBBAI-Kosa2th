@@ -1,3 +1,4 @@
+
 package org.kosa.project.repository.mapper;
 
 
@@ -13,3 +14,4 @@ public interface UserMapper {
     UserProfileDto findUserProfileById(Long userId);
     UserDetailDto findUserByEmail(String email);
 }
+
