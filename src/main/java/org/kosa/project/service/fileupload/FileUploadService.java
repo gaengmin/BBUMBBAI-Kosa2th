@@ -30,11 +30,13 @@ public abstract class FileUploadService {
         String newFileName = uuid + extension;
         String savePath = uploadDir + PATH_SEPARATOR + getTargetUrl();
 
+        System.out.println("fileSavePath: "+savePath);
         // 1-2. 디렉터리가 없다면 이를 생성한다.
         DirectoryUtil.createDirectoriesIfNotExists(savePath);
 
         // 1-3. 파일을 path에 저장한다.
         String fileSavePath = savePath + PATH_SEPARATOR + newFileName;
+        System.out.println("fileSavePath:"+fileSavePath);
         File file = new File(fileSavePath);
         try {
             imgFile.transferTo(file);
