@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="kor" xmlns:th="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #meetingDetailContext {
+            border: 0.5px solid #ced4da;
+            border-radius: .6rem;
+            padding: .375rem .75rem;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            white-space: pre-wrap; /* 이 속성은 텍스트 줄 바꿈을 유지하도록 합니다. */
+        }
+
+        .details-table {
+            margin-top: 15px;
+        }
+
+        .details-table th, .details-table td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 th:text="${meetingDetailDto.subject}" class="text-center"></h3>
+            <div class="row">
+                <div class="col-md-8" id="left-column">
+                    <div class="mb-3">
+                        <span th:text="|카 테 고 리 - ${meetingDetailDto.category.getDisplayName()}|"></span>
+                    </div>
+                    <div class="mb-3">
+                        <span th:text="|모임 생성일 - ${meetingDetailDto.regDate}|"></span>
+                    </div>
+                    <div class="mb-3">
+                        <span th:text="|모 집 인 원 : ${meetingDetailDto.totalMember} / 현 재 원 : ${meetingDetailDto.presentMember}|"></span>
+                    </div>
+                    <div id="meetingDetailContext" class="form-control mb-3" style="height: auto;">
+                        [[${meetingDetailDto.context}]]
+                    </div>
+                </div>
+                <div class="col-md-4" id="right-column">
+                    <div>
+                        <h5>모임 참석 명단</h5>
+                        <table class="table table-striped details-table">
+                            <thead>
+                            <tr>
+                                <th>이 름</th>
+                                <th>LEVEL</th>
+                                <th>프로필</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>아무개</td>
+                                <td>모임장</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">프로필</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>이순신</td>
+                                <td>참석원</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">프로필</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <blockquote class="blockquote text-center">
+                        <p class="mb-0">
+                            지도를 넣고 싶당????
+                            <img th:src="@{/imgs/{filename}(filename=${meetingDetailDto.fileName})}" class="img-fluid">
+                        </p>
+                    </blockquote>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm btn-block mt-3">
+                모임 참석하기
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script>
+    window.onload = function () {
+        // 왼쪽 열과 오른쪽 열, 그리고 내용이 표시될 textarea 요소를 선택합니다.
+        var leftColumn = document.getElementById('left-column');
+        var rightColumn = document.getElementById('right-column');
+        var meetingDetailContext = document.getElementById('meetingDetailContext');
+
+        // textarea의 높이를 오른쪽 열의 높이에 맞추는 함수입니다.
+        function adjustTextareaHeight() {
+            // 오른쪽 열의 현재 높이를 가져와서
+            var rightColumnHeight = rightColumn.offsetHeight;
+            // textarea의 높이를 오른쪽 열의 높이로 설정합니다.
+            meetingDetailContext.style.height = rightColumnHeight + 'px';
+        }
+
+        // 페이지가 처음 로드될 때 textarea의 높이를 조정합니다.
+        adjustTextareaHeight();
+
+        // 창 크기가 변경될 때마다 textarea의 높이를 다시 조정합니다.
+        window.onresize = function () {
+            adjustTextareaHeight();
+        };
+    };
+</script>
+</body>
+</html>

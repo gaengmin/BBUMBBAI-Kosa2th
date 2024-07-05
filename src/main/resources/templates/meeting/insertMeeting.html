@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<main class="mt-5 pt-5">
+    <div class="container">
+        <div class="col-12 text-center">
+            <h2>뿜빠이 만들기</h2>
+        </div>
+        <form th:action="@{/meeting/insertMeeting}" method="post" enctype="multipart/form-data"
+              th:object="${meetingRegisterDto}">
+            <div class="mb-3">
+                <label for="category">Category</label>
+                <select class="form-select" id="category" th:field="*{category}" required>
+                    <option value="" disabled selected>---선택해주세요----</option>
+                    <option th:each="c : ${categories}" th:value="${c.displayName}" th:text="${c.displayName}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="subject" class="form-label">뽐빠이이름</label>
+                <input th:field="*{subject}" type="text" class="form-control" id="subject" required>
+            </div>
+            <div class="mb-3">
+                <label for="context" class="form-label">모임 내용</label>
+                <textarea th:field="*{context}" class="form-control" id="context" rows="10" required>
+                모임명 :
+                모임장소 :
+                모임시간 :
+            </textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">이미지 첨부</label>
+                <input type="file" th:field="*{image}" class="form-file" id="image" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="maxParty">모임인원</label>
+                <input type="number" id="maxParty" name="totalMember" min="2" max="12" th:field="*{totalMember}"
+                       required>
+            </div>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary mb-3">뿜빠이 생성</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>
+

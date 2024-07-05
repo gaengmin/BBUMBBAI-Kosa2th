@@ -1,3 +1,4 @@
+
 package org.kosa.project.repository.mapper;
 
 
@@ -8,3 +9,4 @@ import org.kosa.project.service.dto.UserDto;
 public interface UserMapper {
     void save(UserDto userDto);
 }
+
