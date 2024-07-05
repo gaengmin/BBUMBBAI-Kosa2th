@@ -20,7 +20,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/css/**", "js/**", "/login", "/users/join", "/users/**","/home").permitAll()
+                        .requestMatchers("/meeting/insertMeeting").authenticated()
+                        .requestMatchers("/*", "/css/**","/meeting/*", "/js/**", "/imgs/**", "/login", "/users/join", "/users/**","/home").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(login -> login.loginPage("/login")
                         .usernameParameter("email")

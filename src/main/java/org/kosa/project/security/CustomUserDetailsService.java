@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserMapper userMapper;
-    private final BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (userDetailDto == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
-        return new CustomUserDetails(userDetailDto.getUserName(), userDetailDto.getUserId(), userDetailDto.getEmail(), encoder.encode(userDetailDto.getPassword()));
+        return new CustomUserDetails(userDetailDto.getUserName(), userDetailDto.getUserId(), userDetailDto.getEmail(), bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
     }
 }
 

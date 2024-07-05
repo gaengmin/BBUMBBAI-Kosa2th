@@ -34,8 +34,8 @@ public class MeetingController {
     @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "1") int page, Model model) {
         int pageSize = 6;
-        int startRow = (page - 1) *6 +1;
-        int endRow = page* pageSize;
+        int startRow = (page - 1) * 6 + 1;
+        int endRow = page * pageSize;
 
         List<MeetingDetailDto> list = meetingService.meetingList(startRow, endRow);
         int totalMeetings = meetingService.getTotalMeetingCount();
