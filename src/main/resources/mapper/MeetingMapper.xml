@@ -36,7 +36,7 @@
                      reg_dt,
                      row_number() over (order by meeting_id desc, reg_dt desc) as rnum
               from meeting)
-        where rnum between #{startRow} and #{endRow}
+        where rnum between ((#{page} - 1) * #{pageSize}) + 1 and #{page} * #{pageSize}
     </select>
 
     <!--    <select id="meetingList" resultMap="MeetingDetailDtoResultMap">

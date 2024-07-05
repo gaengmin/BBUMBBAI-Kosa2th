@@ -12,6 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Log4j2
+// meeting, user -> 가입, 권한 정보 확인해서 비즈니스 로직을 처리하는 부분
 public class MeetingService {
     private final MeetingRepository meetingRepository;
 
@@ -20,9 +21,9 @@ public class MeetingService {
         meetingRepository.save(meetingDto);
     }
 
-    public List<MeetingDetailDto> meetingList(int startRow, int endRow) {
+    public List<MeetingDetailDto> meetingList(int page, int pageSize) {
 
-        return meetingRepository.meetingList(startRow, endRow);
+        return meetingRepository.meetingList(page, pageSize);
     }
 
     public MeetingDetailDto detailMeeting(long meetingId) {

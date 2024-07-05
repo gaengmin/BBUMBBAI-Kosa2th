@@ -7,9 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.util.UUID;
 
 @Service
@@ -17,7 +15,11 @@ public abstract class FileUploadService {
 
     @Value("${image.upload-dir}")
     private String uploadDir;
-    private static final String PATH_SEPARATOR = "/";
+    private static final String PATH_SEPARATOR = getSeparator();
+
+    private static String getSeparator() {
+        return System.getProperty("os.name").contains("mac") ? File.separator : "/";
+    }
 
     public String saveFile(MultipartFile imgFile) {
         String originalFilename = imgFile.getOriginalFilename();
