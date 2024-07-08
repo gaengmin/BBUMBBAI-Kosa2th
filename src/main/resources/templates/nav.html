@@ -24,8 +24,10 @@
                     <!-- 우측 버튼들 -->
                     <div class="d-flex">
                         <div sec:authorize="isAuthenticated()">
+                            <form method="post" th:action="@{/logout}" th:object="${loginform}">
                                 <button class="btn btn-outline-primary me-2" type="submit" th:href="@{/}">Logout</button>
                                 <button class="btn btn-outline-secondary" type="button" th:onclick="|window.location.href='@{users/{userId}(userId=${#authentication.principal.userId})}'|">Profile</button>
+                            </form>
                         </div>
 
                         <div sec:authorize="isAnonymous()">
