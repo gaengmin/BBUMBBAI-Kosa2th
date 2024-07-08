@@ -1,10 +1,12 @@
 package org.kosa.project.repository.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.kosa.project.controller.MeetingController;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
 import org.kosa.project.service.dto.UserMeetingDto;
 import org.springframework.stereotype.Repository;
+
 
 import java.util.List;
 

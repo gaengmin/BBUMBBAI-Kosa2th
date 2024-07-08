@@ -13,12 +13,12 @@
             <h2>뿜빠이 만들기</h2>
         </div>
         <form th:action="@{/meeting/insertMeeting}" method="post" enctype="multipart/form-data"
-              th:object="${meetingRegisterDto}">
+              th:object="${meetingRegisterRequest}">
             <div class="mb-3">
                 <label for="category">Category</label>
                 <select class="form-select" id="category" th:field="*{category}" required>
                     <option value="" disabled selected>---선택해주세요----</option>
-                    <option th:each="c : ${categories}" th:value="${c.displayName}" th:text="${c.displayName}"></option>
+                    <option th:each="c : ${categories}" th:value="${c.name}" th:text="${c.displayName}"></option>
                 </select>
             </div>
             <div class="mb-3">
