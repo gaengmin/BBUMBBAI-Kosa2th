@@ -4,8 +4,6 @@ import lombok.*;
 import org.kosa.project.service.Enum.Category;
 import org.springframework.web.multipart.MultipartFile;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -25,17 +23,11 @@ public class MeetingRegisterDto {
     private MultipartFile image;
     private String meetingStatus;
 
-    public void setCategory(String name) {
-        for (Category c : Category.values()) {
-            if (c.getDisplayName().equals(name)) {
-                System.out.println(name);
-                this.category = c;
-            }
-        }
-    }
-
     public Category getCategory() {
         return category;
     }
 
+    public MultipartFile getImage() {
+        return image;
+    }
 }

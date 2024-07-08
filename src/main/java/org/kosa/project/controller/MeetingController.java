@@ -1,6 +1,5 @@
 package org.kosa.project.controller;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.kosa.project.config.annotation.MeetingFileServiceQualifier;
 import org.kosa.project.service.Enum.Category;
@@ -35,6 +34,10 @@ public class MeetingController {
     public String list(@RequestParam(defaultValue = "1") int page, Model model) {
         int pageSize = 6;
 
+        return getMeetingList(page, model, pageSize, meetingService);
+    }
+
+    static String getMeetingList(@RequestParam(defaultValue = "1") int page, Model model, int pageSize, MeetingService meetingService) {
         List<MeetingDetailDto> list = meetingService.meetingList(page, pageSize);
         int totalMeetings = meetingService.getTotalMeetingCount();
         int totalPages = (int)Math.ceil((double) totalMeetings/ pageSize);
@@ -48,16 +51,6 @@ public class MeetingController {
         return "meeting/list";
     }
 
-   /*
-    @GetMapping("/list")
-    public String list(Model model) {
-        List<MeetingDetailDto> list = meetingService.meetingList();
-        for (MeetingDetailDto meetingDetailDto : list) {
-            System.out.println(meetingDetailDto);
-        }
-        model.addAttribute("list", list);
-        return "meeting/list";
-    }*/
 
     @GetMapping("/detailMeeting")
     public String detailMeeting(@RequestParam long meetingId, Model model){
