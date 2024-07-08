@@ -1,17 +1,16 @@
 package org.kosa.project.service.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class UserMeetingDto {
     private long userMeetingId;
     private long userId;
+    private String userName;
     private long meetingId;
-    private String role;
+    private String userType;
 }

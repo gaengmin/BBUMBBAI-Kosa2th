@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.kosa.project.repository.mapper.MeetingMapper;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
+import org.kosa.project.service.dto.UserMeetingDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,5 +30,10 @@ public class MeetingRepository {
     public int countMeetings() {
 
         return meetingMapper.countMeetings();
+    }
+
+    public List<UserMeetingDto> attendanceList(long meetingId) {
+
+        return meetingMapper.attendanceList(meetingId);
     }
 }

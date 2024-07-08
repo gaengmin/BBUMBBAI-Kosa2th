@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.kosa.project.repository.MeetingRepository;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
+import org.kosa.project.service.dto.UserMeetingDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +36,10 @@ public class MeetingService {
     public int getTotalMeetingCount(){
 
         return meetingRepository.countMeetings();
+    }
+
+    public List<UserMeetingDto> attendanceList(long meetingId) {
+
+        return meetingRepository.attendanceList(meetingId);
     }
 }
