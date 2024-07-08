@@ -61,7 +61,7 @@
                  th:if="${not #lists.isEmpty(list)}"
                  th:each="meetingList : ${list}">
                 <div class="card" style="width: 18rem;">
-                    <img th:src="@{/imgs/{filename}(filename=${meetingList.fileName})}" class="card-img-top">
+                    <img th:src="@{/imgs/meeting/{filename}(filename=${meetingList.fileName})}" class="card-img-top">
                     <div class="card-body">
                         <h5 class="card-title" th:text="|카테고리 : ${meetingList.getCategory().getDisplayName()}|"></h5>
                         <h5 class="card-title" th:text="${meetingList.getSubject}"></h5>

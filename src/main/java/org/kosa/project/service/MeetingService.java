@@ -18,7 +18,7 @@ public class MeetingService {
 
     public void save(MeetingRegisterDto meetingDto, String fileUploadUrl) {
         System.out.println("fileUploadUrl :"+fileUploadUrl);
-        meetingDto.setFileUploadUrl("meeting/"+fileUploadUrl);
+        meetingDto.setFileUploadUrl(fileUploadUrl);
         meetingRepository.save(meetingDto);
     }
 
