@@ -23,9 +23,6 @@ public class MeetingController {
     private final MeetingService meetingService;
     private final FileUploadService fileUploadService;
 
-
-    private final static String imageRootDir = "meeting";
-
     public MeetingController(MeetingService meetingService, @MeetingFileServiceQualifier FileUploadService fileUploadService) {
         this.meetingService = meetingService;
         this.fileUploadService = fileUploadService;

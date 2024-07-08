@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@Qualifier("userFileUploadService")
+@Qualifier("meetingFileUploadService")
 public @interface MeetingFileServiceQualifier {
 }
