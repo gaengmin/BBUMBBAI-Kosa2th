@@ -5,9 +5,8 @@ import org.kosa.project.service.Enum.Category;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
-public record MeetingRegisterRequest(long meetingId, long userId, long regionId, Category category, String subject,
-                                     String context, int totalMember, String fileUploadUrl, MultipartFile image,
-                                     String meetingStatus) {
+public record MeetingRegisterRequest(Long userId, Category category, String subject,
+                                     String context, Integer totalMember, MultipartFile image, String meetingStatus) {
     String validate() {
         if (category == null) {
             log.error("Category is null");

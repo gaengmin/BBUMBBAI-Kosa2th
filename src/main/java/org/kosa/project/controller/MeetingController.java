@@ -3,16 +3,20 @@ package org.kosa.project.controller;
 import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import org.kosa.project.config.annotation.MeetingFileServiceQualifier;
+import org.kosa.project.security.CustomUserDetails;
 import org.kosa.project.service.Enum.Category;
 import org.kosa.project.service.dto.MeetingRegisterDto;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.MeetingDetailDto;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.SQLOutput;
 import java.util.List;
 
 import static org.kosa.project.controller.DTOMapper.convertToMeetingRegisterDto;
@@ -25,7 +29,7 @@ public class MeetingController {
     private final MeetingService meetingService;
     private final FileUploadService fileUploadService;
 
-    private static Integer PAGE_SIZE = 10;
+    private static Integer PAGE_SIZE = 6;
 
     public MeetingController(MeetingService meetingService, @MeetingFileServiceQualifier FileUploadService fileUploadService) {
         this.meetingService = meetingService;
@@ -68,16 +72,18 @@ public class MeetingController {
 
     @GetMapping("/insertMeeting")
     public String insertMeeting(Model model) {
-        model.addAttribute("meetingRegisterDto", new MeetingRegisterDto(1, 1, 1, Category.DESSERT, null, null, 0, null, null));
+        model.addAttribute("meetingRegisterRequest", new MeetingRegisterRequest( 1L, Category.DESSERT, null, null, 0, null, null));
         model.addAttribute("categories", Category.values()); //Enum 카테고리 데이터 넘기기
         return "meeting/insertMeeting";
     }
 
     @PostMapping("/insertMeeting")
-    public String insertMeetingData(@ModelAttribute MeetingRegisterRequest request) {
+    public String insertMeetingData(@ModelAttribute MeetingRegisterRequest request, @AuthenticationPrincipal CustomUserDetails user) {
+        System.out.println(user.getUserId());
+        long userId = Long.parseLong(user.getUserId());
         String response = request.validate();
         String fileUploadUrl = fileUploadService.saveFile(request.image());
-        meetingService.save(convertToMeetingRegisterDto(request, fileUploadUrl));
+        meetingService.save(convertToMeetingRegisterDto(request, fileUploadUrl, userId));
         return response;
     }
 
