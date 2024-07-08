@@ -8,10 +8,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class UserDto {
     private Long userId;
-    private String phoneNumber; // 010-283-2
+    private String phoneNumber;
     private String name;
     private String password;
-    private LocalDate birth; //
+    private LocalDate birth;
     private String myselfMemo;
     private LocalDate regDate;
 

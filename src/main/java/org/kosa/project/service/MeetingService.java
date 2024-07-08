@@ -2,6 +2,7 @@ package org.kosa.project.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.kosa.project.controller.MeetingController;
 import org.kosa.project.repository.MeetingRepository;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
@@ -15,9 +16,8 @@ import java.util.List;
 public class MeetingService {
     private final MeetingRepository meetingRepository;
 
-    public void save(MeetingRegisterDto meetingDto, String fileUploadUrl) {
-        System.out.println("fileUploadUrl :"+fileUploadUrl);
-        meetingDto.setFileUploadUrl(fileUploadUrl);
+    public void save(MeetingRegisterDto meetingDto) {
+        System.out.println("fileUploadUrl :"+meetingDto.fileUploadUrl());
         meetingRepository.save(meetingDto);
     }
 
