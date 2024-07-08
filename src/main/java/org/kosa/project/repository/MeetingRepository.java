@@ -17,8 +17,8 @@ public class MeetingRepository {
         meetingMapper.save(meetingDto);
     }
 
-    public List<MeetingDetailDto> meetingList(int startRow, int endRow) {
-        return meetingMapper.meetingList(startRow, endRow);
+    public List<MeetingDetailDto> meetingList(int page, int pageSize) {
+        return meetingMapper.meetingList(page, pageSize);
     }
 
     public MeetingDetailDto detailMeeting(long meetingId){

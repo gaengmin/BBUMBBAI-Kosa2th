@@ -7,9 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.util.UUID;
 
 @Service
@@ -17,7 +15,11 @@ public abstract class FileUploadService {
 
     @Value("${image.upload-dir}")
     private String uploadDir;
-    private static final String PATH_SEPARATOR = "/";
+    private static final String PATH_SEPARATOR = getSeparator();
+
+    private static String getSeparator() {
+        return System.getProperty("os.name").contains("mac") ? File.separator : "/";
+    }
 
     public String saveFile(MultipartFile imgFile) {
         String originalFilename = imgFile.getOriginalFilename();
@@ -28,11 +30,13 @@ public abstract class FileUploadService {
         String newFileName = uuid + extension;
         String savePath = uploadDir + PATH_SEPARATOR + getTargetUrl();
 
+        System.out.println("fileSavePath: "+savePath);
         // 1-2. 디렉터리가 없다면 이를 생성한다.
         DirectoryUtil.createDirectoriesIfNotExists(savePath);
 
         // 1-3. 파일을 path에 저장한다.
         String fileSavePath = savePath + PATH_SEPARATOR + newFileName;
+        System.out.println("fileSavePath:"+fileSavePath);
         File file = new File(fileSavePath);
         try {
             imgFile.transferTo(file);

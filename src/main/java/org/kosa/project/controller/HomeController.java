@@ -18,17 +18,16 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(@RequestParam(value = "page", defaultValue = "1") Integer page, Model model) {
-        int pageSize = 6;
-        int startRow = (page - 1) * 6 + 1;
-        int endRow = page * pageSize;
+        int pageSize = 10;
 
-        List<MeetingDetailDto> list = meetingService.meetingList(startRow, endRow);
+        List<MeetingDetailDto> list = meetingService.meetingList(page, pageSize);
         int totalMeetings = meetingService.getTotalMeetingCount();
         int totalPages = (int)Math.ceil((double) totalMeetings/ pageSize);
 
         for (MeetingDetailDto meetingDetailDto : list) {
             System.out.println(meetingDetailDto);
         }
+        // page 공통적으로 필요,
         model.addAttribute("list", list);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);

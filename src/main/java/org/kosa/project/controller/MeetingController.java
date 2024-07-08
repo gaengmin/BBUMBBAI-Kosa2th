@@ -31,10 +31,8 @@ public class MeetingController {
     @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "1") int page, Model model) {
         int pageSize = 6;
-        int startRow = (page - 1) * 6 + 1;
-        int endRow = page * pageSize;
 
-        List<MeetingDetailDto> list = meetingService.meetingList(startRow, endRow);
+        List<MeetingDetailDto> list = meetingService.meetingList(page, pageSize);
         int totalMeetings = meetingService.getTotalMeetingCount();
         int totalPages = (int)Math.ceil((double) totalMeetings/ pageSize);
 
@@ -79,8 +77,6 @@ public class MeetingController {
 
     @PostMapping("/insertMeeting")
     public String insertMeetingData(@ModelAttribute MeetingRegisterDto meetingRegisterDto) {
-        System.out.println(meetingRegisterDto.toString());
-
         // category 값이 제대로 설정되었는지 확인
         if (meetingRegisterDto.getCategory() == null) {
             log.error("Category is null");

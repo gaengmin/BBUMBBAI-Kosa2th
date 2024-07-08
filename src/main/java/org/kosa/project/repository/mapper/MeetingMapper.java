@@ -11,7 +11,7 @@ import java.util.List;
 public interface MeetingMapper {
     void save(MeetingRegisterDto meetingDto);
 
-    List<MeetingDetailDto> meetingList(int startRow, int endRow);
+    List<MeetingDetailDto> meetingList(int page, int pageSize);
 
     MeetingDetailDto detailMeeting(long meetingId);
 
