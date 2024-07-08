@@ -1,22 +1,17 @@
 package org.kosa.project.controller;
 
-import lombok.experimental.UtilityClass;
 import lombok.extern.log4j.Log4j2;
 import org.kosa.project.config.annotation.MeetingFileServiceQualifier;
 import org.kosa.project.security.CustomUserDetails;
 import org.kosa.project.service.Enum.Category;
-import org.kosa.project.service.dto.MeetingRegisterDto;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.SQLOutput;
 import java.util.List;
 
 import static org.kosa.project.controller.DTOMapper.convertToMeetingRegisterDto;
