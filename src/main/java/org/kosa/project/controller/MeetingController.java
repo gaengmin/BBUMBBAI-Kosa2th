@@ -25,6 +25,8 @@ public class MeetingController {
     private final MeetingService meetingService;
     private final FileUploadService fileUploadService;
 
+    private static Integer PAGE_SIZE = 10;
+
     public MeetingController(MeetingService meetingService, @MeetingFileServiceQualifier FileUploadService fileUploadService) {
         this.meetingService = meetingService;
         this.fileUploadService = fileUploadService;
@@ -32,15 +34,15 @@ public class MeetingController {
 
     @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "1") int page, Model model) {
-        int pageSize = 6;
+        int pageSize = 10;
 
-        return getMeetingList(page, model, pageSize, meetingService);
+        return getMeetingList(page, model, meetingService);
     }
 
-    static String getMeetingList(@RequestParam(defaultValue = "1") int page, Model model, int pageSize, MeetingService meetingService) {
-        List<MeetingDetailDto> list = meetingService.meetingList(page, pageSize);
+    static String getMeetingList(int page, Model model, MeetingService meetingService) {
+        List<MeetingDetailDto> list = meetingService.meetingList(page, PAGE_SIZE);
         int totalMeetings = meetingService.getTotalMeetingCount();
-        int totalPages = (int)Math.ceil((double) totalMeetings/ pageSize);
+        int totalPages = (int)Math.ceil((double) totalMeetings / PAGE_SIZE);
 
         for (MeetingDetailDto meetingDetailDto : list) {
             System.out.println(meetingDetailDto);
