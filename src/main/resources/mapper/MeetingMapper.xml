@@ -3,11 +3,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kosa.project.repository.mapper.MeetingMapper">
-    <insert id="save" parameterType="org.kosa.project.controller.MeetingRegisterRequest">
-        INSERT INTO MEETING (user_id, category, subject, context, total_member, file_name)
-        VALUES (#{userId}, #{category}, #{subject}, #{context}, #{totalMember}, #{fileUploadUrl})
-    </insert>
 
+    <!-- UserMeetingDto 매핑 -->
+    <resultMap id="UserMeetingDtoResultMap" type="org.kosa.project.service.dto.UserMeetingDto">
+        <id property="userMeetingId" column="user_meeting_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="meetingId" column="meeting_id"/>
+        <result property="userType" column="user_type"/>
+    </resultMap>
+
+    <!-- MeetingDetailDto 매핑 -->
     <resultMap id="MeetingDetailDtoResultMap" type="org.kosa.project.service.dto.MeetingDetailDto">
         <id property="meetingId" column="meeting_id"/>
         <result property="userId" column="user_id"/>
@@ -15,12 +21,22 @@
         <result property="category" column="category"/>
         <result property="subject" column="subject"/>
         <result property="context" column="context"/>
-        <result property="fileName" column="file_name"/>
         <result property="totalMember" column="total_member"/>
         <result property="presentMember" column="present_member"/>
+        <result property="fileName" column="file_name"/>
         <result property="meetingStatus" column="status"/>
         <result property="regDate" column="reg_dt"/>
+        <collection property="userMeetingDto" ofType="org.kosa.project.service.dto.UserMeetingDto"
+                    resultMap="UserMeetingDtoResultMap"/>
     </resultMap>
+
+
+    <insert id="save" parameterType="org.kosa.project.controller.MeetingRegisterRequest" useGeneratedKeys="true">
+        INSERT INTO MEETING (user_id, category, subject, context, total_member, file_name)
+        VALUES (#{userId}, #{category}, #{subject}, #{context}, #{totalMember}, #{fileUploadUrl})
+    </insert>
+
+
     <select id="meetingList" resultMap="MeetingDetailDtoResultMap">
         select *
         from (select meeting_id,
@@ -39,46 +55,46 @@
         where rnum between ((#{page} - 1) * #{pageSize}) + 1 and #{page} * #{pageSize}
     </select>
 
-    <select id="detailMeeting" resultMap="MeetingDetailDtoResultMap" parameterType="long">
-        select meeting_id,
-               user_id,
-               region_id,
-               category,
-               subject,
-               context,
-               readcount,
-               file_name,
-               total_member,
-               present_member,
-               status,
-               reg_dt
-        from meeting
-        where meeting_id = #{meetingId}
-    </select>
-
     <select id="countMeetings" resultType="int">
         SELECT COUNT(*)
         FROM meeting
     </select>
 
-    <resultMap id="UserMeetingDtoResultMap" type="org.kosa.project.service.dto.UserMeetingDto">
-        <id property="meetingId" column="meeting_id"/>
-        <result property="userName" column="user_name"/>
-        <result property="userType" column="user_type"/>
-        <result property="userId"   column="user_id"/>
+    <insert id="attendanceSave" parameterType="org.kosa.project.service.dto.UserMeetingDto">
+        insert into user_meeting (user_id, meeting_id, user_type)
+        values (#{userId}, #{meetingId}, #{userType})
+    </insert>
 
-    </resultMap>
+    <select id="getUserMeetingCheck" parameterType="org.kosa.project.service.dto.UserMeetingCheckDto"
+            resultType="String">
+        select user_type
+        from user_meeting
+        where user_id = #{userId}
+          and meeting_id = #{meetingId}
+    </select>
 
-    <select id="attendanceList" parameterType="long" resultMap="UserMeetingDtoResultMap" >
-        SELECT
+    <!-- 쿼리 -->
+    <select id="meetingDetails" parameterType="long" resultMap="MeetingDetailDtoResultMap">
+        SELECT m.meeting_id  as meeting_id,
+               um.user_id,
+               m.region_id,
+               m.category,
+               m.subject,
+               m.context,
+               m.total_member,
+               m.present_member,
+               m.file_name,
+               m.status,
+               m.reg_dt,
+               um.user_meeting_id,
+               um.user_id,
                u.user_name,
-               u.user_id,
-               um.meeting_id,
+               um.meeting_id as um_meeting_id,
                um.user_type
-        FROM user_meeting um
-        JOIN users u ON um.user_id = u.user_id
-        JOIN meeting m ON um.meeting_id = m.meeting_id
-        WHERE um.meeting_id = #{meetingId}
+        FROM meeting m
+                 LEFT JOIN user_meeting um ON m.meeting_id = um.meeting_id
+                 LEFT JOIN users u ON um.user_id = u.user_id
+        WHERE m.meeting_id = #{meetingId}
     </select>
 
 </mapper>

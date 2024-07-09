@@ -1,11 +1,9 @@
 package org.kosa.project.repository.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.kosa.project.controller.MeetingController;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
 import org.kosa.project.service.dto.UserMeetingDto;
-import org.springframework.stereotype.Repository;
 
 
 import java.util.List;
@@ -14,12 +12,15 @@ import java.util.List;
 public interface MeetingMapper {
     void save(MeetingRegisterDto meetingDto);
 
+
     List<MeetingDetailDto> meetingList(int page, int pageSize);
 
-    MeetingDetailDto detailMeeting(long meetingId);
+    int countMeetings(); //전체게시글
 
-    List<UserMeetingDto> attendanceList(long userMeetingId);
-    
-    int countMeetings();
+    /*user_meeting 관련*/
+    void attendanceSave(UserMeetingDto userMeetingDto);
 
+    String getUserMeetingCheck(long meetingId, long userId);
+
+    MeetingDetailDto meetingDetails (long meetingId);
 }

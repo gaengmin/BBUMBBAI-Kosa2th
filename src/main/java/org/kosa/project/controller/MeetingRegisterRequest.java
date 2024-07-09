@@ -2,11 +2,12 @@ package org.kosa.project.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.kosa.project.service.Enum.Category;
+import org.kosa.project.service.Enum.UserType;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 public record MeetingRegisterRequest(Long userId, Category category, String subject,
-                                     String context, Integer totalMember, MultipartFile image, String meetingStatus) {
+                                     String context, Integer totalMember, MultipartFile image, String meetingStatus, UserType userType) {
     String validate() {
         if (category == null) {
             log.error("Category is null");
