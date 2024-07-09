@@ -2,7 +2,6 @@ package org.kosa.project.service.dto;
 
 import lombok.*;
 import org.kosa.project.service.Enum.Category;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 

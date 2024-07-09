@@ -1,6 +1,7 @@
 package org.kosa.project.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.kosa.project.controller.MeetingController;
 import org.kosa.project.repository.mapper.MeetingMapper;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
