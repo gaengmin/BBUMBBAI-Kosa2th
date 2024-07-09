@@ -21,22 +21,44 @@
         <result property="meetingStatus" column="status"/>
         <result property="regDate" column="reg_dt"/>
     </resultMap>
-    <select id="meetingList" resultMap="MeetingDetailDtoResultMap">
+
+    <sql id="setCondition">
+        <where>
+            <choose>
+                <when test="category =category = ''">
+                    subject like "%"||#{content}||"%"
+                </when>
+                <when test="c">
+                    c
+                </when>
+                <when test="">
+
+                </when>
+                <otherwise>
+                    1=1
+                </otherwise>
+            </choose>
+        </where>
+    </sql>
+
+    <select id="meetingList" resultMap="MeetingDetailDtoResultMap" parameterType="org.kosa.project.service.dto.SearchCondition">
         select *
         from (select meeting_id,
                      user_id,
                      category,
                      subject,
                      context,
-                     readcount,
                      file_name,
                      total_member,
                      present_member,
                      status,
                      reg_dt,
                      row_number() over (order by meeting_id desc, reg_dt desc) as rnum
-              from meeting)
-        where rnum between ((#{page} - 1) * #{pageSize}) + 1 and #{page} * #{pageSize}
+              from meeting
+              where meeting_id > 0
+              <include refid="setCondition"/>
+             )
+            where rnum between ((#{condition.page} - 1) * #{pageSize}) + 1 and #{condition.page} * #{pageSize}
     </select>
 
     <!--    <select id="meetingList" resultMap="MeetingDetailDtoResultMap">
@@ -77,6 +99,7 @@
     <select id="countMeetings" resultType="int">
         SELECT COUNT(*)
         FROM meeting
+        <include refid="setCondition"/>
     </select>
 
 </mapper>

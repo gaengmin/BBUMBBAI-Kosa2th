@@ -1,9 +1,9 @@
 package org.kosa.project.controller;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.kosa.project.config.annotation.MeetingFileServiceQualifier;
 import org.kosa.project.service.Enum.Category;
+import org.kosa.project.service.dto.SearchCondition;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.MeetingDetailDto;
@@ -28,19 +28,21 @@ public class MeetingController {
         this.fileUploadService = fileUploadService;
     }
 
+    // requestParameter 정보 -> 객체를 매핑
     @GetMapping("/list")
-    public String list(@RequestParam(defaultValue = "1") int page, Model model) {
+        public String list(@ModelAttribute SearchCondition searchCondition, Model model) {
         int pageSize = 6;
-
-        List<MeetingDetailDto> list = meetingService.meetingList(page, pageSize);
-        int totalMeetings = meetingService.getTotalMeetingCount();
+        String content = searchCondition.getContent();
+        System.out.println(content);
+        List<MeetingDetailDto> list = meetingService.meetingList(searchCondition, pageSize);
+        int totalMeetings = list.size();
         int totalPages = (int)Math.ceil((double) totalMeetings/ pageSize);
 
         for (MeetingDetailDto meetingDetailDto : list) {
             System.out.println(meetingDetailDto);
         }
         model.addAttribute("list", list);
-        model.addAttribute("currentPage", page);
+
         model.addAttribute("totalPages", totalPages);
         return "meeting/list";
     }

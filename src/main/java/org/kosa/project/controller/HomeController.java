@@ -13,14 +13,13 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
-
     private final MeetingService meetingService;
 
     @GetMapping("/")
     public String home(@RequestParam(value = "page", defaultValue = "1") Integer page, Model model) {
         int pageSize = 10;
 
-        List<MeetingDetailDto> list = meetingService.meetingList(page, pageSize);
+        List<MeetingDetailDto> list = meetingService.meetingList(null, page);
         int totalMeetings = meetingService.getTotalMeetingCount();
         int totalPages = (int)Math.ceil((double) totalMeetings/ pageSize);
 

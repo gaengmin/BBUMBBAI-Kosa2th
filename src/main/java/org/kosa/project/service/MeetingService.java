@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.kosa.project.repository.MeetingRepository;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
+import org.kosa.project.service.dto.SearchCondition;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +23,9 @@ public class MeetingService {
         meetingRepository.save(meetingDto);
     }
 
-    public List<MeetingDetailDto> meetingList(int page, int pageSize) {
+    public List<MeetingDetailDto> meetingList(SearchCondition searchCondition, int pageSize) {
 
-        return meetingRepository.meetingList(page, pageSize);
+        return meetingRepository.meetingList(searchCondition, pageSize);
     }
 
     public MeetingDetailDto detailMeeting(long meetingId) {

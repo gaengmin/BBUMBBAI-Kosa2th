@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.kosa.project.repository.mapper.MeetingMapper;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
+import org.kosa.project.service.dto.SearchCondition;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,8 +18,8 @@ public class MeetingRepository {
         meetingMapper.save(meetingDto);
     }
 
-    public List<MeetingDetailDto> meetingList(int page, int pageSize) {
-        return meetingMapper.meetingList(page, pageSize);
+    public List<MeetingDetailDto> meetingList(SearchCondition searchCondition, int pageSize) {
+        return meetingMapper.meetingList(searchCondition, pageSize);
     }
 
     public MeetingDetailDto detailMeeting(long meetingId){
