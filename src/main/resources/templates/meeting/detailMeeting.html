@@ -23,10 +23,15 @@
             padding: 8px;
             text-align: left;
         }
+        .w-80{
+            width : 80%;
+        }
     </style>
 </head>
 <body>
-<div class="container-fluid">
+<div th:replace="~{nav :: navFragment}"></div>
+
+<div class="container-fluid w-80" >
     <div class="row">
         <div class="col-md-12">
             <h3 th:text="${meetingDetailDto.subject}" class="text-center"></h3>
@@ -57,34 +62,35 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>아무개</td>
-                                <td>모임장</td>
+                            <tr th:each="list : ${meetingDetailDto.userMeetingDto}">
+                                <td th:text="${list.userName}"></td>
+                                <td th:text="${list.userType.getUserTypeName()}"></td>
                                 <td>
                                     <button class="btn btn-primary btn-sm">프로필</button>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>이순신</td>
-                                <td>참석원</td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm">프로필</button>
-                                </td>
-                            </tr>
+
                             </tbody>
                         </table>
                     </div>
                     <blockquote class="blockquote text-center">
                         <p class="mb-0">
                             지도를 넣고 싶당????
-                            <img th:src="@{/imgs/users/{filename}(filename=${meetingDetailDto.fileName})}" class="img-fluid">
+                            <img th:src="@{/imgs/users/{filename}(filename=${meetingDetailDto.fileName})}"
+                                 class="img-fluid">
                         </p>
                     </blockquote>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary btn-sm btn-block mt-3">
-                모임 참석하기
-            </button>
+
+            <form th:action="@{/meeting/detailMeeting}" method="post">
+                <div th:switch="${userTypes}">
+                    <button type="submit" th:case="'LEADER'" name="action" value="LEADER" class="btn btn-primary btn-sm btn-block mt-3">방권한자</button>
+                    <button type="submit" th:case="'FOLLOWER'" name="action" value="FOLLOWER" class="btn btn-primary btn-sm btn-block mt-3">모임나가기</button>
+                    <button type="submit" th:case="empty" name="action" value="empty" class="btn btn-primary btn-sm btn-block mt-3">뿜빠이하기</button>
+                    <button type="submit" th:case="login" name="action" value="login" class="btn btn-primary btn-sm btn-block mt-3">로그인하세요</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -4,6 +4,7 @@ import lombok.*;
 import org.kosa.project.service.Enum.Category;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @ToString
 @NoArgsConstructor
@@ -22,4 +23,5 @@ public class MeetingDetailDto {
     private String fileName;
     private String meetingStatus;
     private LocalDate regDate;
+    private List<UserMeetingDto> userMeetingDto;
 }
