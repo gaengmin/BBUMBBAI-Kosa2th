@@ -7,7 +7,6 @@ import org.kosa.project.service.Enum.Category;
 import org.kosa.project.service.Enum.UserType;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.MeetingDetailDto;
-import org.kosa.project.service.dto.UserMeetingDto;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -41,7 +40,7 @@ public class MeetingController {
     }
 
     static String getMeetingList(int page, Model model, MeetingService meetingService) {
-        List<MeetingDetailDto> list = meetingService.meetingList(page, PAGE_SIZE);
+        List<MeetingDetailDto> list = meetingService.meetingList(null, PAGE_SIZE);
         int totalMeetings = meetingService.getTotalMeetingCount();
         int totalPages = (int) Math.ceil((double) totalMeetings / PAGE_SIZE);
 

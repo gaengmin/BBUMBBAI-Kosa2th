@@ -25,7 +25,6 @@ public class MeetingRepository {
 
 
     public int countMeetings() {
-
         return meetingMapper.countMeetings();
     }
 

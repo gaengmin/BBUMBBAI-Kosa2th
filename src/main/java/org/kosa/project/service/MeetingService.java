@@ -25,8 +25,7 @@ public class MeetingService {
     }
 
     public List<MeetingDetailDto> meetingList(SearchCondition searchCondition, int pageSize) {
-
-        return meetingRepository.meetingList(searchCondition, pageSize);
+        return meetingRepository.meetingList(1, pageSize);
     }
 
 
