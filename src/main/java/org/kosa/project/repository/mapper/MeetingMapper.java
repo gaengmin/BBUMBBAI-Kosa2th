@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Param;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
 import org.kosa.project.service.dto.SearchCondition;
+import org.kosa.project.service.dto.UserMeetingDto;
+import org.springframework.stereotype.Repository;
+
 
 import java.util.List;
 
@@ -16,6 +19,8 @@ public interface MeetingMapper {
 
     MeetingDetailDto detailMeeting(long meetingId);
 
+    List<UserMeetingDto> attendanceList(long userMeetingId);
+    
     int countMeetings();
 
 }

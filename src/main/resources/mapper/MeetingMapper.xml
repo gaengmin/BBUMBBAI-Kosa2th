@@ -61,23 +61,6 @@
             where rnum between ((#{condition.page} - 1) * #{pageSize}) + 1 and #{condition.page} * #{pageSize}
     </select>
 
-    <!--    <select id="meetingList" resultMap="MeetingDetailDtoResultMap">
-            select meeting_id,
-                   user_id,
-                   category,
-                   subject,
-                   context,
-                   readcount,
-                   file_name,
-                   total_member,
-                   present_member,
-                   status,
-                   reg_dt
-            from meeting
-            order by meeting_id desc
-        </select>-->
-
-
     <select id="detailMeeting" resultMap="MeetingDetailDtoResultMap" parameterType="long">
         select meeting_id,
                user_id,
@@ -95,11 +78,30 @@
         where meeting_id = #{meetingId}
     </select>
 
-
     <select id="countMeetings" resultType="int">
         SELECT COUNT(*)
         FROM meeting
         <include refid="setCondition"/>
+    </select>
+
+    <resultMap id="UserMeetingDtoResultMap" type="org.kosa.project.service.dto.UserMeetingDto">
+        <id property="meetingId" column="meeting_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userType" column="user_type"/>
+        <result property="userId"   column="user_id"/>
+
+    </resultMap>
+
+    <select id="attendanceList" parameterType="long" resultMap="UserMeetingDtoResultMap" >
+        SELECT
+               u.user_name,
+               u.user_id,
+               um.meeting_id,
+               um.user_type
+        FROM user_meeting um
+        JOIN users u ON um.user_id = u.user_id
+        JOIN meeting m ON um.meeting_id = m.meeting_id
+        WHERE um.meeting_id = #{meetingId}
     </select>
 
 </mapper>
