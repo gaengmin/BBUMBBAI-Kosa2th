@@ -23,15 +23,16 @@
             padding: 8px;
             text-align: left;
         }
-        .w-80{
-            width : 80%;
+
+        .w-80 {
+            width: 80%;
         }
     </style>
 </head>
 <body>
 <div th:replace="~{nav :: navFragment}"></div>
 
-<div class="container-fluid w-80" >
+<div class="container-fluid w-80">
     <div class="row">
         <div class="col-md-12">
             <h3 th:text="${meetingDetailDto.subject}" class="text-center"></h3>
@@ -76,19 +77,28 @@
                     <blockquote class="blockquote text-center">
                         <p class="mb-0">
                             지도를 넣고 싶당????
-                            <img th:src="@{/imgs/users/{filename}(filename=${meetingDetailDto.fileName})}"
+                            <img th:src="@{/imgs/meeting/{filename}(filename=${meetingDetailDto.fileName})}"
                                  class="img-fluid">
                         </p>
                     </blockquote>
                 </div>
             </div>
 
-            <form th:action="@{/meeting/detailMeeting}" method="post">
+            <form method="post" th:action="@{/meeting/detailMeeting}">
+                <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
                 <div th:switch="${userTypes}">
-                    <button type="submit" th:case="'LEADER'" name="action" value="LEADER" class="btn btn-primary btn-sm btn-block mt-3">방권한자</button>
-                    <button type="submit" th:case="'FOLLOWER'" name="action" value="FOLLOWER" class="btn btn-primary btn-sm btn-block mt-3">모임나가기</button>
-                    <button type="submit" th:case="empty" name="action" value="empty" class="btn btn-primary btn-sm btn-block mt-3">뿜빠이하기</button>
-                    <button type="submit" th:case="login" name="action" value="login" class="btn btn-primary btn-sm btn-block mt-3">로그인하세요</button>
+                    <button type="submit" th:case="'LEADER'" name="action" value="LEADER"
+                            class="btn btn-primary btn-sm btn-block mt-3">방권한자
+                    </button>
+                    <button type="submit" th:case="'FOLLOWER'" name="action" value="FOLLOWER"
+                            class="btn btn-primary btn-sm btn-block mt-3">모임나가기
+                    </button>
+                    <button type="submit" th:case="'NOTFOLLOWER'" name="action" value="NOTFOLLOWER"
+                            class="btn btn-primary btn-sm btn-block mt-3">뿜빠이하기
+                    </button>
+                    <button type="submit" th:case="'login'" name="action" value="login"
+                            class="btn btn-primary btn-sm btn-block mt-3">로그인하세요
+                    </button>
                 </div>
             </form>
         </div>

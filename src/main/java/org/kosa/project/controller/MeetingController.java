@@ -7,11 +7,13 @@ import org.kosa.project.service.Enum.Category;
 import org.kosa.project.service.Enum.UserType;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.MeetingDetailDto;
+import org.kosa.project.service.dto.UserMeetingCheckDto;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -65,8 +67,9 @@ public class MeetingController {
             for (int i = 0; i < meetingDetailDto.getUserMeetingDto().size(); i++) {
                 if (meetingDetailDto.getUserMeetingDto().get(i).getUserId() == Long.parseLong(userDetails.getUserId())) {
                     userTypes = meetingDetailDto.getUserMeetingDto().get(i).getUserType().name();
+                    System.out.println("========userTypes : "+userTypes);
                 } else {
-                    userTypes = "empty";
+                    userTypes = "NOTFOLLOWER";
                 }
             }
         } catch (NullPointerException e) {
@@ -93,6 +96,45 @@ public class MeetingController {
         String fileUploadUrl = fileUploadService.saveFile(request.image());
         meetingService.save(convertToMeetingRegisterDto(request, fileUploadUrl, userId));
         return response;
+    }
+
+    @PostMapping("/detailMeeting")
+    public String userTypeMappingAction(
+            @RequestParam("meetingId") long meetingId,
+            @RequestParam("action") String action,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+
+        long userId = 0;
+        System.out.println("Received meetingId: " + meetingId + ", action: " + action);
+        try {
+            userId = Long.parseLong(userDetails.getUserId());
+        } catch (NullPointerException e) {
+            userId = 0;
+        }
+
+        UserMeetingCheckDto userMeetingCheckDto = new UserMeetingCheckDto();
+        userMeetingCheckDto.setMeetingId(meetingId);
+        userMeetingCheckDto.setUserId(userId);
+
+        System.out.println("action : " + action);
+        switch (action) {
+            case "LEADER":
+                // LEADER action 처리
+                break;
+            case "FOLLOWER":
+                meetingService.exitMeetingService(userMeetingCheckDto);
+                break;
+            case "NOTFOLLOWER":
+                userMeetingCheckDto.setUserType(UserType.FOLLOWER);
+                meetingService.meetingUserAttend(userMeetingCheckDto);
+                break;
+            case "login":
+                return "redirect:/login";
+        }
+
+        redirectAttributes.addAttribute("meetingId", meetingId);
+        return "redirect:/meeting/detailMeeting";  // GET 요청으로 리다이렉트
     }
 
 }

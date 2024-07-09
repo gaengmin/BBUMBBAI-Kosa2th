@@ -8,6 +8,6 @@ import org.kosa.project.service.Enum.UserType;
 @Setter
 public class UserMeetingCheckDto {
     private long userId;
-    private String userType;
+    private UserType userType;
     private long meetingId;
 }

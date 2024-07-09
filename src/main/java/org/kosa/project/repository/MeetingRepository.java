@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.kosa.project.repository.mapper.MeetingMapper;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
+import org.kosa.project.service.dto.UserMeetingCheckDto;
 import org.kosa.project.service.dto.UserMeetingDto;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,10 @@ public class MeetingRepository {
         meetingMapper.save(meetingDto);
     }
 
+    public long selectLastInsertId(long userId){
 
+        return meetingMapper.selectLastInsertId(userId);
+    }
     public List<MeetingDetailDto> meetingList(int page, int pageSize) {
         return meetingMapper.meetingList(page, pageSize);
     }
@@ -30,9 +34,9 @@ public class MeetingRepository {
 
     /*모임참여관련 */
 
-    public void attendanceSave(UserMeetingDto userMeetingDto) {
+    public void userMeetingSave(UserMeetingCheckDto userMeetingDto) {
 
-        meetingMapper.attendanceSave(userMeetingDto);
+        meetingMapper.userMeetingSave(userMeetingDto);
     }
 
     public String getUserMeetingCheck(long userId, long meetingId) {
@@ -44,5 +48,13 @@ public class MeetingRepository {
         return meetingMapper.meetingDetails(meetingId);
     }
 
+    /*모임참석 눌렀을시 현재원 수 업데이트*/
+    public void meetingUpdatePresentCount(long meetingId){
 
+        meetingMapper.meetingUpdatePresentCount(meetingId);
+    }
+    /*모임나가기*/
+    public void exitMeeting(UserMeetingCheckDto userMeetingDto){
+        meetingMapper.exitMeeting(userMeetingDto);
+    }
 }
