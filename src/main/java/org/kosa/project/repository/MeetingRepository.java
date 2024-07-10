@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.kosa.project.repository.mapper.MeetingMapper;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
+import org.kosa.project.service.dto.SearchCondition;
 import org.kosa.project.service.dto.UserMeetingDto;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -19,8 +21,8 @@ public class MeetingRepository {
     }
 
 
-    public List<MeetingDetailDto> meetingList(int page, int pageSize) {
-        return meetingMapper.meetingList(page, pageSize);
+    public List<MeetingDetailDto> meetingList(SearchCondition searchCondition, int pageSize) {
+        return meetingMapper.meetingList(searchCondition, pageSize);
     }
 
 

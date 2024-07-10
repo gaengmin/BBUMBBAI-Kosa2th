@@ -40,19 +40,32 @@
     <select id="meetingList" resultMap="MeetingDetailDtoResultMap">
         select *
         from (select meeting_id,
-                     user_id,
-                     category,
-                     subject,
-                     context,
-                     readcount,
-                     file_name,
-                     total_member,
-                     present_member,
-                     status,
-                     reg_dt,
-                     row_number() over (order by meeting_id desc, reg_dt desc) as rnum
-              from meeting)
-        where rnum between ((#{page} - 1) * #{pageSize}) + 1 and #{page} * #{pageSize}
+        user_id,
+        category,
+        subject,
+        context,
+        readcount,
+        file_name,
+        total_member,
+        present_member,
+        status,
+        reg_dt,
+        row_number() over (order by meeting_id desc, reg_dt desc) as rnum
+        from meeting
+        where meeting_id > 0
+        <if test="condition.content != null and condition.content !=''">
+            <if test='condition.searchType == "all"'>
+                and subject like '%' || #{condition.content} || '%' or context like '%' || #{condition.content} || '%'
+            </if>
+            <if test='condition.searchType == "subject"' >
+                and subject like '%' || #{condition.content} || '%'
+            </if>
+            <if test='condition.searchType == "content"'>
+                and context like '%' || #{condition.content} || '%'
+            </if>
+        </if>
+        )
+        where rnum between ((#{condition.page} - 1) * #{pageSize}) + 1 and #{condition.page} * #{pageSize}
     </select>
 
     <select id="countMeetings" resultType="int">
@@ -98,4 +111,3 @@
     </select>
 
 </mapper>
-
