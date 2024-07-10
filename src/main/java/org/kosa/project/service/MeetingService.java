@@ -3,7 +3,7 @@ package org.kosa.project.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.kosa.project.repository.MeetingRepository;
-import org.kosa.project.service.Enum.UserType;
+import org.kosa.project.service.Enum.UserMeetingType;
 import org.kosa.project.service.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +20,12 @@ public class MeetingService {
     public void save(MeetingRegisterDto meetingDto) {
         meetingRepository.save(meetingDto);
         long meetingId = meetingRepository.selectLastInsertId(meetingDto.userId());
+        long userId = meetingDto.userId();
         UserMeetingCheckDto userMeetingCheckDto = new UserMeetingCheckDto();
         userMeetingCheckDto.setMeetingId(meetingId);
-        userMeetingCheckDto.setUserId(meetingDto.userId());
-        userMeetingCheckDto.setUserType(UserType.LEADER);
+        userMeetingCheckDto.setUserId(userId);
+        userMeetingCheckDto.setUserType(UserMeetingType.LEADER);
+        System.out.println(userMeetingCheckDto.getMeetingId() + "     ====     "+ userMeetingCheckDto.getUserId()+ "     ===" + userMeetingCheckDto.getUserType().getUserTypeName() );
         meetingRepository.userMeetingSave(userMeetingCheckDto);
     }
 
@@ -31,22 +33,7 @@ public class MeetingService {
         return meetingRepository.meetingList(1, pageSize);
     }
 
-
-    public int getTotalMeetingCount() {
-
-        return meetingRepository.countMeetings();
-    }
-
-    public void userMeetingSave(UserMeetingCheckDto userMeetingCheckDto) {
-        meetingRepository.userMeetingSave(userMeetingCheckDto);
-    }
-
-    public String getUserMeetingCheck(long userId, long meetingId) {
-        return meetingRepository.getUserMeetingCheck(userId, meetingId);
-    }
-
     public MeetingDetailDto meetingDetails(long meetingId) {
-
         return meetingRepository.meetingDetails(meetingId);
     }
 

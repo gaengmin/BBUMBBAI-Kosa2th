@@ -10,12 +10,48 @@ DROP TABLE USERS CASCADE CONSTRAINTS;
 -- Create USERS table
 CREATE TABLE USERS (
                        user_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                       email varchar2(200),
                        phone_number VARCHAR2(50),
                        user_name VARCHAR2(50),
                        password VARCHAR2(50),
+                       profile_img_url varchar2(200),
                        birth DATE,
                        myself_memo CLOB,
                        reg_dt DATE DEFAULT SYSDATE
+);
+
+-- Create USER_MEETING table
+CREATE TABLE USER_MEETING (
+                              user_meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                              user_id NUMBER,
+                              meeting_id NUMBER,
+                              user_type VARCHAR2(30) --미팅 권한
+);
+
+-- Create MEETING table
+CREATE TABLE MEETING (
+                         meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                         user_id NUMBER,
+                         region_id NUMBER,
+                         category VARCHAR2(20),
+                         subject VARCHAR2(200),
+                         context CLOB,
+                         readcount NUMBER default 0,
+                         file_name varchar2(30),
+                         total_member NUMBER,
+                         present_member NUMBER default 1,
+                         status VARCHAR2(20) ,
+                         reg_dt DATE DEFAULT SYSDATE
+);
+
+
+-- Create RE_MEETING table
+CREATE TABLE RE_MEETING (
+                            re_meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                            meeting_id NUMBER,
+                            user_id NUMBER,
+                            context CLOB,
+                            reg_dt DATE DEFAULT SYSDATE
 );
 
 -- Create REGION table
@@ -29,32 +65,6 @@ CREATE TABLE REGION (
                         longitude NUMBER,
                         latitude NUMBER
 );
-
--- Create MEETING table
-CREATE TABLE MEETING (
-                         meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                         user_id NUMBER,
-                         region_id NUMBER,
-                         category VARCHAR2(20),
-                         subject VARCHAR2(200),
-                         context CLOB,
-                         readcount NUMBER default 0,
-                         imageUrl VARCHAR2(200),
-                         all_meeting_number NUMBER,
-                         meeting_number NUMBER,
-                         status VARCHAR2(10),
-                         reg_dt DATE DEFAULT SYSDATE
-);
-
--- Create RE_MEETING table
-CREATE TABLE RE_MEETING (
-                            re_meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                            meeting_id NUMBER,
-                            user_id NUMBER,
-                            context CLOB,
-                            reg_dt DATE DEFAULT SYSDATE
-);
-
 -- Create ROOM table
 CREATE TABLE ROOM (
                       room_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -70,17 +80,21 @@ CREATE TABLE CHAT (
                       message CLOB
 );
 
--- Create USER_MEETING table
-CREATE TABLE USER_MEETING (
-                              user_meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                              user_id NUMBER,
-                              meeting_id NUMBER,
-                              role VARCHAR2(10)
-);
+
 
 -- Add foreign key constraints
-ALTER TABLE MEETING
-    ADD CONSTRAINT fk_meeting_user FOREIGN KEY (user_id) REFERENCES USERS(user_id);
+
+-- USER_MEETING.user_id references USERS.user_id
+ALTER TABLE USER_MEETING
+    ADD CONSTRAINT fk_user_meeting_user
+        FOREIGN KEY (user_id)
+            REFERENCES USERS(user_id);
+
+-- USER_MEETING.meeting_id references MEETING.meeting_id
+ALTER TABLE USER_MEETING
+    ADD CONSTRAINT fk_user_meeting_meeting
+        FOREIGN KEY (meeting_id)
+            REFERENCES MEETING(meeting_id);
 
 ALTER TABLE MEETING
     ADD CONSTRAINT fk_meeting_region FOREIGN KEY (region_id) REFERENCES REGION(region_id);
@@ -100,8 +114,3 @@ ALTER TABLE CHAT
 ALTER TABLE CHAT
     ADD CONSTRAINT fk_chat_user FOREIGN KEY (user_id) REFERENCES USERS(user_id);
 
-ALTER TABLE USER_MEETING
-    ADD CONSTRAINT fk_user_meeting_user FOREIGN KEY (user_id) REFERENCES USERS(user_id);
-
-ALTER TABLE USER_MEETING
-    ADD CONSTRAINT fk_user_meeting_meeting FOREIGN KEY (meeting_id) REFERENCES MEETING(meeting_id);

@@ -37,13 +37,15 @@
     </insert>
 
     <select id="selectLastInsertId" resultType="long">
-        SELECT meeting_id FROM MEETING WHERE user_id = #{userId} AND rownum = 1 ORDER BY meeting_id DESC
+        SELECT meeting_id FROM MEETING WHERE user_id = #{userId} ORDER BY meeting_id DESC FETCH FIRST 1 ROWS ONLY
     </select>
 
     <insert id="userMeetingSave" parameterType="org.kosa.project.service.dto.UserMeetingDto">
         insert into user_meeting (user_id, meeting_id, user_type)
         values (#{userId}, #{meetingId}, #{userType})
     </insert>
+
+
     <!-- 특정 meetingId와 userId를 기준으로 user_meeting 데이터 삭제 -->
     <delete id="exitMeeting" parameterType="org.kosa.project.service.dto.UserMeetingDto">
         DELETE FROM user_meeting WHERE meeting_id = #{meetingId} AND user_id = #{userId}
@@ -72,11 +74,6 @@
               from meeting)
         where rnum between ((#{page} - 1) * #{pageSize}) + 1 and #{page} * #{pageSize}
 
-    </select>
-
-    <select id="countMeetings" resultType="int">
-        SELECT COUNT(*)
-        FROM meeting
     </select>
 
     <select id="getUserMeetingCheck" parameterType="org.kosa.project.service.dto.UserMeetingCheckDto"

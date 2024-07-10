@@ -1,7 +1,6 @@
 package org.kosa.project.controller;
 
 import lombok.experimental.UtilityClass;
-import org.kosa.project.service.Enum.UserType;
 import org.kosa.project.service.dto.MeetingRegisterDto;
 
 @UtilityClass

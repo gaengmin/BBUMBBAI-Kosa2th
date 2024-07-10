@@ -65,7 +65,7 @@
                         <h5 class="card-title" th:text="${meetingList.getSubject}"></h5>
                         <p class="card-text"
                            th:text="'모 집 인 원 : '+${meetingList.getTotalMember()}+' / 현 재 원 : '+${meetingList.getPresentMember()}"/>
-                        <a th:href="@{detailMeeting(meetingId=${meetingList.meetingId})}" class="btn btn-primary">모임
+                        <a th:href="@{/meeting/detailMeeting(meetingId=${meetingList.meetingId})}" class="btn btn-primary">모임
                             알아보기</a>
                     </div>
                 </div>

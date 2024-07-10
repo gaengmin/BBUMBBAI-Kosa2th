@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="kor" xmlns:th="http://www.w3.org/1999/html">
+<html lang="kor" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Create Post</title>
@@ -67,8 +67,8 @@
                                 <td th:text="${list.userName}"></td>
                                 <td th:text="${list.userType.getUserTypeName()}"></td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm">프로필</button>
-                                </td>
+                                    <a th:href="@{/users/{userId}(userId=${list.userId})}"
+                                       class="btn btn-success btn-sm btn-block mt-3">정보</a></td>
                             </tr>
 
                             </tbody>
@@ -86,17 +86,29 @@
 
             <form method="post" th:action="@{/meeting/detailMeeting}">
                 <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
-                <div th:switch="${userTypes}">
-                    <button type="submit" th:case="'LEADER'" name="action" value="LEADER"
+                <div th:switch="${userTypes.name()}">
+                    <button type="submit" th:case="'LEADER'" name="userType" value="LEADER"
                             class="btn btn-primary btn-sm btn-block mt-3">방권한자
                     </button>
                     <button type="submit" th:case="'FOLLOWER'" name="action" value="FOLLOWER"
                             class="btn btn-primary btn-sm btn-block mt-3">모임나가기
                     </button>
-                    <button type="submit" th:case="'NOTFOLLOWER'" name="action" value="NOTFOLLOWER"
-                            class="btn btn-primary btn-sm btn-block mt-3">뿜빠이하기
-                    </button>
-                    <button type="submit" th:case="'login'" name="action" value="login"
+
+                    <!-- NOT_FOLLOWER with additional conditions -->
+                    <div th:case="'NOT_FOLLOWER'">
+                        <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
+                            <button type="submit" name="action" value="NOT_FOLLOWER"
+                                    class="btn btn-primary btn-sm btn-block mt-3">뿜빠이하기
+                            </button>
+                        </div>
+                        <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
+                            <button type="button" name="" value="NOT_FOLLOWER"
+                                    class="btn btn-warning btn-sm btn-block mt-3" onclick="history.back()">모집마감
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" th:case="'NOT_LOGIN'" name="action" value="NOT_LOGIN"
                             class="btn btn-primary btn-sm btn-block mt-3">로그인하세요
                     </button>
                 </div>
