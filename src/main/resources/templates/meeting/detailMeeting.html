@@ -48,7 +48,44 @@
 <div th:replace="~{nav :: navFragment}"></div>
 
 <div class="container-fluid w-80">
-    <h2 th:text="${meetingDetailDto.subject}" class="mt-5"></h2>
+    <div class="row">
+        <div class="col-md-10">
+            <h2 th:text="${meetingDetailDto.subject}" class="me-auto"></h2>
+        </div>
+        <div class="col-md-2">
+            <form method="post" th:action="@{/meeting/detailMeeting}" class="me-auto">
+                <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
+                <div th:switch="${userType.name()}">
+                    <!-- LEADER 버튼 -->
+                    <button type="submit" th:case="'LEADER'" name="userType" value="LEADER"
+                            class="btn btn-primary btn-sm btn-block mt-3">방권한자
+                    </button>
+                    <!-- FOLLOWER 버튼 -->
+                    <button type="submit" th:case="'FOLLOWER'" name="action" value="FOLLOWER"
+                            class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline">모임 나가기
+                    </button>
+                    <!-- NOT_FOLLOWER 버튼 -->
+                    <div th:case="'NOT_FOLLOWER'">
+                        <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
+                            <button type="submit" name="action" value="NOT_FOLLOWER"
+                                    class="btn btn-primary btn-sm btn-block mt-3">뿜빠이 하기
+                            </button>
+                        </div>
+                        <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
+                            <button type="button" class="btn btn-warning btn-sm btn-block mt-3"
+                                    onclick="history.back()">모집 마감
+                            </button> <!-- 불필요한 name과 value 속성 제거 -->
+                        </div>
+                    </div>
+                    <!-- NOT_LOGIN 버튼 -->
+                    <button type="submit" th:case="'NOT_LOGIN'" name="action" value="NOT_LOGIN"
+                            class="btn btn-primary btn-sm btn-block mt-3">로그인하세요
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <!-- 모든 사람이 볼 수 있는 탭 -->
@@ -86,7 +123,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-6" id="left-column">
+                <div class="col-md-8" id="left-column">
                     <div class="mb-3">
                         <span th:text="|카테고리 - ${meetingDetailDto.category.getDisplayName()}|"></span>
                         <!-- 불필요한 공백 제거 -->
@@ -97,12 +134,12 @@
                     <div class="mb-3">
                         <span th:text="|모집 인원 : ${meetingDetailDto.totalMember} / 현재 원 : ${meetingDetailDto.presentMember}|"></span>
                         <!-- 불필요한 공백 제거 -->
+
                     </div>
-                    <div id="meetingDetailContext" class="form-control mb-3" style="height: auto;">
-                        [[${meetingDetailDto.context}]]
-                    </div>
+                    <div>[[${meetingDetailDto.context}]]</div>
+
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="col-md-12" id="right-column">
                         <!-- 댓글 목록 -->
                         <h5>댓글</h5>
@@ -149,36 +186,6 @@
                     </div>
                 </div>
             </div>
-            <form method="post" th:action="@{/meeting/detailMeeting}">
-                <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
-                <div th:switch="${userType.name()}">
-                    <!-- LEADER 버튼 -->
-                    <button type="submit" th:case="'LEADER'" name="userType" value="LEADER"
-                            class="btn btn-primary btn-sm btn-block mt-3">방권한자
-                    </button>
-                    <!-- FOLLOWER 버튼 -->
-                    <button type="submit" th:case="'FOLLOWER'" name="action" value="FOLLOWER"
-                            class="btn btn-primary btn-sm btn-block mt-3">모임 나가기
-                    </button>
-                    <!-- NOT_FOLLOWER 버튼 -->
-                    <div th:case="'NOT_FOLLOWER'">
-                        <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
-                            <button type="submit" name="action" value="NOT_FOLLOWER"
-                                    class="btn btn-primary btn-sm btn-block mt-3">뿜빠이 하기
-                            </button>
-                        </div>
-                        <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
-                            <button type="button" class="btn btn-warning btn-sm btn-block mt-3"
-                                    onclick="history.back()">모집 마감
-                            </button> <!-- 불필요한 name과 value 속성 제거 -->
-                        </div>
-                    </div>
-                    <!-- NOT_LOGIN 버튼 -->
-                    <button type="submit" th:case="'NOT_LOGIN'" name="action" value="NOT_LOGIN"
-                            class="btn btn-primary btn-sm btn-block mt-3">로그인하세요
-                    </button>
-                </div>
-            </form>
         </div>
         <div class="tab-pane fade" id="userProfile" role="tabpanel" aria-labelledby="userProfile-tab">
             <h5>모임 참석 명단</h5>
