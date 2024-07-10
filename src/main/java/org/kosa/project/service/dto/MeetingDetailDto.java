@@ -13,6 +13,7 @@ import java.util.List;
 @Getter
 public class MeetingDetailDto {
     private long meetingId;
+    private long userId;
     private long regionId;
     private Category category; // ENUM
     private String subject;
