@@ -13,6 +13,5 @@ import org.kosa.project.service.Enum.Category;
 public class SearchCondition {
     private String content;
     private Category category;
-    private Integer page;
     private String searchType;
 }

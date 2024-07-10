@@ -26,17 +26,4 @@ public class LoginController {
         model.addAttribute("loginform", new LoginForm());
         return "loginForm";
     }
-
-    @GetMapping("/logoutpage")
-    public String logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        String linkUrl = request.getHeader("Referer");
-        System.out.println("LoginController.logout");
-        System.out.println(linkUrl);
-        if (linkUrl != null) {
-            return "redirect:" + linkUrl;
-        } else{
-            return "redirect:/";
-        }
-    }
-
 }

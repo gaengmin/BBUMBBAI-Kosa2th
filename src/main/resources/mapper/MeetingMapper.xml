@@ -4,6 +4,26 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kosa.project.repository.mapper.MeetingMapper">
 
+    <resultMap id="MeetingSummaryDtoPageResultMap" type="org.kosa.project.controller.Page">
+        <result property="currentPage" column="currentPage"/>
+        <result property="pagePerSize" column="pagePerSize"/>
+        <result property="totalDataSize" column="totalDataSize"/>
+        <collection property="elements" ofType="org.kosa.project.service.dto.MeetingSummaryDto"
+                    resultMap="MeetingSummaryDtoResultMap"/>
+    </resultMap>
+
+    <resultMap id="MeetingSummaryDtoResultMap" type="org.kosa.project.service.dto.MeetingSummaryDto">
+        <result property="meetingId" column="meeting_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="category" column="category"/>
+        <result property="subject" column="subject"/>
+        <result property="totalMember" column="total_member"/>
+        <result property="presentMember" column="present_member"/>
+        <result property="fileName" column="file_name"/>
+        <result property="meetingStatus" column="status"/>
+    </resultMap>
+
     <!-- UserMeetingDto 매핑 -->
     <resultMap id="UserMeetingDtoResultMap" type="org.kosa.project.service.dto.UserMeetingDto">
         <id property="userMeetingId" column="user_meeting_id"/>
@@ -57,19 +77,19 @@
         WHERE meeting_id = #{meeting_id}
     </update>
 
-    <select id="meetingList" resultMap="MeetingDetailDtoResultMap">
+    <select id="meetingList" resultMap="MeetingSummaryDtoPageResultMap">
         select *
         from (select meeting_id,
         user_id,
         category,
         subject,
-        context,
-        readcount,
         file_name,
         total_member,
         present_member,
         status,
-        reg_dt,
+        count(*) over() as totalDataSize,
+        (select #{pageable.currentPage} from dual) as currentPage,
+        (select #{pageable.pagePerSize} from dual) as pagePerSize,
         row_number() over (order by meeting_id desc, reg_dt desc) as rnum
         from meeting
         where meeting_id > 0
@@ -85,7 +105,7 @@
             </if>
         </if>
         )
-        where rnum between ((#{condition.page} - 1) * #{pageSize}) + 1 and #{condition.page} * #{pageSize}
+        where rnum between ((#{pageable.currentPage} - 1) * #{pageable.pagePerSize}) + 1 and #{pageable.currentPage} * #{pageable.pagePerSize}
     </select>
 
 

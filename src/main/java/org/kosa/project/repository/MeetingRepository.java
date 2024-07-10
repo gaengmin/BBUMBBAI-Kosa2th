@@ -1,6 +1,8 @@
 package org.kosa.project.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.kosa.project.controller.Page;
+import org.kosa.project.controller.Pageable;
 import org.kosa.project.repository.mapper.MeetingMapper;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
@@ -23,8 +25,8 @@ public class MeetingRepository {
         return meetingMapper.selectLastInsertId(userId);
     }
 
-    public List<MeetingDetailDto> meetingList(SearchCondition searchCondition, int pageSize) {
-        return meetingMapper.meetingList(searchCondition, pageSize);
+    public Page<MeetingDetailDto> meetingList(SearchCondition searchCondition, Pageable pageable) {
+        return meetingMapper.meetingList(searchCondition, pageable);
     }
 
 

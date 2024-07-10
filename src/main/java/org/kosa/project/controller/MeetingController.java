@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.model.IModel;
 
 import java.util.List;
 
@@ -30,29 +31,24 @@ public class MeetingController {
     private final MeetingService meetingService;
     private final FileUploadService fileUploadService;
 
-    private static final Integer PAGE_SIZE = 6;
-
+    private static final Integer PAGE_PER_SIZE = 3;
     public MeetingController(MeetingService meetingService, @MeetingFileServiceQualifier FileUploadService fileUploadService) {
         this.meetingService = meetingService;
         this.fileUploadService = fileUploadService;
     }
 
     @GetMapping("/list")
-    // json, xml, file
-    // http message body
-    // ?page=1
-    public String list(@ModelAttribute SearchCondition condition, Model model) {
+    public String list(@ModelAttribute SearchCondition condition,
+                       @RequestParam(defaultValue = "1") Integer page,
+                       Model model) {
+
         System.out.println(condition);
-        return getMeetingList(condition, model, meetingService);
+        return getMeetingList(condition, page, model);
     }
 
-    private String getMeetingList(SearchCondition condition, Model model, MeetingService meetingService) {
-        System.out.println(condition);
-        List<MeetingDetailDto> list = meetingService.meetingList(condition, PAGE_SIZE);
-        int totalPages = (int) Math.ceil((double) list.size() / PAGE_SIZE);
-        model.addAttribute("list", list);
-        model.addAttribute("currentPage", condition.getPage());
-        model.addAttribute("maxPage", totalPages);
+    private String getMeetingList(SearchCondition condition, Integer page, Model model) {
+        Page<MeetingDetailDto> detailList = meetingService.meetingList(condition, page, PAGE_PER_SIZE);
+        model.addAttribute("detailList", detailList);
         model.addAttribute("condition", condition);
         return "meeting/list";
     }
@@ -69,7 +65,7 @@ public class MeetingController {
         UserMeetingType userMeetingType = getCurrentLoginUserMeetingType(userDetails, meetingDetailDto.getUserMeetingDto());
         System.out.println(userMeetingType);
         model.addAttribute("meetingDetailDto", meetingDetailDto);
-        model.addAttribute("userTypes", userMeetingType);
+        model.addAttribute("userType", userMeetingType);
         return "meeting/detailMeeting";
     }
 
@@ -79,11 +75,10 @@ public class MeetingController {
             return UserMeetingType.NOT_LOGIN;
         }
 
-        for (int i = 0; i < userMeetings.size(); i++) {
+        for (UserMeetingDto userMeeting : userMeetings) {
             long loginUserId = Long.parseLong(userDetails.getUserId());
-            UserMeetingDto userMeetingDto = userMeetings.get(i);
-            if (userMeetingDto.getUserId() == loginUserId) {
-                return userMeetingDto.getUserType();
+            if (userMeeting.getUserId() == loginUserId) {
+                return userMeeting.getUserType();
             }
         }
 
@@ -125,7 +120,6 @@ public class MeetingController {
         userMeetingCheckDto.setUserId(Long.parseLong(userDetails.getUserId()));
         userMeetingCheckDto.setUserType(userType);
 
-        System.out.println(userMeetingCheckDto.toString());
         userType.handleAction(meetingService, userMeetingCheckDto);
         redirectAttributes.addAttribute("meetingId", meetingId);
         return "redirect:/meeting/detailMeeting";  // GET 요청으로 리다이렉트

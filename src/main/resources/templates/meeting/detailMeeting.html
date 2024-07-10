@@ -86,7 +86,7 @@
 
             <form method="post" th:action="@{/meeting/detailMeeting}">
                 <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
-                <div th:switch="${userTypes.name()}">
+                <div th:switch="${userType.name()}">
                     <button type="submit" th:case="'LEADER'" name="userType" value="LEADER"
                             class="btn btn-primary btn-sm btn-block mt-3">방권한자
                     </button>

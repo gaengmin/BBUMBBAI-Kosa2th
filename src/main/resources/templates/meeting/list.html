@@ -30,23 +30,24 @@
                 <h2>현재 모집 중인 뿜빠이</h2>
             </div>
             <!-- Pagination controls -->
+            <th:block th:if="${detailList}">
             <div>
                 <ul style="list-style-type: none; padding: 0;">
                     <!-- Previous Page Link -->
                     <li style="display: inline; margin-right: 10px;"
-                        th:if="${currentPage > 1}">
-                        <a th:href="@{/meeting/list(page=${currentPage - 1})}">이전</a>
+                        th:if="${!detailList.isFirst()}">
+                        <a th:href="@{/meeting/list(page=${detailList.currentPage - 1})}">이전</a>
                     </li>
                     <!-- Page Number Links -->
                     <li style="display: inline; margin-right: 10px;"
-                        th:each="pageNum : ${#numbers.sequence(1, maxPage)}"
-                        th:class="${pageNum == currentPage ? 'active' : ''}">
-                        <a th:href="@{/meeting/list(content=${condition.content}, page=${condition.page})}">[[${pageNum}]]</a>
+                        th:each="pageNum : ${#numbers.sequence(1, detailList.getTotalPages())}"
+                        th:class="${pageNum == detailList.currentPage ? 'active' : ''}">
+                        <a th:href="@{/meeting/list(content=${condition.content}, page=${pageNum})}">[[${pageNum}]]</a>
                     </li>
                     <!-- Next Page Link -->
                     <li style="display: inline; margin-right: 10px;"
-                        th:if="${currentPage < maxPage}">
-                        <a th:href="@{/meeting/list(page=${currentPage + 1})}">다음</a>
+                        th:if="${!detailList.isLast()}">
+                        <a th:href="@{/meeting/list(page=${detailList.currentPage + 1})}">다음</a>
                     </li>
                 </ul>
             </div>
@@ -56,8 +57,8 @@
                 </button>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-12 mt-5 d-flex justify-content-center"
-                 th:if="${not #lists.isEmpty(list)}"
-                 th:each="meetingList : ${list}">
+                 th:if="${not #lists.isEmpty(detailList.content)}"
+                 th:each="meetingList : ${detailList.content}">
                 <div class="card" style="width: 18rem;">
                     <img th:src="@{/imgs/meeting/{filename}(filename=${meetingList.fileName})}" class="card-img-top">
                     <div class="card-body">
@@ -70,6 +71,7 @@
                     </div>
                 </div>
             </div>
+            </th:block>
         </div>
     </div>
 </main>

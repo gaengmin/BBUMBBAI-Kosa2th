@@ -2,6 +2,8 @@ package org.kosa.project.repository.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.kosa.project.controller.Page;
+import org.kosa.project.controller.Pageable;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
 import org.kosa.project.service.dto.SearchCondition;
@@ -14,7 +16,7 @@ import java.util.List;
 public interface MeetingMapper {
     void save(MeetingRegisterDto meetingDto);
 
-    List<MeetingDetailDto> meetingList(@Param("condition") SearchCondition searchCondition, @Param("pageSize") int pageSize);
+    Page<MeetingDetailDto> meetingList(@Param("condition") SearchCondition searchCondition, @Param("pageable") Pageable pageable);
 
     public long selectLastInsertId(long userId);
 
