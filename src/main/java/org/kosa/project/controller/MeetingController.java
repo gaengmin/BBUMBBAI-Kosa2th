@@ -102,7 +102,7 @@ public class MeetingController {
         return response;
     }
 
-    @PostMapping("/detailMeeting")
+   /* @PostMapping("/detailMeeting")
     public String userTypeMappingAction(
             @RequestParam("meetingId") long meetingId,
             @RequestParam("action") UserMeetingType userType,
@@ -122,7 +122,7 @@ public class MeetingController {
         userType.handleAction(meetingService, userMeetingCheckDto);
         redirectAttributes.addAttribute("meetingId", meetingId);
         return "redirect:/meeting/detailMeeting";  // GET 요청으로 리다이렉트
-    }
+    }*/
 
 }
 

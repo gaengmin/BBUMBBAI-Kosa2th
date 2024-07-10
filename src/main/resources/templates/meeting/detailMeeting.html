@@ -53,33 +53,35 @@
             <h2 th:text="${meetingDetailDto.subject}" class="me-auto"></h2>
         </div>
         <div class="col-md-2">
-            <form method="post" th:action="@{/meeting/detailMeeting}" class="me-auto">
+            <form method="post" th:action="@{/meeting/detailMeeting}" class="me-auto" id="meetingForm">
                 <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
                 <div th:switch="${userType.name()}">
                     <!-- LEADER 버튼 -->
-                    <button type="submit" th:case="'LEADER'" name="userType" value="LEADER"
-                            class="btn btn-primary btn-sm btn-block mt-3">방권한자
+                    <button type="button" th:case="'LEADER'" name="userType" value="LEADER"
+                            class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('LEADER')">방권한자
                     </button>
                     <!-- FOLLOWER 버튼 -->
-                    <button type="submit" th:case="'FOLLOWER'" name="action" value="FOLLOWER"
-                            class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline">모임 나가기
+                    <button type="button" th:case="'FOLLOWER'" name="action" value="FOLLOWER"
+                            class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
+                            onclick="submitForm('FOLLOWER')">모임 나가기
                     </button>
                     <!-- NOT_FOLLOWER 버튼 -->
                     <div th:case="'NOT_FOLLOWER'">
                         <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
-                            <button type="submit" name="action" value="NOT_FOLLOWER"
-                                    class="btn btn-primary btn-sm btn-block mt-3">뿜빠이 하기
+                            <button type="button" name="action" value="NOT_FOLLOWER"
+                                    class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('NOT_FOLLOWER')">
+                                뿜빠이
                             </button>
                         </div>
                         <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
                             <button type="button" class="btn btn-warning btn-sm btn-block mt-3"
                                     onclick="history.back()">모집 마감
-                            </button> <!-- 불필요한 name과 value 속성 제거 -->
+                            </button>
                         </div>
                     </div>
                     <!-- NOT_LOGIN 버튼 -->
-                    <button type="submit" th:case="'NOT_LOGIN'" name="action" value="NOT_LOGIN"
-                            class="btn btn-primary btn-sm btn-block mt-3">로그인하세요
+                    <button type="button" th:case="'NOT_LOGIN'" name="action" value="NOT_LOGIN"
+                            class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('NOT_LOGIN')">로그인
                     </button>
                 </div>
             </form>
@@ -216,9 +218,45 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    // 폼 제출을 처리하는 함수입니다.
+    function submitForm(action) {
+        // 폼 데이터를 객체로 가져옵니다.
+        var formData = {
+            meetingId: $('[name="meetingId"]').val(),
+            action: action
+        };
 
+        // 폼 데이터 출력 (디버깅용)
+        console.log("Form Data:", formData);
+
+        // Ajax 요청을 보냅니다.
+        $.ajax({
+            url: $('#meetingForm').attr('action'), // 폼의 action URL을 가져옵니다.
+            type: 'POST', // 요청 방식을 POST로 설정합니다.
+            contentType: 'application/json', // JSON 형식으로 데이터를 보냅니다.
+            data: JSON.stringify(formData), // formData 객체를 JSON 문자열로 변환하여 전송합니다.
+            success: function (response) {
+                // 성공 시 메시지를 표시합니다.
+                $('#message').text(response);
+                location.reload(true);
+            },
+            error: function (xhr, status, error) {
+                // 에러 시 상세 정보 출력 (디버깅용)
+                console.error("XHR Object:", xhr);
+                console.error("Status:", status);
+                console.error("Error:", error);
+                if (xhr.status === 401) {
+                    window.location.href = '/login';
+                    // 에러 시 메시지를 표시합니다.
+
+                }  $('#message').text('Error: ' + error);
+            }
+        });
+    }
+</script>
 <!-- Bootstrap JS, Popper.js, and jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
