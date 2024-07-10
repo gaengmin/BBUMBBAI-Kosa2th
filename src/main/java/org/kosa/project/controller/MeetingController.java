@@ -7,6 +7,7 @@ import org.kosa.project.service.Enum.Category;
 import org.kosa.project.service.Enum.UserType;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.MeetingDetailDto;
+import org.kosa.project.service.dto.SearchCondition;
 import org.kosa.project.service.dto.UserMeetingDto;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,7 +27,7 @@ public class MeetingController {
     private final MeetingService meetingService;
     private final FileUploadService fileUploadService;
 
-    private static Integer PAGE_SIZE = 6;
+    private static final Integer PAGE_SIZE = 6;
 
     public MeetingController(MeetingService meetingService, @MeetingFileServiceQualifier FileUploadService fileUploadService) {
         this.meetingService = meetingService;
@@ -34,20 +35,23 @@ public class MeetingController {
     }
 
     @GetMapping("/list")
-    public String list(@RequestParam(defaultValue = "1") int page, Model model) {
-        int pageSize = 10;
-
-        return getMeetingList(page, model, meetingService);
+    // json, xml, file
+    // http message body
+    // ?page=1
+    public String list(@ModelAttribute SearchCondition condition, Model model) {
+        System.out.println(condition);
+        return getMeetingList(condition, model, meetingService);
     }
 
-    static String getMeetingList(int page, Model model, MeetingService meetingService) {
-        List<MeetingDetailDto> list = meetingService.meetingList(page, PAGE_SIZE);
-        int totalMeetings = meetingService.getTotalMeetingCount();
-        int totalPages = (int) Math.ceil((double) totalMeetings / PAGE_SIZE);
+    private String getMeetingList(SearchCondition condition, Model model, MeetingService meetingService) {
+        System.out.println(condition);
+        List<MeetingDetailDto> list = meetingService.meetingList(condition, PAGE_SIZE);
+        int totalPages = (int) Math.ceil((double) list.size() / PAGE_SIZE);
 
         model.addAttribute("list", list);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", condition.getPage());
+        model.addAttribute("maxPage", totalPages);
+        model.addAttribute("condition", condition);
         return "meeting/list";
     }
 

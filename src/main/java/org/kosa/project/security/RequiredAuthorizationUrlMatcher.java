@@ -17,10 +17,10 @@ public class RequiredAuthorizationUrlMatcher {
 
     public boolean matches(HttpServletRequest request) {
         for (AntPathRequestMatcher requestMatcher : requestMatchers) {
-            if (!requestMatcher.matches(request)) {
-                return false;
+            if (requestMatcher.matches(request)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 }

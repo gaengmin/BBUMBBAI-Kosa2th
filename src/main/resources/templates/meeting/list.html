@@ -39,13 +39,13 @@
                     </li>
                     <!-- Page Number Links -->
                     <li style="display: inline; margin-right: 10px;"
-                        th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
+                        th:each="pageNum : ${#numbers.sequence(1, maxPage)}"
                         th:class="${pageNum == currentPage ? 'active' : ''}">
-                        <a th:href="@{'/meeting/list?page=' + ${pageNum}}">[[${pageNum}]]</a>
+                        <a th:href="@{/meeting/list(content=${condition.content}, page=${condition.page})}">[[${pageNum}]]</a>
                     </li>
                     <!-- Next Page Link -->
                     <li style="display: inline; margin-right: 10px;"
-                        th:if="${currentPage < totalPages}">
+                        th:if="${currentPage < maxPage}">
                         <a th:href="@{/meeting/list(page=${currentPage + 1})}">다음</a>
                     </li>
                 </ul>
