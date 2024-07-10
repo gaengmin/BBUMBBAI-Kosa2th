@@ -136,8 +136,9 @@
                         <!-- 불필요한 공백 제거 -->
 
                     </div>
-                    <div>[[${meetingDetailDto.context}]]</div>
-
+                    <div id="meetingDetailContext" class="form-control mb-3" style="height: auto;">
+                        <div th:utext="${meetingDetailDto.context}"></div>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <div class="col-md-12" id="right-column">

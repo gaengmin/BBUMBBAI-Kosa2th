@@ -54,13 +54,16 @@ public class MeetingController {
     }
 
 
+    // /meeting/comment
+    // /meeting/{meetingId}/comments post
+    // -> /meeting/{meetingId}/detail
+
+    // -> /meeting/detailsMeeting?meetingId=?/comment
     @GetMapping("/detailMeeting")
     public String detailMeeting(@RequestParam Long meetingId, Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
         //나중에 예외처리 할 것이 뭐냐면? param값이 없는 값이 없다고 표시
         //        model.addAttribute("userTypes", userTypes);*/
         MeetingDetailDto meetingDetailDto = meetingService.meetingDetails(meetingId);
-
-
         // 현재 로그인 한 유저의 현재 미팅에 대한 참여 정보를 확인하고 싶다.
         UserMeetingType userMeetingType = getCurrentLoginUserMeetingType(userDetails, meetingDetailDto.getUserMeetingDto());
         System.out.println(userMeetingType);
@@ -70,18 +73,15 @@ public class MeetingController {
     }
 
     private UserMeetingType getCurrentLoginUserMeetingType(CustomUserDetails userDetails, List<UserMeetingDto> userMeetings) {
-
         if (userDetails == null) {
             return UserMeetingType.NOT_LOGIN;
         }
-
         for (UserMeetingDto userMeeting : userMeetings) {
             long loginUserId = Long.parseLong(userDetails.getUserId());
             if (userMeeting.getUserId() == loginUserId) {
                 return userMeeting.getUserType();
             }
         }
-
         return UserMeetingType.NOT_FOLLOWER;
     }
 
@@ -96,7 +96,6 @@ public class MeetingController {
     @PostMapping("/insertMeeting")
     public String insertMeetingData(@ModelAttribute MeetingRegisterRequest request, @AuthenticationPrincipal CustomUserDetails user) {
         long userId = Long.parseLong(user.getUserId());
-        System.out.println(userId);
         String response = request.validate();
         String fileUploadUrl = fileUploadService.saveFile(request.image());
         meetingService.save(convertToMeetingRegisterDto(request, fileUploadUrl, userId));
