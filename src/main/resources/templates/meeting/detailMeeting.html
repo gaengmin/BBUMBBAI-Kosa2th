@@ -61,14 +61,14 @@
                             class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('LEADER')">방권한자
                     </button>
                     <!-- FOLLOWER 버튼 -->
-                    <button type="button" th:case="'FOLLOWER'" name="action" value="FOLLOWER"
+                    <button type="button" th:case="'FOLLOWER'" name="userType" value="FOLLOWER"
                             class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
                             onclick="submitForm('FOLLOWER')">모임 나가기
                     </button>
                     <!-- NOT_FOLLOWER 버튼 -->
                     <div th:case="'NOT_FOLLOWER'">
                         <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
-                            <button type="button" name="action" value="NOT_FOLLOWER"
+                            <button type="button" name="userType" value="NOT_FOLLOWER"
                                     class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('NOT_FOLLOWER')">
                                 뿜빠이
                             </button>
@@ -215,16 +215,18 @@
         <div class="tab-pane fade" id="userChat" role="tabpanel" aria-labelledby="userChat-tab">
             <h3>Messages</h3>
             <p>This is the messages section.</p> <!-- 설명 텍스트 정리 -->
+
+            
         </div>
     </div>
 </div>
 <script type="text/javascript">
     // 폼 제출을 처리하는 함수입니다.
-    function submitForm(action) {
+    function submitForm(userType) {
         // 폼 데이터를 객체로 가져옵니다.
         var formData = {
             meetingId: $('[name="meetingId"]').val(),
-            action: action
+            userType: userType
         };
 
         // 폼 데이터 출력 (디버깅용)

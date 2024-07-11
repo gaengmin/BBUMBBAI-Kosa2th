@@ -8,16 +8,12 @@ import org.kosa.project.service.Enum.UserMeetingType;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.SearchCondition;
-import org.kosa.project.service.dto.UserMeetingCheckDto;
 import org.kosa.project.service.dto.UserMeetingDto;
-import org.kosa.project.service.exception.meeting.MeetingUserNotLoginException;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.model.IModel;
 
 import java.util.List;
 

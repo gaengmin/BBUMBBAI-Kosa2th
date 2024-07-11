@@ -37,7 +37,6 @@ public class MeetingRepository {
     /*모임참여관련 */
 
     public void userMeetingSave(UserMeetingCheckDto userMeetingDto) {
-
         meetingMapper.userMeetingSave(userMeetingDto);
     }
 

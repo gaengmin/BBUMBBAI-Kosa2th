@@ -36,11 +36,11 @@ CREATE TABLE MEETING (
                          category VARCHAR2(20),
                          subject VARCHAR2(200),
                          context CLOB,
-                         readcount NUMBER default 0,
                          file_name varchar2(30),
                          total_member NUMBER,
                          present_member NUMBER default 1,
                          status VARCHAR2(20) ,
+                         deadline_time timestamp,
                          reg_dt DATE DEFAULT SYSDATE
 );
 
@@ -68,18 +68,17 @@ CREATE TABLE REGION (
 -- Create ROOM table
 CREATE TABLE ROOM (
                       room_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                      meeting_id NUMBER,
-                      room_name VARCHAR2(200)
-);
+                      meeting_id NUMBER
+                  );
 
 -- Create CHAT table
 CREATE TABLE CHAT (
                       chat_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                       room_id NUMBER,
                       user_id NUMBER,
-                      message CLOB
+                      message VARCHAR2(2000),
+                      message_send_date timestamp default sysdate
 );
-
 
 
 -- Add foreign key constraints

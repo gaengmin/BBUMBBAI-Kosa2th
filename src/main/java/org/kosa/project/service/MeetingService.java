@@ -22,6 +22,7 @@ public class MeetingService {
     @Transactional
     public void save(MeetingRegisterDto meetingDto) {
         meetingRepository.save(meetingDto);
+
         long meetingId = meetingRepository.selectLastInsertId(meetingDto.userId());
         long userId = meetingDto.userId();
         UserMeetingCheckDto userMeetingCheckDto = new UserMeetingCheckDto();

@@ -39,6 +39,9 @@ public class SecurityConfig {
                 )
                 .requestCache(cache -> cache.requestCache(new HttpSessionRequestCache()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(true))
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                         .logoutSuccessHandler((request, response, authentication) -> {
