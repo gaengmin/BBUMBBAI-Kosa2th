@@ -1,4 +1,4 @@
-package org.kosa.project.service.dto;
+package org.kosa.project.service.dto.comment;
 
 import lombok.*;
 

@@ -3,14 +3,14 @@ package org.kosa.project.repository.mapper;
 
 
 import org.apache.ibatis.annotations.Mapper;
-import org.kosa.project.service.dto.UserDetailDto;
-import org.kosa.project.service.dto.UserProfileDto;
-import org.kosa.project.service.dto.UserRegisterForm;
+import org.kosa.project.service.dto.user.UserDto;
+import org.kosa.project.service.dto.user.UserProfileDto;
+import org.kosa.project.service.dto.user.UserRegisterForm;
 
 @Mapper
 public interface UserMapper {
     void insertUser(UserRegisterForm userDto);
     UserProfileDto findUserProfileById(Long userId);
-    UserDetailDto findUserByEmail(String email);
+    UserDto findUserByEmail(String email);
 }
 

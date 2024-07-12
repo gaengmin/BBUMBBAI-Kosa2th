@@ -2,10 +2,7 @@ package org.kosa.project.controller;
 
 import lombok.experimental.UtilityClass;
 import org.kosa.project.service.Enum.MeetingStatus;
-import org.kosa.project.service.dto.MeetingRegisterDto;
-
-import java.time.LocalDateTime;
-import java.util.Date;
+import org.kosa.project.service.dto.meeting.MeetingRegisterDto;
 
 @UtilityClass
 public class DTOMapper{

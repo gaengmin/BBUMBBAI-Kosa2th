@@ -1,8 +1,8 @@
 package org.kosa.project.service;
 
 import org.kosa.project.repository.mapper.UserMapper;
-import org.kosa.project.service.dto.UserProfileDto;
-import org.kosa.project.service.dto.UserRegisterForm;
+import org.kosa.project.service.dto.user.UserProfileDto;
+import org.kosa.project.service.dto.user.UserRegisterForm;
 import org.springframework.stereotype.Service;
 
 @Service

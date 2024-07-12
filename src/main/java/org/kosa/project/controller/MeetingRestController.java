@@ -1,9 +1,9 @@
 package org.kosa.project.controller;
 
 import org.kosa.project.security.CustomUserDetails;
-import org.kosa.project.service.Enum.UserMeetingType;
+import org.kosa.project.service.Enum.UserMeetingStrategy;
 import org.kosa.project.service.MeetingService;
-import org.kosa.project.service.dto.UserMeetingCheckDto;
+import org.kosa.project.service.dto.user.UserMeetingCheckDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,8 +34,8 @@ public class MeetingRestController {
         }
 
         // setter
-        userMeetingCheckDto.setUserId(Long.parseLong(userDetails.getUserId()));
-        UserMeetingType userType = userMeetingCheckDto.getUserType();
+        userMeetingCheckDto.setUserId(userDetails.getUserId());
+        UserMeetingStrategy userType = userMeetingCheckDto.getUserType();
         userType.handleAction(meetingService, userMeetingCheckDto);
 
         return ResponseEntity.ok().build();
@@ -48,7 +48,7 @@ public class MeetingRestController {
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         // setter
-        UserMeetingType userType = userMeetingCheckDto.getUserType();
+        UserMeetingStrategy userType = userMeetingCheckDto.getUserType();
         userType.handleAction(meetingService, userMeetingCheckDto);
 
         return ResponseEntity.ok().build();

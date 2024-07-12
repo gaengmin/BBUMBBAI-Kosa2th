@@ -2,8 +2,8 @@ package org.kosa.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.kosa.project.repository.mapper.CommentMapper;
-import org.kosa.project.service.dto.CommentRequestDto;
-import org.kosa.project.service.dto.CommentResponseDto;
+import org.kosa.project.service.dto.comment.CommentRequestDto;
+import org.kosa.project.service.dto.comment.CommentResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +29,10 @@ public class CommentService {
         System.out.println("Service findAllComments ->"+"value : "+meetingId+" result : "+commentMapper.findAll(meetingId));
         return commentMapper.findAll(meetingId);
     }
+    final void sample( long object, long j){
+
+    }
+
     @Transactional
     public long deleteCommentById(final Long reMeetingId) {
         commentMapper.deleteById(reMeetingId);

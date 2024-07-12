@@ -25,8 +25,7 @@ CREATE TABLE USER_MEETING (
                               user_meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                               user_id NUMBER,
                               meeting_id NUMBER,
-                              user_type VARCHAR2(30),
-                              user_confirm varchar2(1) default 0
+                              user_type VARCHAR2(30)
 );
 
 -- Create MEETING table

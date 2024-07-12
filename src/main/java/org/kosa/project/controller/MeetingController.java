@@ -4,12 +4,12 @@ import lombok.extern.log4j.Log4j2;
 import org.kosa.project.config.annotation.MeetingFileServiceQualifier;
 import org.kosa.project.security.CustomUserDetails;
 import org.kosa.project.service.Enum.Category;
-import org.kosa.project.service.Enum.UserMeetingType;
+import org.kosa.project.service.Enum.UserMeetingStrategy;
 import org.kosa.project.service.MeetingService;
-import org.kosa.project.service.dto.MeetingDetailDto;
-import org.kosa.project.service.dto.SearchConditionDto;
-import org.kosa.project.service.dto.MeetingSummaryDto;
-import org.kosa.project.service.dto.UserMeetingDto;
+import org.kosa.project.service.dto.meeting.MeetingDetailDto;
+import org.kosa.project.service.dto.search.SearchConditionDto;
+import org.kosa.project.service.dto.meeting.MeetingSummaryDto;
+import org.kosa.project.service.dto.user.UserMeetingDto;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -61,24 +61,24 @@ public class MeetingController {
         //        model.addAttribute("userTypes", userTypes);*/
         MeetingDetailDto meetingDetailDto = meetingService.meetingDetails(meetingId);
         // 현재 로그인 한 유저의 현재 미팅에 대한 참여 정보를 확인하고 싶다.
-        UserMeetingType userMeetingType = getCurrentLoginUserMeetingType(userDetails, meetingDetailDto.getUserMeetingDto());
+        UserMeetingStrategy userMeetingStrategy = getCurrentLoginUserMeetingType(userDetails, meetingDetailDto.getUserMeetingDto());
         model.addAttribute("meetingDetailDto", meetingDetailDto);
-        model.addAttribute("userType", userMeetingType);
+        model.addAttribute("userType", userMeetingStrategy);
         System.out.println(model);
         return "meeting/detailMeeting";
     }
 
-    private UserMeetingType getCurrentLoginUserMeetingType(CustomUserDetails userDetails, List<UserMeetingDto> userMeetings) {
+    private UserMeetingStrategy getCurrentLoginUserMeetingType(CustomUserDetails userDetails, List<UserMeetingDto> userMeetings) {
         if (userDetails == null) {
-            return UserMeetingType.NOT_LOGIN;
+            return UserMeetingStrategy.NOT_LOGIN;
         }
         for (UserMeetingDto userMeeting : userMeetings) {
-            long loginUserId = Long.parseLong(userDetails.getUserId());
+            long loginUserId = userDetails.getUserId();
             if (userMeeting.getUserId() == loginUserId) {
                 return userMeeting.getUserType();
             }
         }
-        return UserMeetingType.NOT_FOLLOWER;
+        return UserMeetingStrategy.NOT_FOLLOWER;
     }
 
 
@@ -91,7 +91,7 @@ public class MeetingController {
 
     @PostMapping("/insertMeeting")
     public String insertMeetingData(@ModelAttribute MeetingRegisterRequest request, @AuthenticationPrincipal CustomUserDetails user) {
-        long userId = Long.parseLong(user.getUserId());
+        long userId = user.getUserId();
         String response = request.validate();
         String fileUploadUrl = fileUploadService.saveFile(request.image());
         meetingService.save(convertToMeetingRegisterDto(request, fileUploadUrl, userId));

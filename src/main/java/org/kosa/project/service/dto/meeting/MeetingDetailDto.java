@@ -1,8 +1,9 @@
-package org.kosa.project.service.dto;
+package org.kosa.project.service.dto.meeting;
 
 import lombok.*;
 import org.kosa.project.service.Enum.Category;
 import org.kosa.project.service.Enum.MeetingStatus;
+import org.kosa.project.service.dto.user.UserMeetingDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -7,11 +7,11 @@
         <result property="currentPage" column="currentPage"/>
         <result property="pagePerSize" column="pagePerSize"/>
         <result property="totalDataSize" column="totalDataSize"/>
-        <collection property="elements" ofType="org.kosa.project.service.dto.MeetingSummaryDto"
+        <collection property="elements" ofType="org.kosa.project.service.dto.meeting.MeetingSummaryDto"
                     resultMap="MeetingSummaryDtoResultMap"/>
     </resultMap>
 
-    <resultMap id="MeetingSummaryDtoResultMap" type="org.kosa.project.service.dto.MeetingSummaryDto">
+    <resultMap id="MeetingSummaryDtoResultMap" type="org.kosa.project.service.dto.meeting.MeetingSummaryDto">
         <result property="meetingId" column="meeting_id"/>
         <result property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
@@ -24,7 +24,7 @@
     </resultMap>
 
     <!-- UserMeetingDto 매핑 -->
-    <resultMap id="UserMeetingDtoResultMap" type="org.kosa.project.service.dto.UserMeetingDto">
+    <resultMap id="UserMeetingDtoResultMap" type="org.kosa.project.service.dto.user.UserMeetingDto">
         <id property="userMeetingId" column="user_meeting_id"/>
         <result property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
@@ -33,7 +33,7 @@
     </resultMap>
 
     <!-- MeetingDetailDto 매핑 -->
-    <resultMap id="MeetingDetailDtoResultMap" type="org.kosa.project.service.dto.MeetingDetailDto">
+    <resultMap id="MeetingDetailDtoResultMap" type="org.kosa.project.service.dto.meeting.MeetingDetailDto">
         <id property="meetingId" column="meeting_id"/>
         <result property="userId" column="user_id"/>
         <result property="regionId" column="region_id"/>
@@ -47,7 +47,7 @@
         <result property="regDate" column="reg_dt"/>
         <result property="deadLineTime" column="DEADLINE_TIME"/>
 
-        <collection property="userMeetingDto" ofType="org.kosa.project.service.dto.UserMeetingDto"
+        <collection property="userMeetingDto" ofType="org.kosa.project.service.dto.user.UserMeetingDto"
                     resultMap="UserMeetingDtoResultMap"/>
     </resultMap>
 
@@ -65,12 +65,12 @@
         ORDER BY meeting_id DESC FETCH FIRST 1 ROWS ONLY
     </select>
 
-    <insert id="userMeetingSave" parameterType="org.kosa.project.service.dto.UserMeetingCheckDto">
+    <insert id="userMeetingSave" parameterType="org.kosa.project.service.dto.user.UserMeetingCheckDto">
         insert into user_meeting (user_id, meeting_id, user_type)
         values (#{userId}, #{meetingId}, #{userType})
     </insert>
 
-    <update id="userMeetingUpdate" parameterType="org.kosa.project.service.dto.UserMeetingCheckDto">
+    <update id="userMeetingUpdate" parameterType="org.kosa.project.service.dto.user.UserMeetingCheckDto">
         UPDATE user_meeting
         SET user_type = CASE
                             WHEN user_type = 'WAIT' THEN 'FOLLOWER'
@@ -80,7 +80,7 @@
     </update>
 
     <!-- 특정 meetingId와 userId를 기준으로 user_meeting 데이터 삭제 -->
-    <delete id="exitMeeting" parameterType="org.kosa.project.service.dto.UserMeetingCheckDto">
+    <delete id="exitMeeting" parameterType="org.kosa.project.service.dto.user.UserMeetingCheckDto">
         DELETE
         FROM user_meeting
         WHERE meeting_id = #{meetingId}
@@ -135,7 +135,7 @@
     </select>
 
 
-    <select id="getUserMeetingCheck" parameterType="org.kosa.project.service.dto.UserMeetingCheckDto"
+    <select id="getUserMeetingCheck" parameterType="org.kosa.project.service.dto.user.UserMeetingCheckDto"
             resultType="String">
         select user_type
         from user_meeting
