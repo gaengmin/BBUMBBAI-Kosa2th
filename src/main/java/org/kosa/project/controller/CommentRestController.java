@@ -1,0 +1,39 @@
+package org.kosa.project.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.kosa.project.security.CustomUserDetails;
+import org.kosa.project.service.CommentService;
+import org.kosa.project.service.dto.CommentRequestDto;
+import org.kosa.project.service.dto.CommentResponseDto;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+public class CommentRestController {
+    private final CommentService commentService;
+
+    @PostMapping("/posts/{meetingId}/comments")
+    public CommentResponseDto submitComment(@RequestBody final CommentRequestDto params, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = Long.valueOf(userDetails.getUserId());
+        params.setUserId(userId);
+        long reMeetingId = commentService.submitComment(params);
+        return commentService.findCommentById(reMeetingId);
+    }
+
+;
+    @GetMapping("/posts/{meetingId}/comments")
+    public List<CommentResponseDto> findAllComments(@PathVariable Long meetingId) {
+        System.out.println("Controller findAllComments-> value : "+meetingId+" result : "+commentService.findAllComments(meetingId));
+        return commentService.findAllComments(meetingId);
+    }
+
+    @DeleteMapping("/posts/{meetingId}/comments/{reMeetingId}")
+    public Long deleteCommentById(@PathVariable final Long reMeetingId) {
+        System.out.println("Controller deleteCommentById -> "+reMeetingId);
+        return commentService.deleteCommentById(reMeetingId);
+    }
+
+}

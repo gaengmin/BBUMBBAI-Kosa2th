@@ -6,11 +6,9 @@ import org.kosa.project.controller.Pageable;
 import org.kosa.project.repository.mapper.MeetingMapper;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
-import org.kosa.project.service.dto.SearchCondition;
+import org.kosa.project.service.dto.SearchConditionDto;
 import org.kosa.project.service.dto.UserMeetingCheckDto;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,8 +23,8 @@ public class MeetingRepository {
         return meetingMapper.selectLastInsertId(userId);
     }
 
-    public Page<MeetingDetailDto> meetingList(SearchCondition searchCondition, Pageable pageable) {
-        return meetingMapper.meetingList(searchCondition, pageable);
+    public Page<MeetingDetailDto> meetingList(SearchConditionDto searchConditionDto, Pageable pageable) {
+        return meetingMapper.meetingList(searchConditionDto, pageable);
     }
 
 

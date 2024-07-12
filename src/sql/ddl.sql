@@ -46,8 +46,8 @@ CREATE TABLE MEETING (
 
 
 -- Create RE_MEETING table
-CREATE TABLE RE_MEETING (
-                            re_meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+CREATE TABLE MEETING_COMMENT (
+                            meeting_comment_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                             meeting_id NUMBER,
                             user_id NUMBER,
                             context CLOB,

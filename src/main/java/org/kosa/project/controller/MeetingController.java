@@ -7,17 +7,13 @@ import org.kosa.project.service.Enum.Category;
 import org.kosa.project.service.Enum.UserMeetingType;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.MeetingDetailDto;
-import org.kosa.project.service.dto.SearchCondition;
-import org.kosa.project.service.dto.UserMeetingCheckDto;
+import org.kosa.project.service.dto.SearchConditionDto;
 import org.kosa.project.service.dto.UserMeetingDto;
-import org.kosa.project.service.exception.meeting.MeetingUserNotLoginException;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.thymeleaf.model.IModel;
 
 import java.util.List;
 
@@ -38,15 +34,14 @@ public class MeetingController {
     }
 
     @GetMapping("/list")
-    public String list(@ModelAttribute SearchCondition condition,
+    public String list(@ModelAttribute SearchConditionDto condition,
                        @RequestParam(defaultValue = "1") Integer page,
                        Model model) {
-
-        System.out.println(condition);
+        
         return getMeetingList(condition, page, model);
     }
 
-    private String getMeetingList(SearchCondition condition, Integer page, Model model) {
+    private String getMeetingList(SearchConditionDto condition, Integer page, Model model) {
         Page<MeetingDetailDto> detailList = meetingService.meetingList(condition, page, PAGE_PER_SIZE);
         model.addAttribute("detailList", detailList);
         model.addAttribute("condition", condition);

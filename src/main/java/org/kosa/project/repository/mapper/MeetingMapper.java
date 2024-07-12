@@ -6,17 +6,14 @@ import org.kosa.project.controller.Page;
 import org.kosa.project.controller.Pageable;
 import org.kosa.project.service.dto.MeetingDetailDto;
 import org.kosa.project.service.dto.MeetingRegisterDto;
-import org.kosa.project.service.dto.SearchCondition;
+import org.kosa.project.service.dto.SearchConditionDto;
 import org.kosa.project.service.dto.UserMeetingCheckDto;
-import org.kosa.project.service.dto.UserMeetingDto;
-
-import java.util.List;
 
 @Mapper
 public interface MeetingMapper {
     void save(MeetingRegisterDto meetingDto);
 
-    Page<MeetingDetailDto> meetingList(@Param("condition") SearchCondition searchCondition, @Param("pageable") Pageable pageable);
+    Page<MeetingDetailDto> meetingList(@Param("condition") SearchConditionDto searchConditionDto, @Param("pageable") Pageable pageable);
 
     public long selectLastInsertId(long userId);
 

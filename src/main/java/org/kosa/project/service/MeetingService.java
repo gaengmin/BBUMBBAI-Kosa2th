@@ -9,9 +9,6 @@ import org.kosa.project.service.Enum.UserMeetingType;
 import org.kosa.project.service.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +29,8 @@ public class MeetingService {
         meetingRepository.userMeetingSave(userMeetingCheckDto);
     }
 
-    public Page<MeetingDetailDto> meetingList(SearchCondition searchCondition, int page, int pageSize) {
-        return meetingRepository.meetingList(searchCondition, new Pageable(page, pageSize));
+    public Page<MeetingDetailDto> meetingList(SearchConditionDto searchConditionDto, int page, int pageSize) {
+        return meetingRepository.meetingList(searchConditionDto, new Pageable(page, pageSize));
     }
 
     public MeetingDetailDto meetingDetails(long meetingId) {

@@ -142,49 +142,25 @@
                         <div th:utext="${meetingDetailDto.context}"></div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="content">
                     <div class="col-md-12" id="right-column">
                         <!-- 댓글 목록 -->
-                        <h5>댓글</h5>
-                        <div class="list-group mb-3">
-                            <div class="list-group-item">
-                                <h6 class="mb-1">사용자 1</h6>
-                                <p class="mb-1">이것은 가짜 댓글입니다.</p>
-                                <small>2024-07-01</small>
-                            </div>
-                            <div class="list-group-item">
-                                <h6 class="mb-1">사용자 2</h6>
-                                <p class="mb-1">여기에도 가짜 댓글이 있습니다.</p>
-                                <small>2024-07-02</small>
-                            </div>
-                            <div class="list-group-item">
-                                <h6 class="mb-1">사용자 3</h6>
-                                <p class="mb-1">재미있는 모임이네요!</p>
-                                <small>2024-07-03</small>
-                            </div>
-                            <div class="list-group-item">
-                                <h6 class="mb-1">사용자 4</h6>
-                                <p class="mb-1">참여하고 싶습니다.</p>
-                                <small>2024-07-04</small>
-                            </div>
-                            <div class="list-group-item">
-                                <h6 class="mb-1">사용자 5</h6>
-                                <p class="mb-1">좋은 정보 감사합니다.</p>
-                                <small>2024-07-05</small>
-                            </div>
+                        <div class="cm_list">
+
                         </div>
+
                         <!-- 댓글 작성 폼 -->
                         <form th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
-                            <div class="form-group">
-                                <label for="commentAuthor">이름</label>
-                                <input type="text" class="form-control" id="commentAuthor" placeholder="이름을 입력하세요">
+                            <div class="cm-write">
+                                <fieldset>
+                                 <div class="cm-input">
+                                     <label>댓글</label>
+                                     <p><textarea class="form-control" id="comment" name="content" rows="3" placeholder="댓글을 입력하세요"></textarea></p>
+                                 </div>
+                                </fieldset>
                             </div>
-                            <div class="form-group">
-                                <label for="commentText">댓글</label>
-                                <textarea class="form-control" id="commentText" rows="3"
-                                          placeholder="댓글을 입력하세요"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">댓글 달기</button>
+
+                            <button type="button" class="btn btn-primary" onclick="submitComment()">댓글 달기</button>
                         </form>
                     </div>
                 </div>
@@ -272,6 +248,113 @@
         adjustTextareaHeight();
         window.onresize = adjustTextareaHeight;
     };
+</script>
+
+<script>
+    // 댓글 저장
+    function submitComment() {
+
+        const content = document.getElementById('comment');
+        const meetingId = $('[name="meetingId"]').val();
+
+        const params = {
+            meetingId : meetingId,
+            content : content.value
+        }
+
+        $.ajax({
+            url : `/posts/${meetingId}/comments`,
+            type : 'post',
+            contentType : 'application/json; charset=utf-8',
+            dataType : 'json',
+            data : JSON.stringify(params),
+            async : false,
+            success : function (response) {
+                alert('댓글이 등록되었습니다.');
+                content.value = '';
+                findAllComment();
+            },
+            error : function (request, status, error) {
+                console.log(error)
+            }
+        })
+    }
+
+    window.onload = () => {
+        findAllComment();
+    }
+
+
+    // 전체 댓글 조회
+    function findAllComment() {
+
+        const meetingId = $('[name="meetingId"]').val();
+
+        $.ajax({
+            url : `/posts/${meetingId}/comments`,
+            type : 'get',
+            dataType : 'json',
+            async : false,
+            success : function (response) {
+
+                // 1. 조회된 데이터가 없는 경우
+                if ( !response.length ) {
+                    document.querySelector('.cm_list').innerHTML = '<div class="cm_none"><p>등록된 댓글이 없습니다.</p></div>';
+                    return false;
+                }
+
+                // 2. 렌더링 할 HTML을 저장할 변수
+                let commentHtml = '';
+                // 3. 댓글 HTML 추가
+
+
+                response.forEach(row => {
+                    commentHtml += `
+                        <div class="list-group-item">
+                                <h6 class="mb-1">${row.userName}</h6>
+                                <h6 class="mb-1">${row.reMeetingId}</h6>
+                                <p class="mb-1">${row.content}</p>
+                                <small>${row.regDate}</small>
+                                <p class="func_btns">
+                                <button type="button" class="btns"><span class="icons icon_modify">수정</span></button>
+                                <button type="button" onclick="deleteCommentById(${row.reMeetingId});" class="btns"><span class="icons icon_del">삭제</span></button>
+                                </p>
+                        </div>
+                    `;
+                })
+
+                // 4. class가 "cm_list"인 요소를 찾아 HTML을 렌더링
+                document.querySelector('.cm_list').innerHTML = commentHtml;
+            },
+            error : function (request, status, error) {
+                console.log(error)
+            }
+        })
+    }
+
+    function deleteCommentById(reMeetingId) {
+
+        if ( !confirm('선택하신 댓글을 삭제할까요?') ) {
+            return false;
+        }
+
+        const meetingId = $('[name="meetingId"]').val();
+
+        $.ajax({
+            url : `/posts/${meetingId}/comments/${reMeetingId}`,
+            type : 'delete',
+            dataType : 'json',
+            async : false,
+            success : function (response) {
+                alert('삭제되었습니다.');
+                findAllComment();
+            },
+            error : function (request, status, error) {
+                console.log(error)
+            }
+        })
+    }
+
 </script>
 </body>
 

@@ -10,8 +10,8 @@ import org.kosa.project.service.Enum.Category;
 @Setter
 @NoArgsConstructor
 @ToString
-public class SearchCondition {
-    private String content;
+public class SearchConditionDto {
+    private String keyword;
     private Category category;
     private String searchType;
 }

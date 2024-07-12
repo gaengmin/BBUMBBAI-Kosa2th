@@ -93,15 +93,15 @@
         row_number() over (order by meeting_id desc, reg_dt desc) as rnum
         from meeting
         where meeting_id > 0
-        <if test="condition.content != null and condition.content !=''">
+        <if test="condition.keyword != null and condition.keyword !=''">
             <if test='condition.searchType == "all"'>
-                and subject like '%' || #{condition.content} || '%' or context like '%' || #{condition.content} || '%'
+                and subject like '%' || #{condition.keyword} || '%' or context like '%' || #{condition.keyword} || '%'
             </if>
             <if test='condition.searchType == "subject"'>
-                and subject like '%' || #{condition.content} || '%'
+                and subject like '%' || #{condition.keyword} || '%'
             </if>
             <if test='condition.searchType == "content"'>
-                and context like '%' || #{condition.content} || '%'
+                and context like '%' || #{condition.keyword} || '%'
             </if>
         </if>
         )

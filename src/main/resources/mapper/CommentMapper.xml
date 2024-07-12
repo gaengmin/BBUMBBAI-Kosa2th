@@ -2,22 +2,40 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.kosa.project.repository.mapper.UserMapper">
+<mapper namespace="org.kosa.project.repository.mapper.CommentMapper">
 
-    <insert id="submit" parameterType="org.kosa.project.service.dto.CommentRequest" >
+    <insert id="submit" parameterType="org.kosa.project.service.dto.CommentRequestDto" useGeneratedKeys="true" keyProperty="reMeetingId" keyColumn="re_meeting_id">
         insert into re_meeting(
-                               re_Meeting_Id,
                                meeting_id,
                                user_id,
                                context
         )
-        values (#{reMeetingId}, #{meetingId},#{userId}, #{comment})
+        values (#{meetingId}, #{userId}, #{content})
     </insert>
-    
-    <select id="findById" parameterType="long" resultType="org.kosa.project.service.dto.CommentResponse">
-        select re_meeting_id as reMeetingId, meeting_id as meetingId, user_id as userId, context as comment, reg_dt as regDate
+
+    <select id="findById" parameterType="long" resultType="org.kosa.project.service.dto.CommentResponseDto">
+        select re_meeting_id as reMeetingId, meeting_id as meetingId, user_id as userId, context as content, reg_dt as regDate
         from re_meeting
-        where id = #{value}
+        where re_meeting_id = #{value}
     </select>
+
+    <select id="findAll" parameterType="long" resultType="org.kosa.project.service.dto.CommentResponseDto">
+        select r.re_meeting_id as reMeetingId,
+               r.meeting_id as meetingId,
+               r.user_id as userId,
+               m.user_name as userName,
+               r.context as content,
+               to_char(r.reg_dt, 'yy-mm-dd hh24:mi') as regDate
+        from re_meeting r
+                 join users m on m.user_id = r.user_id
+        where r.meeting_id = #{value}
+        order by r.re_meeting_id
+    </select>
+
+    <delete id="deleteById" parameterType="long">
+        delete
+        from re_meeting
+        where re_meeting_id = #{value}
+    </delete>
 
 </mapper>
