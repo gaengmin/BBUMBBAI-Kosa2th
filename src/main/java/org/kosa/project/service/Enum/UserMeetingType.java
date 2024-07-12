@@ -3,7 +3,6 @@ package org.kosa.project.service.Enum;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.UserMeetingCheckDto;
 import org.kosa.project.service.exception.meeting.MeetingUserNotLoginException;
-import org.springframework.security.authentication.InsufficientAuthenticationException;
 
 public enum UserMeetingType {
     LEADER("모임장") {
@@ -18,10 +17,25 @@ public enum UserMeetingType {
             meetingService.exitMeetingService(checkDto);
         }
     },
+    WAIT("대기중") {
+        @Override
+        public void handleAction(MeetingService meetingService, UserMeetingCheckDto checkDto) {
+            if (checkDto.getConfirmCheck() == 1 || checkDto.getConfirmCheck() ==2) {
+                //권한자가 허용 및 내보낼 때.
+                if(checkDto.getConfirmCheck() == 1){
+                    meetingService.exitMeetingService(checkDto);
+                }else{
+                    meetingService.meetingUserAttend(checkDto);
+                }
+            }else {
+                //이거는 일반 사람이
+                meetingService.exitMeetingService(checkDto);
+            }
+        }
+    },
     NOT_FOLLOWER("미참여") {
         @Override
         public void handleAction(MeetingService meetingService, UserMeetingCheckDto checkDto) {
-            checkDto.setUserType(FOLLOWER);
             meetingService.meetingUserAttend(checkDto);
         }
     },
@@ -44,21 +58,4 @@ public enum UserMeetingType {
 
     public abstract void handleAction(MeetingService meetingService, UserMeetingCheckDto checkDto);
 
-//    {
-//        UserMeetingType userMeetingType = this;
-//        switch (userMeetingType) {
-//            case LEADER :
-//                // LEADER action 처리
-//                break;
-//            case FOLLOWER:
-//                meetingService.exitMeetingService(checkDto);
-//                break;
-//            case NOT_FOLLOWER:
-//                meetingService.meetingUserAttend(checkDto);
-//                break;
-//            case NOT_LOGIN:
-//                throw new InsufficientAuthenticationException("로그인해주세요.");
-//        }
-//
-//    }
 }

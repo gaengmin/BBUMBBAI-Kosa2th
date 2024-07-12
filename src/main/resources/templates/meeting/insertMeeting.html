@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<html lang="ko" xmlns:th=http://www.thymeleaf.org>
+<head th:replace="~{head :: headerFragment}">
     <meta charset="UTF-8">
     <title>Create Post</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,6 +43,13 @@
                 <label for="maxParty">모임인원</label>
                 <input type="number" id="maxParty" name="totalMember" min="2" max="12" th:field="*{totalMember}"
                        required>
+            </div>
+
+            <div class="mb-3">
+                <label for="deadLineTime" class="form-label">모임 날짜</label>
+                <input type="datetime-local" id="deadLineTime" th:field="*{deadLineTime}" min="2" max="12"
+                       required>
+
             </div>
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary mb-3">뿜빠이 생성</button>

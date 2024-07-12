@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kosa.project.repository.mapper.MeetingMapper">
-
     <resultMap id="MeetingSummaryDtoPageResultMap" type="org.kosa.project.controller.Page">
         <result property="currentPage" column="currentPage"/>
         <result property="pagePerSize" column="pagePerSize"/>
@@ -46,36 +45,62 @@
         <result property="fileName" column="file_name"/>
         <result property="meetingStatus" column="status"/>
         <result property="regDate" column="reg_dt"/>
+        <result property="deadLineTime" column="DEADLINE_TIME"/>
+
         <collection property="userMeetingDto" ofType="org.kosa.project.service.dto.UserMeetingDto"
                     resultMap="UserMeetingDtoResultMap"/>
     </resultMap>
 
+
     <!--Meeting생성시 save / select / userMeeting테이블까지 저장-->
     <insert id="save" parameterType="org.kosa.project.controller.MeetingRegisterRequest">
-        INSERT INTO MEETING (user_id, category, subject, context, total_member, file_name)
-        VALUES (#{userId}, #{category}, #{subject}, #{context}, #{totalMember}, #{fileUploadUrl})
+        INSERT INTO MEETING (user_id, category, subject, context, total_member, file_name, DEADLINE_TIME)
+        VALUES (#{userId}, #{category}, #{subject}, #{context}, #{totalMember}, #{fileUploadUrl}, #{deadLineTime})
     </insert>
 
     <select id="selectLastInsertId" resultType="long">
-        SELECT meeting_id FROM MEETING WHERE user_id = #{userId} ORDER BY meeting_id DESC FETCH FIRST 1 ROWS ONLY
+        SELECT meeting_id
+        FROM MEETING
+        WHERE user_id = #{userId}
+        ORDER BY meeting_id DESC FETCH FIRST 1 ROWS ONLY
     </select>
 
-    <insert id="userMeetingSave" parameterType="org.kosa.project.service.dto.UserMeetingDto">
+    <insert id="userMeetingSave" parameterType="org.kosa.project.service.dto.UserMeetingCheckDto">
         insert into user_meeting (user_id, meeting_id, user_type)
         values (#{userId}, #{meetingId}, #{userType})
     </insert>
 
+    <update id="userMeetingUpdate" parameterType="org.kosa.project.service.dto.UserMeetingCheckDto">
+        UPDATE user_meeting
+        SET user_type = CASE
+                            WHEN user_type = 'WAIT' THEN 'FOLLOWER'
+                            WHEN user_type = 'FOLLOWER' THEN 'WAIT'
+            END
+        WHERE user_id = #{userId} AND meeting_id = #{meetingId}
+    </update>
 
     <!-- 특정 meetingId와 userId를 기준으로 user_meeting 데이터 삭제 -->
-    <delete id="exitMeeting" parameterType="org.kosa.project.service.dto.UserMeetingDto">
-        DELETE FROM user_meeting WHERE meeting_id = #{meetingId} AND user_id = #{userId}
+    <delete id="exitMeeting" parameterType="org.kosa.project.service.dto.UserMeetingCheckDto">
+        DELETE
+        FROM user_meeting
+        WHERE meeting_id = #{meetingId}
+          AND user_id = #{userId}
     </delete>
 
-    <update id="meetingUpdatePresentCount" parameterType="long">
+    <!--모임 참석에 따른 인원 변경 쿼리 및 전체인원만큼 차면 모집 마감으로 변경 -->
+    <update id="meetingUpdateCountAndStatus" parameterType="long">
         UPDATE meeting
-        SET PRESENT_MEMBER = (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId})
-        WHERE meeting_id = #{meeting_id}
+        SET PRESENT_MEMBER = (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}),
+            status         = CASE
+                                 WHEN TOTAL_MEMBER = (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}) AND
+                                      status = 'CONTINUE' THEN 'FINISH'
+                                 WHEN TOTAL_MEMBER > (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}) AND
+                                      status = 'FINISH' THEN 'CONTINUE'
+                                 ELSE status  -- ELSE 절 추가하여 기본 값을 유지
+                END
+        WHERE meeting_id = #{meetingId}
     </update>
+
 
     <select id="meetingList" resultMap="MeetingSummaryDtoPageResultMap">
         select *
@@ -105,7 +130,8 @@
             </if>
         </if>
         )
-        where rnum between ((#{pageable.currentPage} - 1) * #{pageable.pagePerSize}) + 1 and #{pageable.currentPage} * #{pageable.pagePerSize}
+        where rnum between ((#{pageable.currentPage} - 1) * #{pageable.pagePerSize}) + 1 and #{pageable.currentPage} *
+        #{pageable.pagePerSize}
     </select>
 
 
@@ -130,6 +156,7 @@
                m.file_name,
                m.status,
                m.reg_dt,
+               m.DEADLINE_TIME,
                um.user_meeting_id,
                um.user_id,
                u.user_name,

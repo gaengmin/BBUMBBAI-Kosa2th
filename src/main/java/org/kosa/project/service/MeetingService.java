@@ -9,9 +9,7 @@ import org.kosa.project.service.Enum.UserMeetingType;
 import org.kosa.project.service.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,15 +23,12 @@ public class MeetingService {
 
         long meetingId = meetingRepository.selectLastInsertId(meetingDto.userId());
         long userId = meetingDto.userId();
-        UserMeetingCheckDto userMeetingCheckDto = new UserMeetingCheckDto();
-        userMeetingCheckDto.setMeetingId(meetingId);
-        userMeetingCheckDto.setUserId(userId);
-        userMeetingCheckDto.setUserType(UserMeetingType.LEADER);
-        System.out.println(userMeetingCheckDto.getMeetingId() + "     ====     "+ userMeetingCheckDto.getUserId()+ "     ===" + userMeetingCheckDto.getUserType().getUserTypeName() );
+
+        UserMeetingCheckDto userMeetingCheckDto = new UserMeetingCheckDto(userId, UserMeetingType.LEADER, meetingId);
         meetingRepository.userMeetingSave(userMeetingCheckDto);
     }
 
-    public Page<MeetingDetailDto> meetingList(SearchCondition searchCondition, int page, int pageSize) {
+    public Page<MeetingSummaryDto> meetingList(SearchCondition searchCondition, int page, int pageSize) {
         return meetingRepository.meetingList(searchCondition, new Pageable(page, pageSize));
     }
 
@@ -41,17 +36,38 @@ public class MeetingService {
         return meetingRepository.meetingDetails(meetingId);
     }
 
+
+    //모임 참석 시 권한에 따른
     @Transactional
-    /*모임참석 눌렀을시 모임 참석 후현재원 수 업데이트*/
     public void meetingUserAttend(UserMeetingCheckDto userMeetingCheckDto) {
-        meetingRepository.userMeetingSave(userMeetingCheckDto);
-        meetingRepository.meetingUpdatePresentCount(userMeetingCheckDto.getMeetingId());
+        UserMeetingType nowUserType = userMeetingCheckDto.getUserType();
+        long meetingId = userMeetingCheckDto.getMeetingId();
+
+        if (nowUserType.equals(UserMeetingType.NOT_FOLLOWER)) {
+            userMeetingCheckDto.setUserType(UserMeetingType.WAIT);
+            meetingRepository.userMeetingSave(userMeetingCheckDto);
+
+        } else if (nowUserType.equals(UserMeetingType.WAIT)) {
+            userMeetingCheckDto.setUserType(UserMeetingType.FOLLOWER);
+            meetingRepository.userMeetingUpdate(userMeetingCheckDto);
+            meetingRepository.meetingUpdateCountAndStatus(meetingId);
+        }
     }
 
     @Transactional
     /*모임 나가기 버튼  현재원 수 업데이트*/
     public void exitMeetingService(UserMeetingCheckDto userMeetingCheckDto) {
-        meetingRepository.exitMeeting(userMeetingCheckDto);
-        meetingRepository.meetingUpdatePresentCount(userMeetingCheckDto.getMeetingId());
+        UserMeetingType nowUserType = userMeetingCheckDto.getUserType();
+        long meetingId = userMeetingCheckDto.getMeetingId();
+
+        if (nowUserType.equals(UserMeetingType.WAIT)) {
+            meetingRepository.exitMeeting(userMeetingCheckDto);
+
+        } else if (nowUserType.equals(UserMeetingType.FOLLOWER)) {
+
+            meetingRepository.exitMeeting(userMeetingCheckDto);
+            meetingRepository.meetingUpdateCountAndStatus(userMeetingCheckDto.getMeetingId());
+        }
+
     }
 }

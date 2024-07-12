@@ -2,8 +2,10 @@ package org.kosa.project.service.dto;
 
 import lombok.*;
 import org.kosa.project.service.Enum.Category;
+import org.kosa.project.service.Enum.MeetingStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ToString
@@ -21,7 +23,8 @@ public class MeetingDetailDto {
     private int totalMember;
     private int presentMember;
     private String fileName;
-    private String meetingStatus;
+    private MeetingStatus meetingStatus;
+    private LocalDateTime deadLineTime;
     private LocalDate regDate;
     private List<UserMeetingDto> userMeetingDto;
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.kosa.project.service.Enum.Category;
+import org.kosa.project.service.Enum.MeetingStatus;
 
 @Getter
 @Setter
@@ -17,5 +18,5 @@ public class MeetingSummaryDto {
     private int totalMember;
     private int presentMember;
     private String fileName;
-    private String meetingStatus;
+    private MeetingStatus meetingStatus;
 }
