@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.kosa.project.controller.Page;
 import org.kosa.project.controller.Pageable;
 import org.kosa.project.repository.mapper.MeetingMapper;
-import org.kosa.project.service.dto.MeetingDetailDto;
-import org.kosa.project.service.dto.MeetingRegisterDto;
-import org.kosa.project.service.dto.SearchConditionDto;
-import org.kosa.project.service.dto.UserMeetingCheckDto;
+import org.kosa.project.service.dto.*;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -23,19 +21,13 @@ public class MeetingRepository {
         return meetingMapper.selectLastInsertId(userId);
     }
 
-    public Page<MeetingDetailDto> meetingList(SearchConditionDto searchConditionDto, Pageable pageable) {
+    public Page<MeetingSummaryDto> meetingList(SearchConditionDto searchConditionDto, Pageable pageable) {
         return meetingMapper.meetingList(searchConditionDto, pageable);
+
     }
-
-
-    public int countMeetings() {
-        return meetingMapper.countMeetings();
-    }
-
     /*모임참여관련 */
 
     public void userMeetingSave(UserMeetingCheckDto userMeetingDto) {
-
         meetingMapper.userMeetingSave(userMeetingDto);
     }
 
@@ -49,9 +41,15 @@ public class MeetingRepository {
     }
 
     /*모임참석 눌렀을시 현재원 수 업데이트*/
-    public void meetingUpdatePresentCount(long meetingId) {
+    public void meetingUpdateCountAndStatus(long meetingId) {
 
-        meetingMapper.meetingUpdatePresentCount(meetingId);
+        meetingMapper.meetingUpdateCountAndStatus(meetingId);
+    }
+
+    /*관리자가 Wait를 허용했을 떄*/
+    public void userMeetingUpdate(UserMeetingCheckDto userMeetingCheckDto){
+
+        meetingMapper.userMeetingUpdate(userMeetingCheckDto);
     }
 
     /*모임나가기*/

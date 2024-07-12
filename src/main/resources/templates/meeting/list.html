@@ -36,45 +36,46 @@
                 </button>
             </div>
             <th:block th:if="${detailList}">
-            <div>
-                <ul style="list-style-type: none; padding: 0;">
-                    <!-- Previous Page Link -->
-                    <li style="display: inline; margin-right: 10px;"
-                        th:if="${!detailList.isFirst()}">
-                        <a th:href="@{/meeting/list(page=${detailList.currentPage - 1})}">이전</a>
-                    </li>
-                    <!-- Page Number Links -->
-                    <li style="display: inline; margin-right: 10px;"
-                        th:each="pageNum : ${#numbers.sequence(1, detailList.getTotalPages())}"
-                        th:class="${pageNum == detailList.currentPage ? 'active' : ''}">
-                        <a th:href="@{/meeting/list(content=${condition.keyword}, page=${pageNum})}">[[${pageNum}]]</a>
-                    </li>
-                    <!-- Next Page Link -->
-                    <li style="display: inline; margin-right: 10px;"
-                        th:if="${!detailList.isLast()}">
-                        <a th:href="@{/meeting/list(page=${detailList.currentPage + 1})}">다음</a>
-                    </li>
-                </ul>
-            </div>
+                <div>
+                    <ul style="list-style-type: none; padding: 0;">
+                        <!-- Previous Page Link -->
+                        <li style="display: inline; margin-right: 10px;"
+                            th:if="${!detailList.isFirst()}">
+                            <a th:href="@{/meeting/list(page=${detailList.currentPage - 1})}">이전</a>
+                        </li>
+                        <!-- Page Number Links -->
+                        <li style="display: inline; margin-right: 10px;"
+                            th:each="pageNum : ${#numbers.sequence(1, detailList.getTotalPages())}"
+                            th:class="${pageNum == detailList.currentPage ? 'active' : ''}">
+                            <a th:href="@{/meeting/list(content=${condition.keyword}, page=${pageNum})}">[[${pageNum}]]</a>
+                        </li>
+                        <!-- Next Page Link -->
+                        <li style="display: inline; margin-right: 10px;"
+                            th:if="${!detailList.isLast()}">
+                            <a th:href="@{/meeting/list(page=${detailList.currentPage + 1})}">다음</a>
+                        </li>
+                    </ul>
+                </div>
 
-            <div class="col-lg-4 col-md-6 col-sm-12 mt-5 d-flex justify-content-center"
-                 th:if="${not #lists.isEmpty(detailList.keyword)}"
-                 th:each="meetingList : ${detailList.keyword}">
-                <div class="card" style="width: 18rem;">
-                    <img th:src="@{/imgs/meeting/{filename}(filename=${meetingList.fileName})}" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="|카테고리 : ${meetingList.getCategory().getDisplayName()}|"></h5>
-                        <h5 class="card-title" th:text="${meetingList.getSubject}"></h5>
-                        <p class="card-text"
-                           th:text="'모 집 인 원 : '+${meetingList.getTotalMember()}+' / 현 재 원 : '+${meetingList.getPresentMember()}"/>
-                        <a th:href="@{/meeting/detailMeeting(meetingId=${meetingList.meetingId})}" class="btn btn-primary">모임
-                            알아보기</a>
+                <div class="col-lg-4 col-md-6 col-sm-12 mt-5 d-flex justify-content-center"
+                     th:if="${not #lists.isEmpty(detailList.keyword)}"
+                     th:each="meetingList : ${detailList.keyword}">
+                    <div class="card" style="width: 18rem;">
+                        <img th:src="@{/imgs/meeting/{filename}(filename=${meetingList.fileName})}"
+                             class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title"
+                                th:text="|카테고리 : ${meetingList.getCategory().getDisplayName()}|"></h5>
+                            <h5 class="card-title" th:text="${meetingList.getSubject}"></h5>
+                            <p class="card-text"
+                               th:text="'모 집 인 원 : '+${meetingList.getTotalMember()}+' / 현 재 원 : '+${meetingList.getPresentMember()}"/>
+                            <a th:href="@{/meeting/detailMeeting(meetingId=${meetingList.meetingId})}"
+                               class="btn btn-primary">모임
+                                알아보기</a>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            </th:block>
-        </div>
-    </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

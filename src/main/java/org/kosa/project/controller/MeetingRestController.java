@@ -4,17 +4,16 @@ import org.kosa.project.security.CustomUserDetails;
 import org.kosa.project.service.Enum.UserMeetingType;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.UserMeetingCheckDto;
-import org.kosa.project.service.exception.meeting.MeetingUserNotLoginException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/meeting")
+@RequestMapping("/api")
 public class MeetingRestController {
 
     private final MeetingService meetingService;
@@ -25,24 +24,34 @@ public class MeetingRestController {
 
     @PostMapping("/detailMeeting")
     public ResponseEntity<?> userTypeMappingAction(
-            @RequestBody Map<String, Object> payload,
+            @RequestBody UserMeetingCheckDto userMeetingCheckDto, //body -> model
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
+        System.out.println(userMeetingCheckDto+"userMeetingCheckDto");
         // 비로그인이면
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
         }
-        // 요청 본문에서 파라미터를 추출합니다.
-        long meetingId = Long.parseLong(payload.get("meetingId").toString());
-        UserMeetingType userType = UserMeetingType.valueOf(payload.get("action").toString());
 
-        UserMeetingCheckDto userMeetingCheckDto = new UserMeetingCheckDto();
-        userMeetingCheckDto.setMeetingId(meetingId);
+        // setter
         userMeetingCheckDto.setUserId(Long.parseLong(userDetails.getUserId()));
-        userMeetingCheckDto.setUserType(userType);
-
+        UserMeetingType userType = userMeetingCheckDto.getUserType();
         userType.handleAction(meetingService, userMeetingCheckDto);
 
         return ResponseEntity.ok().build();
     }
+
+    /*관리자가 대기중인 회원 관리할 때.*/
+    @PostMapping("/confirmCheck")
+    public ResponseEntity<?> userConfirmCheckAction(
+            @RequestBody UserMeetingCheckDto userMeetingCheckDto, //body -> model
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        // setter
+        UserMeetingType userType = userMeetingCheckDto.getUserType();
+        userType.handleAction(meetingService, userMeetingCheckDto);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

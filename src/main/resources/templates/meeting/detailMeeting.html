@@ -53,24 +53,34 @@
             <h2 th:text="${meetingDetailDto.subject}" class="me-auto"></h2>
         </div>
         <div class="col-md-2">
-            <form method="post" th:action="@{/meeting/detailMeeting}" class="me-auto" id="meetingForm">
+            <div id="message"></div>
+            <form method="post" th:action="@{/api/detailMeeting}" class="me-auto" id="meetingForm">
                 <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
                 <div th:switch="${userType.name()}">
-                    <!-- LEADER 버튼 -->
+                    <!-- 로그인-->
+                    <button type="button" th:case="'NOT_LOGIN'" name="userType" value="NOT_LOGIN"
+                            class="btn btn-primary btn-sm btn-block mt-3" onclick="redirectToLogin()">로그인
+                    </button>
                     <button type="button" th:case="'LEADER'" name="userType" value="LEADER"
-                            class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('LEADER')">방권한자
+                            class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('LEADER')">수정하기
                     </button>
                     <!-- FOLLOWER 버튼 -->
-                    <button type="button" th:case="'FOLLOWER'" name="action" value="FOLLOWER"
+                    <button type="button" th:case="'FOLLOWER'" name="userType" value="FOLLOWER"
                             class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
-                            onclick="submitForm('FOLLOWER')">모임 나가기
+                            onclick="submitForm('FOLLOWER')">참석 중인 모임 나가기
+                    </button>
+
+                    <!-- wait 버튼 -->
+                    <button type="button" th:case="'WAIT'" name="userType" value="WAIT"
+                            class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
+                            onclick="submitForm('WAIT')">대기 중인 모임 나가기
                     </button>
                     <!-- NOT_FOLLOWER 버튼 -->
                     <div th:case="'NOT_FOLLOWER'">
                         <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
-                            <button type="button" name="action" value="NOT_FOLLOWER"
+                            <button type="button" name="userType" value="NOT_FOLLOWER"
                                     class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('NOT_FOLLOWER')">
-                                뿜빠이
+                                모임참여하기
                             </button>
                         </div>
                         <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
@@ -79,10 +89,7 @@
                             </button>
                         </div>
                     </div>
-                    <!-- NOT_LOGIN 버튼 -->
-                    <button type="button" th:case="'NOT_LOGIN'" name="action" value="NOT_LOGIN"
-                            class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('NOT_LOGIN')">로그인
-                    </button>
+
                 </div>
             </form>
         </div>
@@ -96,6 +103,11 @@
                aria-selected="true">뿜빠이 정보</a>
         </li>
 
+        <!-- LEADER만 볼 수 있는 탭 -->
+        <li class="nav-item" th:if="${userType.name() == 'LEADER'}">
+            <a class="nav-link" id="userWaitProfile-tab" data-toggle="tab" href="#userWaitProfile" role="tab"
+               aria-controls="userWaitProfile" aria-selected="false">뿜빠이 대기자</a>
+        </li>
         <!-- LEADER와 FOLLOWER만 볼 수 있는 탭 -->
         <li class="nav-item" th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
             <a class="nav-link" id="userProfile-tab" data-toggle="tab" href="#userProfile" role="tab"
@@ -116,6 +128,8 @@
                     </div>
                     모임 이미지 넣기
                 </div>
+
+                <!--지도 위치 마커 찍어주기 -->
                 <div class="col-md-6">
                     <div class="ratio-5-3">
                         <img th:src="@{/imgs/meeting/{filename}(filename=${meetingDetailDto.fileName})}" alt="지도 이미지">
@@ -136,7 +150,13 @@
                     <div class="mb-3">
                         <span th:text="|모집 인원 : ${meetingDetailDto.totalMember} / 현재 원 : ${meetingDetailDto.presentMember}|"></span>
                         <!-- 불필요한 공백 제거 -->
-
+                    </div>
+                    <div class="mb-3">
+                        <span th:text="|약속 시간 : ${meetingDetailDto.deadLineTime}|"></span>
+                        <!-- 불필요한 공백 제거 -->
+                    </div>
+                    <div class="mb-3">
+                        <span th:text="|모집 상태 : ${meetingDetailDto.meetingStatus.getStatusType()}|"></span>
                     </div>
                     <div id="meetingDetailContext" class="form-control mb-3" style="height: auto;">
                         <div th:utext="${meetingDetailDto.context}"></div>
@@ -166,23 +186,58 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="userProfile" role="tabpanel" aria-labelledby="userProfile-tab">
-            <h5>모임 참석 명단</h5>
+        <div class="tab-pane fade" id="userWaitProfile" role="tabpanel" aria-labelledby="userProfile-tab">
+            <h5>모임 대기자 명단</h5>
             <table class="table table-striped details-table" width="70%">
                 <thead>
                 <tr>
                     <th>이름</th>
                     <th>LEVEL</th>
                     <th>프로필</th>
+                    <th>거부</th>
+                    <th>참여</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="list : ${meetingDetailDto.userMeetingDto}">
+                <tr th:each="list : ${meetingDetailDto.userMeetingDto}" th:if="${list.userType.name().equals('WAIT')}">
                     <td th:text="${list.userName}"></td>
                     <td th:text="${list.userType.getUserTypeName()}"></td>
                     <td>
                         <a th:href="@{/users/{userId}(userId=${list.userId})}"
-                           class="btn btn-success btn-sm btn-block mt-3">정보</a> <!-- 불필요한 공백 제거 -->
+                           class="btn btn-success btn-sm btn-block mt-3">정보</a>
+                    </td>
+                    <td>
+                        <a href="#"
+                           th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '1')|"
+                           class="btn btn-dark btn-sm btn-block mt-3">내보내기</a>
+                    </td>
+                    <td>
+                        <a href="#"
+                           th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '2')|"
+                           class="btn btn-dark btn-sm btn-block mt-3">허가하기</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="userProfile" role="tabpanel" aria-labelledby="userProfile-tab">
+            <h5>참여자 명단</h5>
+            <table class="table table-striped details-table" width="70%">
+                <thead>
+                <tr>
+                    <th>이름</th>
+                    <th>대기자</th>
+                    <th>프로필</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="list : ${meetingDetailDto.userMeetingDto}" th:if="${!list.userType.name().equals('WAIT')}">
+                    <td th:text="${list.userName}"></td>
+                    <td th:text="${list.userType.getUserTypeName()}"></td>
+                    <td>
+                        <a th:href="@{/users/{userId}(userId=${list.userId})}"
+                           class="btn btn-success btn-sm btn-block mt-3">정보</a>
                     </td>
                 </tr>
                 </tbody>
@@ -191,44 +246,59 @@
         <div class="tab-pane fade" id="userChat" role="tabpanel" aria-labelledby="userChat-tab">
             <h3>Messages</h3>
             <p>This is the messages section.</p> <!-- 설명 텍스트 정리 -->
+
+
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    // 폼 제출을 처리하는 함수입니다.
-    function submitForm(action) {
-        // 폼 데이터를 객체로 가져옵니다.
-        var formData = {
-            meetingId: $('[name="meetingId"]').val(),
-            action: action
-        };
+<script>
+    function redirectToLogin() {
+        window.location.href = '/login'; // 로그인 페이지 URL로 변경
+    }
 
-        // 폼 데이터 출력 (디버깅용)
-        console.log("Form Data:", formData);
+    function sendAjaxRequest(url, formData, redirectOnSuccess) {
+        console.log("FORM DATA: ", formData);
 
-        // Ajax 요청을 보냅니다.
         $.ajax({
-            url: $('#meetingForm').attr('action'), // 폼의 action URL을 가져옵니다.
-            type: 'POST', // 요청 방식을 POST로 설정합니다.
-            contentType: 'application/json', // JSON 형식으로 데이터를 보냅니다.
-            data: JSON.stringify(formData), // formData 객체를 JSON 문자열로 변환하여 전송합니다.
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
             success: function (response) {
-                // 성공 시 메시지를 표시합니다.
+                console.log("SERVER Response:", response);
                 $('#message').text(response);
-                location.reload(true);
+                if (redirectOnSuccess) {
+                    window.location.href = '/meeting/detailMeeting?meetingId=' + formData.meetingId;
+                }
             },
             error: function (xhr, status, error) {
-                // 에러 시 상세 정보 출력 (디버깅용)
                 console.error("XHR Object:", xhr);
                 console.error("Status:", status);
                 console.error("Error:", error);
                 if (xhr.status === 401) {
                     window.location.href = '/login';
-                    // 에러 시 메시지를 표시합니다.
-
-                }  $('#message').text('Error: ' + error);
+                }
+                $('#message').text('Error: ' + error);
             }
         });
+    }
+
+    function memberConfirm(userType, userId, meetingId, confirmCheck) {
+        var formData = {
+            userType: userType,
+            meetingId: meetingId,
+            userId: userId,
+            confirmCheck: confirmCheck
+        };
+        sendAjaxRequest('/api/confirmCheck', formData, true);
+    }
+
+    function submitForm(userType) {
+        var formData = {
+            meetingId: $('[name="meetingId"]').val(),
+            userType: userType
+        };
+        sendAjaxRequest($('#meetingForm').attr('action'), formData, true);
     }
 </script>
 <!-- Bootstrap JS, Popper.js, and jQuery -->

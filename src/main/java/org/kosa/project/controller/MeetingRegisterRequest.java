@@ -2,12 +2,13 @@ package org.kosa.project.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.kosa.project.service.Enum.Category;
-import org.kosa.project.service.Enum.UserMeetingType;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 public record MeetingRegisterRequest(Long userId, Category category, String subject,
-                                     String context, Integer totalMember, MultipartFile image, String meetingStatus, UserMeetingType userType) {
+                                     String context, Integer totalMember, MultipartFile image, LocalDateTime deadLineTime) {
     String validate() {
         if (category == null) {
             log.error("Category is null");
@@ -17,6 +18,7 @@ public record MeetingRegisterRequest(Long userId, Category category, String subj
             log.error("이미지 파일이 아님 {}", image.getContentType());
             return "redirect:uploadStatus";
         }
+
         return "redirect:/meeting/list";
     }
 }
