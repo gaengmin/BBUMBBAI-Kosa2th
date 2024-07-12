@@ -20,15 +20,9 @@ public class MeetingRepository {
         return meetingMapper.selectLastInsertId(userId);
     }
 
-    public Page<MeetingDetailDto> meetingList(SearchCondition searchCondition, Pageable pageable) {
+    public Page<MeetingSummaryDto> meetingList(SearchCondition searchCondition, Pageable pageable) {
         return meetingMapper.meetingList(searchCondition, pageable);
     }
-
-
-    public int countMeetings() {
-        return meetingMapper.countMeetings();
-    }
-
     /*모임참여관련 */
 
     public void userMeetingSave(UserMeetingCheckDto userMeetingDto) {
@@ -45,8 +39,15 @@ public class MeetingRepository {
     }
 
     /*모임참석 눌렀을시 현재원 수 업데이트*/
-    public void meetingUpdatePresentCount(long meetingId) {
-        meetingMapper.meetingUpdatePresentCount(meetingId);
+
+    public void meetingUpdateCountAndStatus(long meetingId) {
+
+        meetingMapper.meetingUpdateCountAndStatus(meetingId);
+    }
+
+    /*관리자가 Wait를 허용했을 떄*/
+    public void userMeetingUpdate(UserMeetingCheckDto userMeetingCheckDto){
+        meetingMapper.userMeetingUpdate(userMeetingCheckDto);
     }
 
     /*모임나가기*/

@@ -14,7 +14,7 @@ CREATE TABLE USERS (
                        phone_number VARCHAR2(50),
                        user_name VARCHAR2(50),
                        password VARCHAR2(50),
-                       profile_img_url varchar2(200),
+                       profile_img_url varchar2(300),
                        birth DATE,
                        myself_memo CLOB,
                        reg_dt DATE DEFAULT SYSDATE
@@ -25,7 +25,8 @@ CREATE TABLE USER_MEETING (
                               user_meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                               user_id NUMBER,
                               meeting_id NUMBER,
-                              user_type VARCHAR2(30) --미팅 권한
+                              user_type VARCHAR2(30),
+                              user_confirm varchar2(1) default 0
 );
 
 -- Create MEETING table
@@ -39,7 +40,7 @@ CREATE TABLE MEETING (
                          file_name varchar2(300),
                          total_member NUMBER,
                          present_member NUMBER default 1,
-                         status VARCHAR2(20) ,
+                         status VARCHAR2(20) default 'CONTINUE',
                          deadline_time timestamp,
                          reg_dt DATE DEFAULT SYSDATE
 );

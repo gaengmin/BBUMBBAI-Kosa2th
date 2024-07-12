@@ -27,7 +27,8 @@ public class MeetingRestController {
     public ResponseEntity<?> userTypeMappingAction(
             @RequestBody UserMeetingCheckDto userMeetingCheckDto, //body -> model
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-
+        System.out.println(userMeetingCheckDto+"userMeetingCheckDto");
+        // 비로그인이면
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
         }
@@ -58,4 +59,18 @@ public class MeetingRestController {
     public String saveChatMessage(@RequestBody SaveChatMessageDto chatMessage, @AuthenticationPrincipal CustomUserDetails userDetails) {
         return null;
     }
+
+    /*관리자가 대기중인 회원 관리할 때.*/
+    @PostMapping("/confirmCheck")
+    public ResponseEntity<?> userConfirmCheckAction(
+            @RequestBody UserMeetingCheckDto userMeetingCheckDto, //body -> model
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        // setter
+        UserMeetingType userType = userMeetingCheckDto.getUserType();
+        userType.handleAction(meetingService, userMeetingCheckDto);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

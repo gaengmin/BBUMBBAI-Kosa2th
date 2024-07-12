@@ -12,7 +12,7 @@ import java.util.List;
 public interface MeetingMapper {
     void save(MeetingRegisterDto meetingDto);
 
-    Page<MeetingDetailDto> meetingList(@Param("condition") SearchCondition searchCondition, @Param("pageable") Pageable pageable);
+    Page<MeetingSummaryDto> meetingList(@Param("condition") SearchCondition searchCondition, @Param("pageable") Pageable pageable);
 
     long selectLastInsertId(long userId);
 
@@ -21,13 +21,15 @@ public interface MeetingMapper {
     MeetingDetailDto meetingDetails(long meetingId);
 
     int countMeetings(); //전체게시글
+    void userMeetingUpdate(UserMeetingCheckDto userMeetingCheckDto);
 
     /*user_meeting 관련*/
     String getUserMeetingCheck(long meetingId, long userId);
 
     /*모임참석 눌렀을시 현재원 수 업데이트*/
-    void meetingUpdatePresentCount(long meetingId);
+    void meetingUpdateCountAndStatus(long meetingId);
 
+    /*모임나가기*/
     void exitMeeting(UserMeetingCheckDto userMeetingDto);
 
     UserMeetingDto findUserMeetingByUserIdAndMeetingId(@Param("meetingId") Long meetingId, @Param("userId") Long userId);

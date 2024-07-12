@@ -4,9 +4,11 @@ import lombok.extern.log4j.Log4j2;
 import org.kosa.project.config.annotation.MeetingFileServiceQualifier;
 import org.kosa.project.security.CustomUserDetails;
 import org.kosa.project.service.Enum.Category;
+import org.kosa.project.service.Enum.MeetingStatus;
 import org.kosa.project.service.Enum.UserMeetingType;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.MeetingDetailDto;
+import org.kosa.project.service.dto.MeetingSummaryDto;
 import org.kosa.project.service.dto.SearchCondition;
 import org.kosa.project.service.dto.UserMeetingDto;
 import org.kosa.project.service.fileupload.FileUploadService;
@@ -15,6 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import static org.kosa.project.controller.DTOMapper.convertToMeetingRegisterDto;
@@ -37,13 +42,11 @@ public class MeetingController {
     public String list(@ModelAttribute SearchCondition condition,
                        @RequestParam(defaultValue = "1") Integer page,
                        Model model) {
-
-        System.out.println(condition);
         return getMeetingList(condition, page, model);
     }
 
     private String getMeetingList(SearchCondition condition, Integer page, Model model) {
-        Page<MeetingDetailDto> detailList = meetingService.meetingList(condition, page, PAGE_PER_SIZE);
+        Page<MeetingSummaryDto> detailList = meetingService.meetingList(condition, page, PAGE_PER_SIZE);
         model.addAttribute("detailList", detailList);
         model.addAttribute("condition", condition);
         return "meeting/list";
@@ -62,9 +65,9 @@ public class MeetingController {
         MeetingDetailDto meetingDetailDto = meetingService.meetingDetails(meetingId);
         // 현재 로그인 한 유저의 현재 미팅에 대한 참여 정보를 확인하고 싶다.
         UserMeetingType userMeetingType = getCurrentLoginUserMeetingType(userDetails, meetingDetailDto.getUserMeetingDto());
-        System.out.println(userMeetingType);
         model.addAttribute("meetingDetailDto", meetingDetailDto);
         model.addAttribute("userType", userMeetingType);
+        System.out.println(model);
         return "meeting/detailMeeting";
     }
 
@@ -84,7 +87,7 @@ public class MeetingController {
 
     @GetMapping("/insertMeeting")
     public String insertMeeting(Model model) {
-        model.addAttribute("meetingRegisterRequest", new MeetingRegisterRequest(1L, Category.DESSERT, null, null, 0, null, null, UserMeetingType.LEADER));
+        model.addAttribute("meetingRegisterRequest", new MeetingRegisterRequest(1L, Category.BOB_FRIEND, null, null, 0, null, null));
         model.addAttribute("categories", Category.values()); //Enum 카테고리 데이터 넘기기
         return "meeting/insertMeeting";
     }
@@ -98,27 +101,6 @@ public class MeetingController {
         return response;
     }
 
-   /* @PostMapping("/detailMeeting")
-    public String userTypeMappingAction(
-            @RequestParam("meetingId") long meetingId,
-            @RequestParam("action") UserMeetingType userType,
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            RedirectAttributes redirectAttributes) {
-
-        // 비로그인이면
-        if (userDetails == null) {
-            throw new MeetingUserNotLoginException("Not Logined");
-        }
-
-        UserMeetingCheckDto userMeetingCheckDto = new UserMeetingCheckDto();
-        userMeetingCheckDto.setMeetingId(meetingId);
-        userMeetingCheckDto.setUserId(Long.parseLong(userDetails.getUserId()));
-        userMeetingCheckDto.setUserType(userType);
-
-        userType.handleAction(meetingService, userMeetingCheckDto);
-        redirectAttributes.addAttribute("meetingId", meetingId);
-        return "redirect:/meeting/detailMeeting";  // GET 요청으로 리다이렉트
-    }*/
 
 }
 
