@@ -2,6 +2,7 @@ package org.kosa.project.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.kosa.project.service.exception.meeting.MeetingUserNotLoginException;
+import org.kosa.project.service.exception.meeting.MeetingUserNotSufficientException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,6 +17,18 @@ import java.io.IOException;
 @ControllerAdvice
 public class ErrorControllerAdvice {
 
+    @ExceptionHandler(value = {MeetingUserNotSufficientException.class})
+    public String redirectMeeting(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        String requestURI = request.getRequestURI();
+        request.getParameterNames()
+                .asIterator()
+                .forEachRemaining(name -> {
+                    redirectAttributes.addAttribute(name, request.getParameter(name));
+                });
+        return "redirect:" + requestURI;
+    }
+
+
     @ExceptionHandler(value = {MeetingUserNotLoginException.class})
     @ResponseStatus(HttpStatus.SEE_OTHER)
     public String handleException(Exception ex, HttpServletRequest request, RedirectAttributes redirectAttributes) {
@@ -24,13 +37,5 @@ public class ErrorControllerAdvice {
         return "redirect:/login";
     }
 
-
-
-//    @ExceptionHandler(value = {NoResourceFoundException.class})
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    public String handleNoResourceFoundException(Exception ex, Model model) {
-//        model.addAttribute("error", ex.getMessage());
-//        return "error";
-//    }
 
 }

@@ -4,11 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.kosa.project.controller.Page;
 import org.kosa.project.controller.Pageable;
-import org.kosa.project.service.dto.MeetingDetailDto;
-import org.kosa.project.service.dto.MeetingRegisterDto;
-import org.kosa.project.service.dto.SearchCondition;
-import org.kosa.project.service.dto.UserMeetingCheckDto;
-import org.kosa.project.service.dto.UserMeetingDto;
+import org.kosa.project.service.dto.*;
 
 import java.util.List;
 
@@ -18,12 +14,11 @@ public interface MeetingMapper {
 
     Page<MeetingDetailDto> meetingList(@Param("condition") SearchCondition searchCondition, @Param("pageable") Pageable pageable);
 
-    public long selectLastInsertId(long userId);
+    long selectLastInsertId(long userId);
 
     void userMeetingSave(UserMeetingCheckDto userMeetingDto);
 
     MeetingDetailDto meetingDetails(long meetingId);
-
 
     int countMeetings(); //전체게시글
 
@@ -33,8 +28,9 @@ public interface MeetingMapper {
     /*모임참석 눌렀을시 현재원 수 업데이트*/
     void meetingUpdatePresentCount(long meetingId);
 
-    /*모임나가기
-     */
     void exitMeeting(UserMeetingCheckDto userMeetingDto);
 
+    UserMeetingDto findUserMeetingByUserIdAndMeetingId(@Param("meetingId") Long meetingId, @Param("userId") Long userId);
+
+    RoomPermissionDto findRoomWithAllChatListByMeetingAndUser(@Param("meetingId") Long meetingId, @Param("userId") Long userId);
 }

@@ -20,7 +20,6 @@ public class UserController {
     public UserController(UserService userService, @UserFileServiceQualifier FileUploadService fileUploadService) {
         this.userService = userService;
         this.fileUploadService = fileUploadService;
-        System.out.println(fileUploadService.getClass());
     }
 
     @GetMapping("/join")
@@ -60,3 +59,4 @@ public class UserController {
     }
 
 }
+

@@ -36,7 +36,7 @@ CREATE TABLE MEETING (
                          category VARCHAR2(20),
                          subject VARCHAR2(200),
                          context CLOB,
-                         file_name varchar2(30),
+                         file_name varchar2(300),
                          total_member NUMBER,
                          present_member NUMBER default 1,
                          status VARCHAR2(20) ,

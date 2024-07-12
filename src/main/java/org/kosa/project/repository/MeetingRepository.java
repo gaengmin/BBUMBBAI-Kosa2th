@@ -4,13 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.kosa.project.controller.Page;
 import org.kosa.project.controller.Pageable;
 import org.kosa.project.repository.mapper.MeetingMapper;
-import org.kosa.project.service.dto.MeetingDetailDto;
-import org.kosa.project.service.dto.MeetingRegisterDto;
-import org.kosa.project.service.dto.SearchCondition;
-import org.kosa.project.service.dto.UserMeetingCheckDto;
+import org.kosa.project.service.dto.*;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -51,12 +46,19 @@ public class MeetingRepository {
 
     /*모임참석 눌렀을시 현재원 수 업데이트*/
     public void meetingUpdatePresentCount(long meetingId) {
-
         meetingMapper.meetingUpdatePresentCount(meetingId);
     }
 
     /*모임나가기*/
     public void exitMeeting(UserMeetingCheckDto userMeetingDto) {
         meetingMapper.exitMeeting(userMeetingDto);
+    }
+
+    public UserMeetingDto findUserMeetingByUserIdAndMeetingId(Long meetingId, Long userId) {
+        return meetingMapper.findUserMeetingByUserIdAndMeetingId(meetingId, userId);
+    }
+
+    public RoomPermissionDto findRoomWithAllChatListByMeetingAndUser(Long meetingId, Long userId) {
+        return meetingMapper.findRoomWithAllChatListByMeetingAndUser(meetingId, userId);
     }
 }
