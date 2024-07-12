@@ -5,20 +5,22 @@ import lombok.*;
 import java.time.LocalDate;
 
 @Getter
+@Setter
+@AllArgsConstructor
 public class UserDto {
-    private final Long userId;
+    private Long userId;
     private String phoneNumber;
-    private final String userEmail;
-    private final String name;
-    private final String password;
+    private String email;
+    private String name;
+    private String password;
     private LocalDate birth;
     private String myselfMemo;
     private LocalDate regDate;
 
-    public UserDto(Long userId, String userEmail, String name, String password) {
+    public UserDto(Long userId, String email, String userName, String password) {
         this.userId = userId;
-        this.userEmail = userEmail;
-        this.name = name;
+        this.email = email;
+        this.name = userName;
         this.password = password;
     }
 }

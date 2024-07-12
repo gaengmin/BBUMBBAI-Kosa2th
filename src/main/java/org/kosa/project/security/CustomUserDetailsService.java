@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (userDetailDto == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
         }
-        return new CustomUserDetails(userDetailDto.getName(), userDetailDto.getUserId(), userDetailDto.getUserEmail(), bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
+        return new CustomUserDetails(userDetailDto.getName(), userDetailDto.getUserId(), userDetailDto.getEmail(), bCryptPasswordEncoder.encode(userDetailDto.getPassword()));
     }
 }
 

@@ -16,7 +16,7 @@
         </select>
 
         <select id="findUserByEmail" resultType="org.kosa.project.service.dto.user.UserDto" parameterType="String">
-            select email,password,user_id as userID, user_name as userName
+            select user_id as userId, email, user_name as userName, password
             from users
             where email = #{email}
         </select>
