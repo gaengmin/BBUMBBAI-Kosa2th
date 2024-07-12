@@ -27,7 +27,6 @@ public class MeetingRestController {
             @RequestBody UserMeetingCheckDto userMeetingCheckDto, //body -> model
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        System.out.println(userMeetingCheckDto+"userMeetingCheckDto");
         // 비로그인이면
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");

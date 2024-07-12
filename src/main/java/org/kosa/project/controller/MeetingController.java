@@ -64,7 +64,6 @@ public class MeetingController {
         UserMeetingStrategy userMeetingStrategy = getCurrentLoginUserMeetingType(userDetails, meetingDetailDto.getUserMeetingDto());
         model.addAttribute("meetingDetailDto", meetingDetailDto);
         model.addAttribute("userType", userMeetingStrategy);
-        System.out.println(model);
         return "meeting/detailMeeting";
     }
 
