@@ -41,15 +41,16 @@ public class MeetingRepository {
         return meetingMapper.getUserMeetingCheck(userId, meetingId);
     }
 
+    /**상세 게시물 DTO + USER_MEETING DTO 통합*/
     public MeetingDetailDto meetingDetails(long meetingId) {
         return meetingMapper.meetingDetails(meetingId);
     }
 
     /*모임참석 눌렀을시 현재원 수 업데이트*/
 
-    public void meetingUpdateCountAndStatus(long meetingId) {
 
-        meetingMapper.meetingUpdateCountAndStatus(meetingId);
+    public void meetingUpdatePresentStatus(long meetingId){
+        meetingMapper.meetingUpdatePresentStatus(meetingId);
     }
 
     /*관리자가 Wait를 허용했을 떄*/

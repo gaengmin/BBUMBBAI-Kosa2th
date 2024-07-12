@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="kor" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Post</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head th:replace="~{head :: headerFragment}"/>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         #meetingDetailContext {
@@ -120,10 +117,9 @@
             text-align: right;
         }
     </style>
-</head>
 <body>
 <div th:replace="~{nav :: navFragment}"></div>
-
+<main>
 <div class="container-fluid w-80">
     <div class="row">
         <div class="col-md-10">
@@ -146,7 +142,6 @@
                             class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
                             onclick="submitForm('FOLLOWER')">참석 중인 모임 나가기
                     </button>
-
                     <!-- wait 버튼 -->
                     <button type="button" th:case="'WAIT'" name="userType" value="WAIT"
                             class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
@@ -166,12 +161,10 @@
                             </button>
                         </div>
                     </div>
-
                 </div>
             </form>
         </div>
     </div>
-
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -273,7 +266,7 @@
                     <th>LEVEL</th>
                     <th>프로필</th>
                     <th>거부</th>
-                    <th>참여</th>
+                    <th th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">참여</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -289,7 +282,7 @@
                            th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '1')|"
                            class="btn btn-dark btn-sm btn-block mt-3">내보내기</a>
                     </td>
-                    <td>
+                    <td th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">
                         <a href="#"
                            th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '2')|"
                            class="btn btn-dark btn-sm btn-block mt-3">허가하기</a>
@@ -342,6 +335,7 @@
 
     </div>
 </div>
+</main>
 
 <!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

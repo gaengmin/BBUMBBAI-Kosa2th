@@ -102,18 +102,27 @@
           AND user_id = #{userId}
     </delete>
 
-    <!--모임 참석에 따른 인원 변경 쿼리 및 전체인원만큼 차면 모집 마감으로 변경 <수정해야함.......> -->
-    <update id="meetingUpdateCountAndStatus" parameterType="long">
-        UPDATE meeting
-        SET PRESENT_MEMBER = (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}),
+    <!--모임 참석에 따른 인원 변경 -->
+    <update id="meetingUpdatePresentStatus" parameterType="long">
+        UPDATE MEETING
+        SET PRESENT_MEMBER = (SELECT COUNT(*)
+                              FROM USER_MEETING
+                              WHERE MEETING_ID = #{meetingId}
+                                AND (USER_TYPE = 'FOLLOWER' OR USER_TYPE = 'LEADER')),
             status         = CASE
-                                 WHEN TOTAL_MEMBER = (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}) AND
-                                      status = 'CONTINUE' THEN 'FINISH'
-                                 WHEN TOTAL_MEMBER > (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}) AND
-                                      status = 'FINISH' THEN 'CONTINUE'
-                                 ELSE status  -- ELSE 절 추가하여 기본 값을 유지
+                                 WHEN (SELECT COUNT(*)
+                                       FROM USER_MEETING
+                                       WHERE MEETING_ID =  #{meetingId}
+                                         AND (USER_TYPE = 'FOLLOWER' OR USER_TYPE = 'LEADER')) = TOTAL_MEMBER
+                                     AND status = 'CONTINUE' THEN 'FINISH'
+                                 WHEN (SELECT COUNT(*)
+                                       FROM USER_MEETING
+                                       WHERE MEETING_ID =  #{meetingId}
+                                         AND (USER_TYPE = 'FOLLOWER' OR USER_TYPE = 'LEADER')) &lt; TOTAL_MEMBER
+                                     AND status = 'FINISH' THEN 'CONTINUE'
+                                 ELSE status
                 END
-        WHERE meeting_id = #{meetingId}
+        WHERE MEETING_ID = #{meetingId}
     </update>
 
 

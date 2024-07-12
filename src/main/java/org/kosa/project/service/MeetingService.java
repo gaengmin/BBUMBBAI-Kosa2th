@@ -6,12 +6,12 @@ import org.kosa.project.controller.Page;
 import org.kosa.project.controller.Pageable;
 import org.kosa.project.repository.MeetingRepository;
 import org.kosa.project.service.Enum.UserMeetingStrategy;
+import org.kosa.project.service.dto.RoomPermissionDto;
 import org.kosa.project.service.dto.meeting.MeetingDetailDto;
 import org.kosa.project.service.dto.meeting.MeetingRegisterDto;
 import org.kosa.project.service.dto.meeting.MeetingSummaryDto;
 import org.kosa.project.service.dto.search.SearchConditionDto;
 import org.kosa.project.service.dto.user.UserMeetingCheckDto;
-import org.kosa.project.service.dto.*;
 import org.kosa.project.service.dto.user.UserMeetingDto;
 import org.kosa.project.service.exception.meeting.MeetingUserNotSufficientException;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MeetingService {
     private final MeetingRepository meetingRepository;
 
+    //게시물 생성 시 트랜잭션 처리
     @Transactional
     public void save(MeetingRegisterDto meetingDto) {
         meetingRepository.save(meetingDto);
@@ -35,11 +36,17 @@ public class MeetingService {
         meetingRepository.userMeetingSave(userMeetingCheckDto);
     }
 
+    /**
+     * MEETING LIST
+     */
 
     public Page<MeetingSummaryDto> meetingList(SearchConditionDto searchConditionDto, int page, int pageSize) {
         return meetingRepository.meetingList(searchConditionDto, new Pageable(page, pageSize));
     }
 
+    /**
+     *
+     */
     public MeetingDetailDto meetingDetails(long meetingId) {
         return meetingRepository.meetingDetails(meetingId);
     }
@@ -50,15 +57,15 @@ public class MeetingService {
     public void meetingUserAttend(UserMeetingCheckDto userMeetingCheckDto) {
         UserMeetingStrategy nowUserType = userMeetingCheckDto.getUserType();
         long meetingId = userMeetingCheckDto.getMeetingId();
-
         if (nowUserType.equals(UserMeetingStrategy.NOT_FOLLOWER)) {
             userMeetingCheckDto.setUserType(UserMeetingStrategy.WAIT);
             meetingRepository.userMeetingSave(userMeetingCheckDto);
 
+            /* 방장이 권한을 줄 떄*/
         } else if (nowUserType.equals(UserMeetingStrategy.WAIT)) {
             userMeetingCheckDto.setUserType(UserMeetingStrategy.FOLLOWER);
             meetingRepository.userMeetingUpdate(userMeetingCheckDto);
-            meetingRepository.meetingUpdateCountAndStatus(meetingId);
+            meetingRepository.meetingUpdatePresentStatus(meetingId);
         }
     }
 
@@ -70,11 +77,9 @@ public class MeetingService {
 
         if (nowUserType.equals(UserMeetingStrategy.WAIT)) {
             meetingRepository.exitMeeting(userMeetingCheckDto);
-
         } else if (nowUserType.equals(UserMeetingStrategy.FOLLOWER)) {
-
             meetingRepository.exitMeeting(userMeetingCheckDto);
-            meetingRepository.meetingUpdateCountAndStatus(userMeetingCheckDto.getMeetingId());
+            meetingRepository.meetingUpdatePresentStatus(meetingId);
         }
 
     }

@@ -33,8 +33,7 @@ public interface MeetingMapper {
     String getUserMeetingCheck(long meetingId, long userId);
 
     /*모임참석 눌렀을시 현재원 수 업데이트*/
-    void meetingUpdateCountAndStatus(long meetingId);
-
+    void meetingUpdatePresentStatus(long meetingId);
     /*모임나가기*/
     void exitMeeting(UserMeetingCheckDto userMeetingDto);
 
