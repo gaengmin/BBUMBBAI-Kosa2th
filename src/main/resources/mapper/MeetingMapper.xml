@@ -32,6 +32,21 @@
         <result property="userType" column="user_type"/>
     </resultMap>
 
+    <resultMap id="ChatMessageDtoResultMap" type="org.kosa.project.service.dto.ChatMessageDto">
+        <result property="writeUserId" column="writeUserId"></result>
+        <result property="writeUserName" column="writeUserName"></result>
+        <result property="message" column="message"/>
+        <result property="writeTime" column="writeTime"/>
+    </resultMap>
+
+    <resultMap id="RoomPermissionDtoResultMap" type="org.kosa.project.service.dto.RoomPermissionDto">
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="roomId" column="room_id"/>
+        <collection property="chatMessages" ofType="org.kosa.project.service.dto.ChatMessageDto"
+                    resultMap="ChatMessageDtoResultMap"/>
+    </resultMap>
+
     <!-- MeetingDetailDto 매핑 -->
     <resultMap id="MeetingDetailDtoResultMap" type="org.kosa.project.service.dto.meeting.MeetingDetailDto">
         <id property="meetingId" column="meeting_id"/>
@@ -87,18 +102,27 @@
           AND user_id = #{userId}
     </delete>
 
-    <!--모임 참석에 따른 인원 변경 쿼리 및 전체인원만큼 차면 모집 마감으로 변경 <수정해야함.......> -->
-    <update id="meetingUpdateCountAndStatus" parameterType="long">
-        UPDATE meeting
-        SET PRESENT_MEMBER = (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}),
+    <!--모임 참석에 따른 인원 변경 -->
+    <update id="meetingUpdatePresentStatus" parameterType="long">
+        UPDATE MEETING
+        SET PRESENT_MEMBER = (SELECT COUNT(*)
+                              FROM USER_MEETING
+                              WHERE MEETING_ID = #{meetingId}
+                                AND (USER_TYPE = 'FOLLOWER' OR USER_TYPE = 'LEADER')),
             status         = CASE
-                                 WHEN TOTAL_MEMBER = (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}) AND
-                                      status = 'CONTINUE' THEN 'FINISH'
-                                 WHEN TOTAL_MEMBER > (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}) AND
-                                      status = 'FINISH' THEN 'CONTINUE'
-                                 ELSE status  -- ELSE 절 추가하여 기본 값을 유지
+                                 WHEN (SELECT COUNT(*)
+                                       FROM USER_MEETING
+                                       WHERE MEETING_ID =  #{meetingId}
+                                         AND (USER_TYPE = 'FOLLOWER' OR USER_TYPE = 'LEADER')) = TOTAL_MEMBER
+                                     AND status = 'CONTINUE' THEN 'FINISH'
+                                 WHEN (SELECT COUNT(*)
+                                       FROM USER_MEETING
+                                       WHERE MEETING_ID =  #{meetingId}
+                                         AND (USER_TYPE = 'FOLLOWER' OR USER_TYPE = 'LEADER')) &lt; TOTAL_MEMBER
+                                     AND status = 'FINISH' THEN 'CONTINUE'
+                                 ELSE status
                 END
-        WHERE meeting_id = #{meetingId}
+        WHERE MEETING_ID = #{meetingId}
     </update>
 
 
@@ -127,7 +151,7 @@
             <if test='condition.searchType == "subject"'>
                 and subject like '%' || #{condition.keyword} || '%'
             </if>
-            <if test='condition.searchType == "content"'>
+            <if test='condition.searchType == "keyword"'>
                 and context like '%' || #{condition.keyword} || '%'
             </if>
         </if>
@@ -173,6 +197,26 @@
                      ELSE 1
                      END,
                  um.user_id
+    </select>
+
+    <select id="findUserMeetingByUserIdAndMeetingId" resultMap="UserMeetingDtoResultMap">
+        select um.user_meeting_id, u.user_id, u.user_name, um.meeting_id, um.user_type
+        from users u
+        join USER_MEETING um on u.user_id = um.user_id
+        where u.user_id = #{userId} and um.meeting_id = #{meetingId}
+    </select>
+
+    <select id="findRoomWithAllChatListByMeetingAndUser" resultMap="RoomPermissionDtoResultMap">
+        select u.user_id as user_id, u.user_name as user_name, c.room_id as room_id, us.user_id as writeUserId, us.user_name as writeUserName, c.message, c.message_send_date as writeTime
+        from chat c
+                 left join (select user_id, user_name from users where user_id = #{userId}) u on 1 = 1
+                 left join users us on c.user_id = us.user_id
+        where room_id = (
+            select ROOM_ID as room_id
+            from room
+            where meeting_id = #{meetingId}
+        )
+        order by message_send_date
     </select>
 
 </mapper>

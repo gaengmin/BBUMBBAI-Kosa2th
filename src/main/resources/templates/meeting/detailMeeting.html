@@ -1,182 +1,256 @@
 <!DOCTYPE html>
 <html lang="kor" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Post</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        #meetingDetailContext {
-            border: 0.5px solid #ced4da;
-            border-radius: .6rem;
-            padding: .375rem .75rem;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            white-space: pre-wrap; /* 이 속성은 텍스트 줄 바꿈을 유지하도록 합니다. */
-        }
+<head th:replace="~{head :: headerFragment}"/>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    #meetingDetailContext {
+        border: 0.5px solid #ced4da;
+        border-radius: .6rem;
+        padding: .375rem .75rem;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        white-space: pre-wrap; /* 이 속성은 텍스트 줄 바꿈을 유지하도록 합니다. */
+    }
 
-        .details-table {
-            margin-top: 15px;
-        }
+    .details-table {
+        margin-top: 15px;
+    }
 
-        .details-table th, .details-table td {
-            padding: 8px;
-            text-align: left;
-        }
+    .details-table th, .details-table td {
+        padding: 8px;
+        text-align: left;
+    }
 
-        .w-80 {
-            width: 80%;
-        }
+    .w-80 {
+        width: 80%;
+    }
 
-        .ratio-5-3 {
-            position: relative;
-            width: 100%;
-            padding-top: 60%; /* 5:3 비율로 컨테이너의 높이를 설정 */
-        }
+    .ratio-5-3 {
+        position: relative;
+        width: 100%;
+        padding-top: 60%; /* 5:3 비율로 컨테이너의 높이를 설정 */
+    }
 
-        .ratio-5-3 img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
-</head>
+    .ratio-5-3 img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .tab-content {
+        height: 100vh; /* 전체 탭 높이를 80vh로 설정 */
+        display: flex;
+        flex-direction: column;
+    }
+
+    #chatList {
+        flex: 7; /* 높이 85% */
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    #chatInput {
+        flex: 1; /* 높이 15% */
+        padding: 10px;
+    }
+
+    .chat-item {
+        margin-bottom: 10px;
+    }
+
+    .chat-item .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-header {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .chat-message {
+        flex-grow: 1;
+    }
+
+    .chat-time {
+        align-self: flex-end;
+        font-size: 0.8rem;
+        color: grey;
+    }
+
+    .chat-item {
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* 왼쪽 정렬 */
+    }
+
+    .chat-item.self {
+        align-items: flex-end; /* 오른쪽 정렬 */
+    }
+
+    .chat-bubble {
+        max-width: 75%;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #f1f1f1;
+        position: relative;
+    }
+
+    .chat-item.self .chat-bubble {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .chat-header {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .chat-time {
+        font-size: 0.8rem;
+        color: white;
+        margin-top: 5px;
+        text-align: right;
+    }
+</style>
 <body>
 <div th:replace="~{nav :: navFragment}"></div>
-
-<div class="container-fluid w-80">
-    <div class="row">
-        <div class="col-md-10">
-            <h2 th:text="${meetingDetailDto.subject}" class="me-auto"></h2>
-        </div>
-        <div class="col-md-2">
-            <div id="message"></div>
-            <form method="post" th:action="@{/api/detailMeeting}" class="me-auto" id="meetingForm">
-                <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
-                <div th:switch="${userType.name()}">
-                    <!-- 로그인-->
-                    <button type="button" th:case="'NOT_LOGIN'" name="userType" value="NOT_LOGIN"
-                            class="btn btn-primary btn-sm btn-block mt-3" onclick="redirectToLogin()">로그인
-                    </button>
-                    <button type="button" th:case="'LEADER'" name="userType" value="LEADER"
-                            class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('LEADER')">수정하기
-                    </button>
-                    <!-- FOLLOWER 버튼 -->
-                    <button type="button" th:case="'FOLLOWER'" name="userType" value="FOLLOWER"
-                            class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
-                            onclick="submitForm('FOLLOWER')">참석 중인 모임 나가기
-                    </button>
-
-                    <!-- wait 버튼 -->
-                    <button type="button" th:case="'WAIT'" name="userType" value="WAIT"
-                            class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
-                            onclick="submitForm('WAIT')">대기 중인 모임 나가기
-                    </button>
-                    <!-- NOT_FOLLOWER 버튼 -->
-                    <div th:case="'NOT_FOLLOWER'">
-                        <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
-                            <button type="button" name="userType" value="NOT_FOLLOWER"
-                                    class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('NOT_FOLLOWER')">
-                                모임참여하기
-                            </button>
-                        </div>
-                        <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
-                            <button type="button" class="btn btn-warning btn-sm btn-block mt-3"
-                                    onclick="history.back()">모집 마감
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <!-- 모든 사람이 볼 수 있는 탭 -->
-        <li class="nav-item">
-            <a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info"
-               aria-selected="true">뿜빠이 정보</a>
-        </li>
-
-        <!-- LEADER만 볼 수 있는 탭 -->
-        <li class="nav-item" th:if="${userType.name() == 'LEADER'}">
-            <a class="nav-link" id="userWaitProfile-tab" data-toggle="tab" href="#userWaitProfile" role="tab"
-               aria-controls="userWaitProfile" aria-selected="false">뿜빠이 대기자</a>
-        </li>
-        <!-- LEADER와 FOLLOWER만 볼 수 있는 탭 -->
-        <li class="nav-item" th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
-            <a class="nav-link" id="userProfile-tab" data-toggle="tab" href="#userProfile" role="tab"
-               aria-controls="userProfile" aria-selected="false">뿜빠이 참석정보</a>
-        </li>
-        <li class="nav-item" th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
-            <a class="nav-link" id="userChat-tab" data-toggle="tab" href="#userChat" role="tab"
-               aria-controls="userChat" aria-selected="false">뿜빠이 채팅</a>
-        </li>
-    </ul>
-    <!-- Tab panes -->
-    <div class="tab-content">
-        <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="ratio-5-3">
-                        <img th:src="@{/imgs/meeting/{filename}(filename=${meetingDetailDto.fileName})}" alt="모임 이미지">
-                    </div>
-                    모임 이미지 넣기
-                </div>
-
-                <!--지도 위치 마커 찍어주기 -->
-                <div class="col-md-6">
-                    <div class="ratio-5-3">
-                        <img th:src="@{/imgs/meeting/{filename}(filename=${meetingDetailDto.fileName})}" alt="지도 이미지">
-                    </div>
-                    지도 데이터 넣기
-                </div>
+<main>
+    <div class="container-fluid w-80">
+        <div class="row">
+            <div class="col-md-10">
+                <h2 th:text="${meetingDetailDto.subject}" class="me-auto"></h2>
             </div>
+            <div class="col-md-2">
+                <div id="message"></div>
+                <form method="post" th:action="@{/api/meeting/detailMeeting}" class="me-auto" id="meetingForm">
+                    <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
+                    <div th:switch="${userType.name()}">
+                        <!-- 로그인-->
+                        <button type="button" th:case="'NOT_LOGIN'" name="userType" value="NOT_LOGIN"
+                                class="btn btn-primary btn-sm btn-block mt-3" onclick="redirectToLogin()">로그인
+                        </button>
+                        <button type="button" th:case="'LEADER'" name="userType" value="LEADER"
+                                class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('LEADER')">수정하기
+                        </button>
+                        <!-- FOLLOWER 버튼 -->
+                        <button type="button" th:case="'FOLLOWER'" name="userType" value="FOLLOWER"
+                                class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
+                                onclick="submitForm('FOLLOWER')">참석 중인 모임 나가기
+                        </button>
+                        <!-- wait 버튼 -->
+                        <button type="button" th:case="'WAIT'" name="userType" value="WAIT"
+                                class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
+                                onclick="submitForm('WAIT')">대기 중인 모임 나가기
+                        </button>
+                        <!-- NOT_FOLLOWER 버튼 -->
+                        <div th:case="'NOT_FOLLOWER'">
+                            <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
+                                <button type="button" name="userType" value="NOT_FOLLOWER"
+                                        class="btn btn-primary btn-sm btn-block mt-3"
+                                        onclick="submitForm('NOT_FOLLOWER')">
+                                    모임참여하기
+                                </button>
+                            </div>
+                            <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
+                                <button type="button" class="btn btn-warning btn-sm btn-block mt-3"
+                                        onclick="history.back()">모집 마감
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-            <div class="row">
-                <div class="col-md-8" id="left-column">
-                    <div class="mb-3">
-                        <span th:text="|카테고리 - ${meetingDetailDto.category.getDisplayName()}|"></span>
-                        <!-- 불필요한 공백 제거 -->
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- 모든 사람이 볼 수 있는 탭 -->
+            <li class="nav-item">
+                <a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info"
+                   aria-selected="true">뿜빠이 정보</a>
+            </li>
+
+            <!-- LEADER만 볼 수 있는 탭 -->
+            <li class="nav-item" th:if="${userType.name() == 'LEADER'}">
+                <a class="nav-link" id="userWaitProfile-tab" data-toggle="tab" href="#userWaitProfile" role="tab"
+                   aria-controls="userWaitProfile" aria-selected="false">뿜빠이 대기자</a>
+            </li>
+            <!-- LEADER와 FOLLOWER만 볼 수 있는 탭 -->
+            <li class="nav-item" th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
+                <a class="nav-link" id="userProfile-tab" data-toggle="tab" href="#userProfile" role="tab"
+                   aria-controls="userProfile" aria-selected="false">뿜빠이 참석정보</a>
+            </li>
+
+            <li class="nav-item" th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
+                <a class="nav-link" id="userChat-tab" data-toggle="tab" href="#userChat" role="tab"
+                   aria-controls="userChat" aria-selected="false">뿜빠이 채팅</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ratio-5-3">
+                            <img th:src="@{/imgs/meeting/{filename}(filename=${meetingDetailDto.fileName})}"
+                                 alt="모임 이미지">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <span th:text="|모임 생성일 - ${meetingDetailDto.regDate}|"></span> <!-- 불필요한 공백 제거 -->
-                    </div>
-                    <div class="mb-3">
-                        <span th:text="|모집 인원 : ${meetingDetailDto.totalMember} / 현재 원 : ${meetingDetailDto.presentMember}|"></span>
-                        <!-- 불필요한 공백 제거 -->
-                    </div>
-                    <div class="mb-3">
-                        <span th:text="|약속 시간 : ${meetingDetailDto.deadLineTime}|"></span>
-                        <!-- 불필요한 공백 제거 -->
-                    </div>
-                    <div class="mb-3">
-                        <span th:text="|모집 상태 : ${meetingDetailDto.meetingStatus.getStatusType()}|"></span>
-                    </div>
-                    <div id="meetingDetailContext" class="form-control mb-3" style="height: auto;">
-                        <div th:utext="${meetingDetailDto.context}"></div>
+                    <!--지도 위치 마커 찍어주기 -->
+                    <div class="col-md-6">
+                        지도
+                        <div class="ratio-5-3" id="map" style="width:80%;"></div>
                     </div>
                 </div>
-                <div class="content">
-                    <div class="col-md-12" id="right-column">
+
+                <div class="row">
+                    <div class="col-md-8" id="left-column">
+                        <div class="mb-3">
+                            <span th:text="|카테고리 - ${meetingDetailDto.category.getDisplayName()}|"></span>
+                            <!-- 불필요한 공백 제거 -->
+                        </div>
+                        <div class="mb-3">
+                            <span th:text="|모임 생성일 - ${meetingDetailDto.regDate}|"></span> <!-- 불필요한 공백 제거 -->
+                        </div>
+                        <div class="mb-3">
+                            <span th:text="|모집 인원 : ${meetingDetailDto.totalMember} / 현재 원 : ${meetingDetailDto.presentMember}|"></span>
+                            <!-- 불필요한 공백 제거 -->
+                        </div>
+                        <div class="mb-3">
+                            <span th:text="|약속 시간 : ${meetingDetailDto.deadLineTime}|"></span>
+                            <!-- 불필요한 공백 제거 -->
+                        </div>
+                        <div class="mb-3">
+                            <span th:text="|모집 상태 : ${meetingDetailDto.meetingStatus.getStatusType()}|"></span>
+
+                        </div>
+                        <div id="meetingDetailContext" class="form-control mb-3" style="height: auto;">
+                            <div th:utext="${meetingDetailDto.context}"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
                         <!-- 댓글 목록 -->
                         <div class="cm_list">
 
                         </div>
-                        <div th:text="${userIdentify}"></div>
+
+
                         <!-- 댓글 작성 폼 -->
                         <form th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
                             <div class="cm-write">
                                 <fieldset>
-                                 <div class="cm-input">
-                                     <label>댓글</label>
-                                     <p><textarea class="form-control" id="comment" name="content" rows="3" placeholder="댓글을 입력하세요"></textarea></p>
-                                 </div>
+                                    <div class="cm-input">
+                                        <label>댓글</label>
+                                        <p><textarea class="form-control" id="comment" name="content" rows="3"
+                                                     placeholder="댓글을 입력하세요"></textarea></p>
+                                    </div>
                                 </fieldset>
                             </div>
 
@@ -186,6 +260,7 @@
                 </div>
             </div>
         </div>
+
         <div class="tab-pane fade" id="userWaitProfile" role="tabpanel" aria-labelledby="userProfile-tab">
             <h5>모임 대기자 명단</h5>
             <table class="table table-striped details-table" width="70%">
@@ -195,11 +270,12 @@
                     <th>LEVEL</th>
                     <th>프로필</th>
                     <th>거부</th>
-                    <th>참여</th>
+                    <th th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">참여</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="list : ${meetingDetailDto.userMeetingDto}" th:if="${list.userType.name().equals('WAIT')}">
+                <tr th:each="list : ${meetingDetailDto.userMeetingDto}"
+                    th:if="${list.userType.name().equals('WAIT')}">
                     <td th:text="${list.userName}"></td>
                     <td th:text="${list.userType.getUserTypeName()}"></td>
                     <td>
@@ -211,7 +287,7 @@
                            th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '1')|"
                            class="btn btn-dark btn-sm btn-block mt-3">내보내기</a>
                     </td>
-                    <td>
+                    <td th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">
                         <a href="#"
                            th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '2')|"
                            class="btn btn-dark btn-sm btn-block mt-3">허가하기</a>
@@ -223,7 +299,7 @@
 
         <div class="tab-pane fade" id="userProfile" role="tabpanel" aria-labelledby="userProfile-tab">
             <h5>참여자 명단</h5>
-            <table class="table table-striped details-table" width="70%">
+            <table class="table table-striped details-table">
                 <thead>
                 <tr>
                     <th>이름</th>
@@ -232,7 +308,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="list : ${meetingDetailDto.userMeetingDto}" th:if="${!list.userType.name().equals('WAIT')}">
+                <tr th:each="list : ${meetingDetailDto.userMeetingDto}"
+                    th:if="${!list.userType.name().equals('WAIT')}">
                     <td th:text="${list.userName}"></td>
                     <td th:text="${list.userType.getUserTypeName()}"></td>
                     <td>
@@ -243,14 +320,33 @@
                 </tbody>
             </table>
         </div>
+
         <div class="tab-pane fade" id="userChat" role="tabpanel" aria-labelledby="userChat-tab">
-            <h3>Messages</h3>
-            <p>This is the messages section.</p> <!-- 설명 텍스트 정리 -->
+            <div class="tab-content">
+                <div class="row" id="chatList">
+                </div>
 
-
+                <div class="row" id="chatInput">
+                    <div class="col-12 justify-content-end align-items-end">
+                        <!-- Chat input or other content -->
+                        <div class="input-group">
+                            <input type="text" id="send-input" class="form-control"
+                                   placeholder="Type your message here...">
+                            <button id="send-button" class="btn btn-primary" type="button">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </div>
-</div>
+    </div>
+</main>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     function redirectToLogin() {
         window.location.href = '/login'; // 로그인 페이지 URL로 변경
@@ -290,7 +386,7 @@
             userId: userId,
             confirmCheck: confirmCheck
         };
-        sendAjaxRequest('/api/confirmCheck', formData, true);
+        sendAjaxRequest('/api/meeting/confirmCheck', formData, true);
     }
 
     function submitForm(userType) {
@@ -301,10 +397,162 @@
         sendAjaxRequest($('#meetingForm').attr('action'), formData, true);
     }
 </script>
-<!-- Bootstrap JS, Popper.js, and jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script th:inline="javascript">
+    // 1. 채팅 버튼이 눌렸을 때 ajax를 호툴한다.
+    // -> 참여 권한에 대한 내용을 가지고 온다.
+    class ConnectionInfo {
+        constructor(roomId, userId, userName) {
+            this.roomId = roomId;
+            this.userId = userId;
+            this.userName = userName;
+        }
+    }
+
+    class ChatMessage {
+        constructor(roomId, userId, userName, message, sendDateTime) {
+            this.roomId = roomId;
+            this.userId = userId;
+            this.userName = userName;
+            this.message = message;
+            this.sendDateTime = sendDateTime;
+        }
+    }
+
+
+    const meetingId = [[${meetingDetailDto.meetingId}]];
+    const fetchData = function () {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: "/api/meeting/" + [[${meetingDetailDto.meetingId}]] + "/rooms",
+                type: "GET",
+                dataType: "json",
+                data: {meetingId: [[${meetingDetailDto.meetingId}]]},
+                timeout: 3000,
+                beforeSend: function (xhr) {
+                    console.log("xhr : " + xhr);
+                },
+                success: function (roomPermission, textStatus, xhr) {
+                    console.log(textStatus);
+                    console.log(roomPermission);
+                    loadPreviousMessages(roomPermission.chatMessages, roomPermission.userId)
+                    resolve(new ConnectionInfo(roomPermission.roomId, roomPermission.userId, roomPermission.userName));
+                },
+                error: function (xhr, textStatus, xhr) {
+                    console.log("권한이 없습니다.");
+                    reject(textStatus);
+                    window.location.href = `/meeting/detailMeeting?meetingId=` + [[${meetingDetailDto.meetingId}]];
+                }
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        $('#userChat-tab').click(function () {
+            fetchData()
+                .then(connectionInfo => {
+                    console.log(connectionInfo);
+                    nettyConnect(connectionInfo);
+                })
+        });
+    });
+
+    function loadSendMessage(userId, userName, message, sendDate, loginUserId) {
+        console.log("userId = " + userId);
+        console.log("username = " + userName);
+        console.log("message = " + message);
+        console.log("sendDate = " + sendDate);
+
+        const chatList = document.getElementById('chatList');
+        const chatItem = document.createElement('div');
+        chatItem.className = `col-12 chat-item${userId == loginUserId ? ' self' : ''}`;
+
+        const chatBubble = document.createElement('div');
+        chatBubble.className = 'chat-bubble';
+
+        const chatHeader = document.createElement('div');
+        chatHeader.className = 'chat-header';
+        chatHeader.textContent = userName;
+
+        const chatMessage = document.createElement('div');
+        chatMessage.className = 'chat-message';
+        chatMessage.textContent = message;
+
+        const chatTime = document.createElement('div');
+        chatTime.className = 'chat-time';
+        let timeString = new Intl.DateTimeFormat('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false // 24시간 형식
+        }).format(new Date(sendDate));
+        chatTime.textContent = timeString;
+
+        chatBubble.appendChild(chatHeader);
+        chatBubble.appendChild(chatMessage);
+        chatBubble.appendChild(chatTime);
+        chatItem.appendChild(chatBubble);
+        chatList.appendChild(chatItem);
+    }
+
+    function loadPreviousMessages(previousChatMessages, loginUserId) {
+        previousChatMessages.forEach(chat => {
+            loadSendMessage(chat.writeUserId, chat.writeUserName, chat.message, chat.writeTime, loginUserId);
+        });
+    }
+
+    let websocket;
+
+    function nettyConnect(connectionInfo) {
+        websocket = new WebSocket(`ws://localhost:8082/websocket?userId=${connectionInfo.userId}&roomId=${connectionInfo.roomId}`);
+
+        websocket.onopen = function () {
+            console.log("WebSocket connection opened");
+        };
+
+        websocket.onmessage = function (event) {
+            let chatMessage = JSON.parse(event.data)
+            console.log(chatMessage);
+            loadSendMessage(chatMessage.userId, chatMessage.userName, chatMessage.message, chatMessage.sendDateTime, connectionInfo.userId);
+            chatBox.innerHTML += `<p><b>${chatMessage.userName}</b>: ${chatMessage.message} <i>(${new Date(chatMessage.sendDateTime).toLocaleTimeString()})</i></p>`;
+        };
+
+        websocket.onclose = function () {
+            console.log("WebSocket connection closed");
+        };
+
+        websocket.onerror = function (error) {
+            console.log("WebSocket Error: ", error);
+        };
+
+        function sendNettyMessage() {
+            if (websocket.readyState === WebSocket.OPEN) {
+                let input = document.getElementById("send-input");
+                let message = input.value;
+                let currentDate = new Date();
+                let chatMessage = {
+                    userId: connectionInfo.userId,
+                    roomId: connectionInfo.roomId,
+                    userName: connectionInfo.userName,
+                    message: message,
+                    sendDateTime: currentDate
+                };
+                websocket.send(JSON.stringify(chatMessage));
+                loadSendMessage(chatMessage.userId, chatMessage.userName, chatMessage.message, chatMessage.sendDateTime, connectionInfo.userId);
+                input.value = "";
+            } else {
+                console.log("WebSocket is not open. readyState: " + ws.readyState);
+            }
+        }
+
+        $('#send-button').click(sendNettyMessage);
+    }
+</script>
+
+
 <script>
     window.onload = function () {
         var rightColumn = document.getElementById('right-column');
@@ -427,6 +675,38 @@
     }
 
 </script>
-</body>
 
+<script type="text/javascript"
+        th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.map.api.key')}}"></script>
+
+<script th:inline="javascript">
+    var latitude = /*[[${meetingDetailDto.latitude}]]*/ 37.5665;
+    var longitude = /*[[${meetingDetailDto.longitude}]]*/ 126.9780;
+    var meetingName = /*[[${meetingDetailDto.subject}]]*/ '모임 이름';
+
+    var mapContainer = document.getElementById('map'),
+        mapOption = {
+            center: new kakao.maps.LatLng(latitude, longitude),
+            level: 3
+        };
+
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+
+    var markerPosition = new kakao.maps.LatLng(latitude, longitude);
+
+    var marker = new kakao.maps.Marker({
+        position: markerPosition
+    });
+
+    marker.setMap(map);
+
+    var infowindow = new kakao.maps.InfoWindow({
+        content: '<div style="padding:5px;">' + meetingName + '</div>'
+    });
+    infowindow.open(map, marker);
+    /*]]>*/
+</script>
+
+
+</body>
 </html>

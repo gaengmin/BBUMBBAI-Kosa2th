@@ -20,7 +20,6 @@ public class UserController {
     public UserController(UserService userService, @UserFileServiceQualifier FileUploadService fileUploadService) {
         this.userService = userService;
         this.fileUploadService = fileUploadService;
-        System.out.println(fileUploadService.getClass());
     }
 
     @GetMapping("/join")
@@ -31,7 +30,6 @@ public class UserController {
 
     @PostMapping("/join")
     public String join(@ModelAttribute UserRegisterForm userRegisterForm) {
-        System.out.println(userRegisterForm);
         // 1. 파일을 저장
         MultipartFile imgFile = userRegisterForm.getProfileImg();
         String profileImageUrl = fileUploadService.saveFile(imgFile);
@@ -47,7 +45,6 @@ public class UserController {
     @GetMapping("/{userId}")
     public String userProfile1(@PathVariable Long userId, Model model) {
         UserProfileDto userProfileDto = userService.getProfile(userId);
-        System.out.println(userProfileDto);
         model.addAttribute("userProfileDto", userProfileDto);
         return "profile";
     }
@@ -60,3 +57,4 @@ public class UserController {
     }
 
 }
+

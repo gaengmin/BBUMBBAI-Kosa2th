@@ -26,13 +26,11 @@ public class CommentRestController {
 
     @GetMapping("/{meetingId}/comments")
     public List<CommentResponseDto> findAllComments(@PathVariable Long meetingId) {
-        System.out.println("Controller findAllComments-> value : "+meetingId+" result : "+commentService.findAllComments(meetingId));
         return commentService.findAllComments(meetingId);
     }
 
     @DeleteMapping("/{meetingId}/comments/{reMeetingId}")
     public Long deleteCommentById(@PathVariable final Long reMeetingId) {
-        System.out.println("Controller deleteCommentById -> "+reMeetingId);
         return commentService.deleteCommentById(reMeetingId);
     }
 

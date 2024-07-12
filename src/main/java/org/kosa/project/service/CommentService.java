@@ -26,7 +26,6 @@ public class CommentService {
     }
 
     public List<CommentResponseDto> findAllComments(final Long meetingId) {
-        System.out.println("Service findAllComments ->"+"value : "+meetingId+" result : "+commentMapper.findAll(meetingId));
         return commentMapper.findAll(meetingId);
     }
     @Transactional
