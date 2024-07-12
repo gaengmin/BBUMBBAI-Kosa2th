@@ -33,3 +33,7 @@ build/
 .vscode/
 .mvn/
 /src/main/resources/static/imgs/meeting
+src/main/resources/static/imgs/users/3ac61ec6-7d65-481b-9432-a44726f0a066.jpeg
+src/main/resources/static/imgs/users/7835bc05-4cbd-4e81-b541-9e1d2fa7c659.jpeg
+src/test/java/org/kosa/project/repository/mapper/MeetingTest.java
+src/main/resources/application.properties
