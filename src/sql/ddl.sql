@@ -97,12 +97,11 @@ ALTER TABLE USER_MEETING
 
 ALTER TABLE MEETING
     ADD CONSTRAINT fk_meeting_region FOREIGN KEY (region_id) REFERENCES REGION(region_id);
+ALTER TABLE MEETING_COMMENT
+    ADD CONSTRAINT fk_meeting_comment_meeting FOREIGN KEY (meeting_id) REFERENCES MEETING(meeting_id);
 
 ALTER TABLE MEETING_COMMENT
-    ADD CONSTRAINT fk_re_meeting_meeting FOREIGN KEY (meeting_id) REFERENCES MEETING(meeting_id);
-
-ALTER TABLE MEETING_COMMENT
-    ADD CONSTRAINT fk_re_meeting_user FOREIGN KEY (user_id) REFERENCES USERS(user_id);
+    ADD CONSTRAINT fk_meeting_comment_user FOREIGN KEY (user_id) REFERENCES USERS(user_id);
 
 ALTER TABLE ROOM
     ADD CONSTRAINT fk_room_meeting FOREIGN KEY (meeting_id) REFERENCES MEETING(meeting_id);

@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class CommentRequestDto {
-    private Long reMeetingId;
+    private Long meetingCommentId;
     private Long meetingId;
     private Long userId;
     private String content;

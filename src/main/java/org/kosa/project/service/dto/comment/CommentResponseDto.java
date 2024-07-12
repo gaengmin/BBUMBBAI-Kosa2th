@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommentResponseDto {
-    private Long reMeetingId;
+    private Long meetingCommentId;
     private Long meetingId;
     private Long userId;
     private String userName;

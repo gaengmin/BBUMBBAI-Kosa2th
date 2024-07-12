@@ -18,7 +18,7 @@ public class CommentService {
     public Long submitComment(final CommentRequestDto params) {
         System.out.println("Service"+params);
         commentMapper.submit(params);
-        return params.getReMeetingId();
+        return params.getMeetingCommentId();
     }
 
     public CommentResponseDto findCommentById(final Long reMeetingId) {

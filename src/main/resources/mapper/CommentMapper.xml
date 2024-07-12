@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kosa.project.repository.mapper.CommentMapper">
 
-    <insert id="submit" parameterType="org.kosa.project.service.dto.comment.CommentRequestDto" useGeneratedKeys="true" keyProperty="reMeetingId" keyColumn="re_meeting_id">
-        insert into re_meeting(
+    <insert id="submit" parameterType="org.kosa.project.service.dto.comment.CommentRequestDto" useGeneratedKeys="true" keyProperty="meetingCommentId" keyColumn="MEETING_COMMENT_ID">
+        insert into MEETING_COMMENT(
                                meeting_id,
                                user_id,
                                context
@@ -14,28 +14,28 @@
     </insert>
 
     <select id="findById" parameterType="long" resultType="org.kosa.project.service.dto.comment.CommentResponseDto">
-        select re_meeting_id as reMeetingId, meeting_id as meetingId, user_id as userId, context as content, reg_dt as regDate
-        from re_meeting
-        where re_meeting_id = #{value}
+        select MEETING_COMMENT_ID as meetingCommentId, meeting_id as meetingId, user_id as userId, context as content, reg_dt as regDate
+        from MEETING_COMMENT
+        where MEETING_COMMENT_ID = #{value}
     </select>
 
     <select id="findAll" parameterType="long" resultType="org.kosa.project.service.dto.comment.CommentResponseDto">
-        select r.re_meeting_id as reMeetingId,
+        select r.MEETING_COMMENT_ID as meetingCommentId,
                r.meeting_id as meetingId,
                r.user_id as userId,
                m.user_name as userName,
                r.context as content,
                to_char(r.reg_dt, 'yy-mm-dd hh24:mi') as regDate
-        from re_meeting r
+        from MEETING_COMMENT r
                  join users m on m.user_id = r.user_id
         where r.meeting_id = #{value}
-        order by r.re_meeting_id
+        order by r.MEETING_COMMENT_ID
     </select>
 
     <delete id="deleteById" parameterType="long">
         delete
-        from re_meeting
-        where re_meeting_id = #{value}
+        from MEETING_COMMENT
+        where MEETING_COMMENT_ID = #{value}
     </delete>
 
 </mapper>
