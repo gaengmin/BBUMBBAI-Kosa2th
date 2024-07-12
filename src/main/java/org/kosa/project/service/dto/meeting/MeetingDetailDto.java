@@ -27,5 +27,7 @@ public class MeetingDetailDto {
     private MeetingStatus meetingStatus;
     private LocalDateTime deadLineTime;
     private LocalDate regDate;
+    private double latitude;
+    private double longitude;
     private List<UserMeetingDto> userMeetingDto;
 }
