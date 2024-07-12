@@ -24,6 +24,7 @@ public interface MeetingMapper {
 
     MeetingDetailDto meetingDetails(long meetingId);
 
+    int countMeetings(); //전체게시글
     void userMeetingUpdate(UserMeetingCheckDto userMeetingCheckDto);
 
     /*user_meeting 관련*/
@@ -35,4 +36,7 @@ public interface MeetingMapper {
     /*모임나가기*/
     void exitMeeting(UserMeetingCheckDto userMeetingDto);
 
+    UserMeetingDto findUserMeetingByUserIdAndMeetingId(@Param("meetingId") Long meetingId, @Param("userId") Long userId);
+
+    RoomPermissionDto findRoomWithAllChatListByMeetingAndUser(@Param("meetingId") Long meetingId, @Param("userId") Long userId);
 }
