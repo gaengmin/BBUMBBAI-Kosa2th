@@ -129,12 +129,14 @@
                     모임 이미지 넣기
                 </div>
 
+
                 <!--지도 위치 마커 찍어주기 -->
                 <div class="col-md-6">
                     <div class="ratio-5-3">
                         <img th:src="@{/imgs/meeting/{filename}(filename=${meetingDetailDto.fileName})}" alt="지도 이미지">
                     </div>
-                    지도 데이터 넣기
+                    <-! 지도 위치  ->
+                    <div id="map" style="width:500px;height:400px;"></div>
                 </div>
             </div>
 
@@ -326,9 +328,39 @@
     }
 </script>
 <!-- Bootstrap JS, Popper.js, and jQuery -->
+<script type="text/javascript" th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.map.api.key')}}"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.map.api.key')}}"></script>
+
+<script th:inline="javascript">
+    var latitude = /*[[${meetingDetailDto.latitude}]]*/ 37.5665;
+    var longitude = /*[[${meetingDetailDto.longitude}]]*/ 126.9780;
+    var meetingName = /*[[${meetingDetailDto.subject}]]*/ '모임 이름';
+
+    var mapContainer = document.getElementById('map'),
+        mapOption = {
+            center: new kakao.maps.LatLng(latitude, longitude),
+            level: 3
+        };
+
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+
+    var markerPosition = new kakao.maps.LatLng(latitude, longitude);
+
+    var marker = new kakao.maps.Marker({
+        position: markerPosition
+    });
+
+    marker.setMap(map);
+
+    var infowindow = new kakao.maps.InfoWindow({
+        content: '<div style="padding:5px;">' + meetingName + '</div>'
+    });
+    infowindow.open(map, marker);
+    /*]]>*/
+</script>
 <script>
     window.onload = function () {
         var rightColumn = document.getElementById('right-column');
