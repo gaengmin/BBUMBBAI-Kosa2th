@@ -27,7 +27,6 @@ public class MeetingRepository {
 
     public Page<MeetingSummaryDto> meetingList(SearchConditionDto searchConditionDto, Pageable pageable) {
         return meetingMapper.meetingList(searchConditionDto, pageable);
-
     }
     /*모임참여관련 */
 

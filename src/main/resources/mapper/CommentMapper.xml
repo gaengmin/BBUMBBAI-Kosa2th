@@ -23,11 +23,11 @@
         select r.MEETING_COMMENT_ID as meetingCommentId,
                r.meeting_id as meetingId,
                r.user_id as userId,
-               m.user_name as userName,
+               u.user_name as userName,
                r.context as content,
                to_char(r.reg_dt, 'yy-mm-dd hh24:mi') as regDate
         from MEETING_COMMENT r
-                 join users m on m.user_id = r.user_id
+                 join users u on u.user_id = r.user_id
         where r.meeting_id = #{value}
         order by r.MEETING_COMMENT_ID
     </select>
@@ -35,7 +35,7 @@
     <delete id="deleteById" parameterType="long">
         delete
         from MEETING_COMMENT
-        where MEETING_COMMENT_ID = #{value}
+        where MEETING_COMMENT_ID = #{reMeetingId}
     </delete>
 
 </mapper>

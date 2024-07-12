@@ -29,10 +29,6 @@ public class CommentService {
         System.out.println("Service findAllComments ->"+"value : "+meetingId+" result : "+commentMapper.findAll(meetingId));
         return commentMapper.findAll(meetingId);
     }
-    final void sample( long object, long j){
-
-    }
-
     @Transactional
     public long deleteCommentById(final Long reMeetingId) {
         commentMapper.deleteById(reMeetingId);

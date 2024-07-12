@@ -24,7 +24,6 @@ public class CommentRestController {
         return commentService.findCommentById(reMeetingId);
     }
 
-;
     @GetMapping("/{meetingId}/comments")
     public List<CommentResponseDto> findAllComments(@PathVariable Long meetingId) {
         System.out.println("Controller findAllComments-> value : "+meetingId+" result : "+commentService.findAllComments(meetingId));

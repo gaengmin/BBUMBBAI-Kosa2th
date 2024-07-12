@@ -18,11 +18,4 @@ public class HomeController {
         return "redirect:/meeting/list";
     }
 
-    @GetMapping("/search")
-    public String search(){
-        return "123";
-    }
-
-
-
 }

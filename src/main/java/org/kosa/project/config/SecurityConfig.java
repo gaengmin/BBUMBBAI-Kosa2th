@@ -65,7 +65,7 @@ public class SecurityConfig {
     }
 
     private String[] permitAllUrlPatterns() {
-        return new String[]{"/*", "/css/**", "/meeting/*", "/js/**", "/imgs/**", "/users/join", "/users/**", "/home"};
+        return new String[]{"/*", "/css/**", "/meeting/**", "/js/**", "/posts/**", "/api/**", "/imgs/**", "/users/join", "/users/**", "/home"};
     }
 
     @Bean

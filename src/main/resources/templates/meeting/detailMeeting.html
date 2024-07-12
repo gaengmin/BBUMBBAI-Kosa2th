@@ -168,7 +168,7 @@
                         <div class="cm_list">
 
                         </div>
-
+                        <div th:text="${userIdentify}"></div>
                         <!-- 댓글 작성 폼 -->
                         <form th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
                             <div class="cm-write">
@@ -382,13 +382,14 @@
                     commentHtml += `
                         <div class="list-group-item">
                                 <h6 class="mb-1">${row.userName}</h6>
-                                <h6 class="mb-1">${row.reMeetingId}</h6>
+                                <h6 class="mb-1">${row.meetingCommentId}</h6>
                                 <p class="mb-1">${row.content}</p>
                                 <small>${row.regDate}</small>
-                                <p class="func_btns">
+                                <div sec:authorize access="isAuthenticated()">
                                 <button type="button" class="btns"><span class="icons icon_modify">수정</span></button>
-                                <button type="button" onclick="deleteCommentById(${row.reMeetingId});" class="btns"><span class="icons icon_del">삭제</span></button>
-                                </p>
+                                <button type="button" onclick="deleteCommentById(${row.meetingCommentId});" class="btns"><span class="icons icon_del">삭제</span></button>
+                                <!--<button class="btn btn-outline-secondary" type="button" onclick="deleteCommentById(${row.meetingCommentId});" >삭제</button>-->
+                                </div>
                         </div>
                     `;
                 })

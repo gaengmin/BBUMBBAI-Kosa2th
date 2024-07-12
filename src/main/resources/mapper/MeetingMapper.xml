@@ -106,8 +106,10 @@
         select *
         from (select meeting_id,
         user_id,
+        region_id,
         category,
         subject,
+        context,
         file_name,
         total_member,
         present_member,

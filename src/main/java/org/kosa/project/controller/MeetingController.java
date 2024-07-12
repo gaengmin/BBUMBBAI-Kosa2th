@@ -1,5 +1,6 @@
 package org.kosa.project.controller;
 
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.log4j.Log4j2;
 import org.kosa.project.config.annotation.MeetingFileServiceQualifier;
 import org.kosa.project.security.CustomUserDetails;
@@ -11,6 +12,8 @@ import org.kosa.project.service.dto.search.SearchConditionDto;
 import org.kosa.project.service.dto.meeting.MeetingSummaryDto;
 import org.kosa.project.service.dto.user.UserMeetingDto;
 import org.kosa.project.service.fileupload.FileUploadService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +41,6 @@ public class MeetingController {
     public String list(@ModelAttribute SearchConditionDto condition,
                        @RequestParam(defaultValue = "1") Integer page,
                        Model model) {
-
         return getMeetingList(condition, page, model);
     }
 
@@ -61,10 +63,15 @@ public class MeetingController {
         //        model.addAttribute("userTypes", userTypes);*/
         MeetingDetailDto meetingDetailDto = meetingService.meetingDetails(meetingId);
         // 현재 로그인 한 유저의 현재 미팅에 대한 참여 정보를 확인하고 싶다.
+
+        if (userDetails != null) {
+            model.addAttribute("userIdentify", userDetails.getUserId());
+        }
         UserMeetingStrategy userMeetingStrategy = getCurrentLoginUserMeetingType(userDetails, meetingDetailDto.getUserMeetingDto());
         model.addAttribute("meetingDetailDto", meetingDetailDto);
         model.addAttribute("userType", userMeetingStrategy);
         System.out.println(model);
+
         return "meeting/detailMeeting";
     }
 
