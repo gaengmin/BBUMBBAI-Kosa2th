@@ -87,7 +87,7 @@
           AND user_id = #{userId}
     </delete>
 
-    <!--모임 참석에 따른 인원 변경 쿼리 및 전체인원만큼 차면 모집 마감으로 변경 -->
+    <!--모임 참석에 따른 인원 변경 쿼리 및 전체인원만큼 차면 모집 마감으로 변경 <수정해야함.......> -->
     <update id="meetingUpdateCountAndStatus" parameterType="long">
         UPDATE meeting
         SET PRESENT_MEMBER = (SELECT COUNT(*) FROM user_meeting WHERE meeting_id = #{meetingId}),

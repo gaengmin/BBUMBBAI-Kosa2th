@@ -60,12 +60,10 @@
                     <!-- 로그인-->
                     <button type="button" th:case="'NOT_LOGIN'" name="userType" value="NOT_LOGIN"
                             class="btn btn-primary btn-sm btn-block mt-3" onclick="redirectToLogin()">로그인
-                        <!-- LEADER 버튼 -->
                     </button>
                     <button type="button" th:case="'LEADER'" name="userType" value="LEADER"
-                            class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('LEADER')">방권한자
+                            class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('LEADER')">수정하기
                     </button>
-
                     <!-- FOLLOWER 버튼 -->
                     <button type="button" th:case="'FOLLOWER'" name="userType" value="FOLLOWER"
                             class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
@@ -104,6 +102,7 @@
             <a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info"
                aria-selected="true">뿜빠이 정보</a>
         </li>
+
         <!-- LEADER만 볼 수 있는 탭 -->
         <li class="nav-item" th:if="${userType.name() == 'LEADER'}">
             <a class="nav-link" id="userWaitProfile-tab" data-toggle="tab" href="#userWaitProfile" role="tab"
@@ -129,6 +128,8 @@
                     </div>
                     모임 이미지 넣기
                 </div>
+
+                <!--지도 위치 마커 찍어주기 -->
                 <div class="col-md-6">
                     <div class="ratio-5-3">
                         <img th:src="@{/imgs/meeting/{filename}(filename=${meetingDetailDto.fileName})}" alt="지도 이미지">
@@ -279,73 +280,49 @@
         window.location.href = '/login'; // 로그인 페이지 URL로 변경
     }
 
+    function sendAjaxRequest(url, formData, redirectOnSuccess) {
+        console.log("FORM DATA: ", formData);
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                console.log("SERVER Response:", response);
+                $('#message').text(response);
+                if (redirectOnSuccess) {
+                    window.location.href = '/meeting/detailMeeting?meetingId=' + formData.meetingId;
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("XHR Object:", xhr);
+                console.error("Status:", status);
+                console.error("Error:", error);
+                if (xhr.status === 401) {
+                    window.location.href = '/login';
+                }
+                $('#message').text('Error: ' + error);
+            }
+        });
+    }
+
     function memberConfirm(userType, userId, meetingId, confirmCheck) {
-        // 폼 데이터를 객체로 가져옵니다.
         var formData = {
             userType: userType,
             meetingId: meetingId,
             userId: userId,
             confirmCheck: confirmCheck
         };
-        console.log("FORM DATA: ", formData);
-        // Ajax 요청을 보냅니다.
-        $.ajax({
-            url: '/api/confirmCheck', // 폼의 action URL을 가져옵니다.
-            type: 'POST', // 요청 방식을 POST로 설정합니다.
-            contentType: 'application/json', // JSON 형식으로 데이터를 보냅니다.
-            data: JSON.stringify(formData), // formData 객체를 JSON 문자열로 변환하여 전송합니다.
-            success: function (response) {
-                console.log("SERVER Response:", response);
-                // 성공 시 메시지를 표시합니다.
-                $('#message').text(response);
-                window.location.href = '/meeting/detailMeeting?meetingId=' + $('[name="meetingId"]').val();
-            },
-            error: function (xhr, status, error) {
-                // 에러 시 상세 정보 출력 (디버깅용)
-                console.error("XHR Object:", xhr);
-                console.error("Status:", status);
-                console.error("Error:", error);
-                $('#message').text('Error: ' + error);
-            }
-        });
+        sendAjaxRequest('/api/confirmCheck', formData, true);
     }
 
     function submitForm(userType) {
-        // 폼 데이터를 객체로 가져옵니다.
         var formData = {
             meetingId: $('[name="meetingId"]').val(),
             userType: userType
         };
-        // Ajax 요청을 보냅니다.
-        alert(formData.meetingId);
-        alert(formData.userType);
-
-        $.ajax({
-            url: $('#meetingForm').attr('action'), // 폼의 action URL을 가져옵니다.
-            type: 'POST', // 요청 방식을 POST로 설정합니다.
-            contentType: 'application/json', // JSON 형식으로 데이터를 보냅니다.
-            data: JSON.stringify(formData), // formData 객체를 JSON 문자열로 변환하여 전송합니다.
-
-            success: function (response) {
-                // 성공 시 메시지를 표시합니다.
-                $('#message').text(response);
-                window.location.href = '/meeting/detailMeeting?meetingId=' + $('[name="meetingId"]').val();
-            },
-            error: function (xhr, status, error) {
-                alert("실패 잡아보자" + userType);
-
-                // 에러 시 상세 정보 출력 (디버깅용)
-                console.error("XHR Object:", xhr);
-                console.error("Status:", status);
-                console.error("Error:", error);
-                if (xhr.status === 401) {
-                    window.location.href = '/login';
-                    // 에러 시 메시지를 표시합니다.
-
-                }
-                $('#message').text('Error: ' + error);
-            }
-        });
+        sendAjaxRequest($('#meetingForm').attr('action'), formData, true);
     }
 </script>
 <!-- Bootstrap JS, Popper.js, and jQuery -->
