@@ -207,5 +207,8 @@
         )
         order by message_send_date
     </select>
-
+    <insert id="saveChat" parameterType="org.kosa.project.service.dto.SaveChatMessageDto" useGeneratedKeys="true" keyColumn="chat_id" keyProperty="chatId">
+        insert into chat (room_id, user_id, message, message_send_date)
+        values (#{roomId}, #{userId}, #{message}, #{sendDateTime})
+    </insert>
 </mapper>

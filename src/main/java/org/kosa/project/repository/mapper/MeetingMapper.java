@@ -35,4 +35,6 @@ public interface MeetingMapper {
     UserMeetingDto findUserMeetingByUserIdAndMeetingId(@Param("meetingId") Long meetingId, @Param("userId") Long userId);
 
     RoomPermissionDto findRoomWithAllChatListByMeetingAndUser(@Param("meetingId") Long meetingId, @Param("userId") Long userId);
+
+    Long saveChat(SaveChatMessageDto chatMessage);
 }

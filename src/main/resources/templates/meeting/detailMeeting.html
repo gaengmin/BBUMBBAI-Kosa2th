@@ -227,10 +227,9 @@
                         <span th:text="|약속 시간 : ${meetingDetailDto.deadLineTime}|"></span>
                         <!-- 불필요한 공백 제거 -->
                     </div>
-                    <div class="mb-3">
-                        <span th:text="|모집 상태 : ${meetingDetailDto.meetingStatus.getStatusType()}|"></span>
-
-                    </div>
+<!--                    <div class="mb-3">-->
+<!--                        <span th:text="|모집 상태 : ${meetingDetailDto.meetingStatus.getStatusType()}|"></span>-->
+<!--                    </div>-->
                     <div id="meetingDetailContext" class="form-control mb-3" style="height: auto;">
                         <div th:utext="${meetingDetailDto.context}"></div>
                     </div>
@@ -474,14 +473,38 @@
                     console.log(connectionInfo);
                     nettyConnect(connectionInfo);
                 })
+                .catch(error => {
+                    console.log(error);
+                    alert("접근 할 수 없습니다.");
+                })
         });
     });
+
 
     function loadSendMessage(userId, userName, message, sendDate, loginUserId) {
         console.log("userId = " + userId);
         console.log("username = " + userName);
         console.log("message = " + message);
         console.log("sendDate = " + sendDate);
+
+        let dateHandler = (date) => {
+            if (Array.isArray(date)) {
+                const [year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0] = date;
+                return new Date(year, month - 1, day, hour, minute, second, millisecond);
+            }
+            return new Date(date);
+        }
+
+        let timeString = new Intl.DateTimeFormat('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false // 24시간 형식
+        }).format(dateHandler(sendDate));
+
 
         const chatList = document.getElementById('chatList');
         const chatItem = document.createElement('div');
@@ -500,15 +523,6 @@
 
         const chatTime = document.createElement('div');
         chatTime.className = 'chat-time';
-        let timeString = new Intl.DateTimeFormat('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false // 24시간 형식
-        }).format(new Date(sendDate));
         chatTime.textContent = timeString;
 
         chatBubble.appendChild(chatHeader);
@@ -537,7 +551,6 @@
             let chatMessage = JSON.parse(event.data)
             console.log(chatMessage);
             loadSendMessage(chatMessage.userId, chatMessage.userName, chatMessage.message, chatMessage.sendDateTime, connectionInfo.userId);
-            chatBox.innerHTML += `<p><b>${chatMessage.userName}</b>: ${chatMessage.message} <i>(${new Date(chatMessage.sendDateTime).toLocaleTimeString()})</i></p>`;
         };
 
         websocket.onclose = function () {
@@ -565,39 +578,41 @@
                 loadSendMessage(chatMessage.userId, chatMessage.userName, chatMessage.message, chatMessage.sendDateTime, connectionInfo.userId);
                 input.value = "";
             } else {
-                console.log("WebSocket is not open. readyState: " + ws.readyState);
+                console.log("WebSocket is not open. readyState: " + websocket.readyState);
             }
         }
         $('#send-button').click(sendNettyMessage);
     }
+
+
 </script>
-<script th:inline="javascript">
-    var latitude = /*[[${meetingDetailDto.latitude}]]*/ 37.5665;
-    var longitude = /*[[${meetingDetailDto.longitude}]]*/ 126.9780;
-    var meetingName = /*[[${meetingDetailDto.subject}]]*/ '모임 이름';
+<!--<script th:inline="javascript">-->
+<!--    var latitude =  37.5665;-->
+<!--    var longitude = 126.9780;-->
+<!--    var meetingName = '모임 이름';-->
 
-    var mapContainer = document.getElementById('map'),
-        mapOption = {
-            center: new kakao.maps.LatLng(latitude, longitude),
-            level: 3
-        };
+<!--    var mapContainer = document.getElementById('map'),-->
+<!--        mapOption = {-->
+<!--            center: new kakao.maps.LatLng(latitude, longitude),-->
+<!--            level: 3-->
+<!--        };-->
 
-    var map = new kakao.maps.Map(mapContainer, mapOption);
+<!--    var map = new kakao.maps.Map(mapContainer, mapOption);-->
 
-    var markerPosition = new kakao.maps.LatLng(latitude, longitude);
+<!--    var markerPosition = new kakao.maps.LatLng(latitude, longitude);-->
 
-    var marker = new kakao.maps.Marker({
-        position: markerPosition
-    });
+<!--    var marker = new kakao.maps.Marker({-->
+<!--        position: markerPosition-->
+<!--    });-->
 
-    marker.setMap(map);
+<!--    marker.setMap(map);-->
 
-    var infowindow = new kakao.maps.InfoWindow({
-        content: '<div style="padding:5px;">' + meetingName + '</div>'
-    });
-    infowindow.open(map, marker);
-    /*]]>*/
-</script>
+<!--    var infowindow = new kakao.maps.InfoWindow({-->
+<!--        content: '<div style="padding:5px;">' + meetingName + '</div>'-->
+<!--    });-->
+<!--    infowindow.open(map, marker);-->
+<!--    /*]]>*/-->
+<!--</script>-->
 <script>
     window.onload = function () {
         var rightColumn = document.getElementById('right-column');

@@ -9,6 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class SaveChatMessageDto {
+    private Long chatId;
     private Long roomId;
     private Long userId;
     private String userName;
