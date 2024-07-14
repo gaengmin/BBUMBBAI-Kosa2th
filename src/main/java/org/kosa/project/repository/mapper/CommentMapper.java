@@ -14,5 +14,5 @@ public interface CommentMapper {
 
     List<CommentResponseDto> findAll(Long MeetingId);
 
-    void deleteById(Long meetinCommentId);
+    void deleteById(Long meetingCommentId);
 }

@@ -1,6 +1,10 @@
 package org.kosa.project.controller;
 
 import org.kosa.project.config.annotation.UserFileServiceQualifier;
+import org.kosa.project.service.UserMeetingListService;
+import org.kosa.project.service.dto.meeting.MeetingSummaryDto;
+import org.kosa.project.service.dto.search.SearchConditionDto;
+import org.kosa.project.service.dto.user.UserMeetingListDto;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.kosa.project.service.UserService;
 import org.kosa.project.service.dto.user.UserProfileDto;
@@ -16,10 +20,12 @@ public class UserController {
 
     private final UserService userService;
     private final FileUploadService fileUploadService;
+    private final UserMeetingListService userMeetingListService;
 
-    public UserController(UserService userService, @UserFileServiceQualifier FileUploadService fileUploadService) {
+    public UserController(UserService userService, @UserFileServiceQualifier FileUploadService fileUploadService, UserMeetingListService userMeetingListService) {
         this.userService = userService;
         this.fileUploadService = fileUploadService;
+        this.userMeetingListService = userMeetingListService;
     }
 
     @GetMapping("/join")
@@ -43,11 +49,16 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public String userProfile1(@PathVariable Long userId, Model model) {
+    public String userProfile1(@PathVariable Long userId,  String userType, Model model,
+                               @RequestParam(defaultValue = "1") Integer page) {
         UserProfileDto userProfileDto = userService.getProfile(userId);
+        Page <UserMeetingListDto> userMeetingJoinList = userMeetingListService.userMeetingJoinList(userId, userType, page, 5);
         model.addAttribute("userProfileDto", userProfileDto);
+        model.addAttribute("joinList", userMeetingJoinList);
+        model.addAttribute("userType", userType);
         return "profile";
     }
+
 
     @GetMapping("/profile/{email}")
     public String userProfile2(@PathVariable("email") String email, Model model) {
@@ -55,6 +66,8 @@ public class UserController {
 //        model.addAttribute("userProfileDto",userProfileDto);
         return "userProfileDto";
     }
+
+
 
 }
 

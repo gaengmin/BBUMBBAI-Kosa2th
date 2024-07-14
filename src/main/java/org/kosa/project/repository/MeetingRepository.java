@@ -10,6 +10,7 @@ import org.kosa.project.service.dto.meeting.MeetingRegisterDto;
 import org.kosa.project.service.dto.meeting.MeetingSummaryDto;
 import org.kosa.project.service.dto.search.SearchConditionDto;
 import org.kosa.project.service.dto.user.UserMeetingCheckDto;
+import org.kosa.project.service.dto.user.UserMeetingListDto;
 import org.springframework.stereotype.Repository;
 import org.kosa.project.service.dto.user.UserMeetingDto;
 

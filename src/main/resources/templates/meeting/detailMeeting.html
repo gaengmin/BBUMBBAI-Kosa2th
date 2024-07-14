@@ -233,6 +233,7 @@
                         <div id="meetingDetailContext" class="form-control mb-3" style="height: auto;">
                             <div th:utext="${meetingDetailDto.context}"></div>
                         </div>
+
                     </div>
 
                     <div class="col-md-4">
@@ -240,8 +241,6 @@
                         <div class="cm_list">
 
                         </div>
-
-
                         <!-- 댓글 작성 폼 -->
                         <form th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
                             <div class="cm-write">
@@ -259,89 +258,88 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="tab-pane fade" id="userWaitProfile" role="tabpanel" aria-labelledby="userProfile-tab">
-            <h5>모임 대기자 명단</h5>
-            <table class="table table-striped details-table" width="70%">
-                <thead>
-                <tr>
-                    <th>이름</th>
-                    <th>LEVEL</th>
-                    <th>프로필</th>
-                    <th>거부</th>
-                    <th th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">참여</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="list : ${meetingDetailDto.userMeetingDto}"
-                    th:if="${list.userType.name().equals('WAIT')}">
-                    <td th:text="${list.userName}"></td>
-                    <td th:text="${list.userType.getUserTypeName()}"></td>
-                    <td>
-                        <a th:href="@{/users/{userId}(userId=${list.userId})}"
-                           class="btn btn-success btn-sm btn-block mt-3">정보</a>
-                    </td>
-                    <td>
-                        <a href="#"
-                           th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '1')|"
-                           class="btn btn-dark btn-sm btn-block mt-3">내보내기</a>
-                    </td>
-                    <td th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">
-                        <a href="#"
-                           th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '2')|"
-                           class="btn btn-dark btn-sm btn-block mt-3">허가하기</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="tab-pane fade" id="userWaitProfile" role="tabpanel" aria-labelledby="userProfile-tab">
+                <h5>모임 대기자 명단</h5>
+                <table class="table table-striped details-table" width="70%">
+                    <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>LEVEL</th>
+                        <th>프로필</th>
+                        <th>거부</th>
+                        <th th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">참여</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="list : ${meetingDetailDto.userMeetingDto}"
+                        th:if="${list.userType.name().equals('WAIT')}">
+                        <td th:text="${list.userName}"></td>
+                        <td th:text="${list.userType.getUserTypeName()}"></td>
+                        <td>
+                            <a th:href="@{/users/{userId}(userId=${list.userId})}"
+                               class="btn btn-success btn-sm btn-block mt-3">정보</a>
+                        </td>
+                        <td>
+                            <a href="#"
+                               th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '1')|"
+                               class="btn btn-dark btn-sm btn-block mt-3">내보내기</a>
+                        </td>
+                        <td th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">
+                            <a href="#"
+                               th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '2')|"
+                               class="btn btn-dark btn-sm btn-block mt-3">허가하기</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="tab-pane fade" id="userProfile" role="tabpanel" aria-labelledby="userProfile-tab">
-            <h5>참여자 명단</h5>
-            <table class="table table-striped details-table">
-                <thead>
-                <tr>
-                    <th>이름</th>
-                    <th>대기자</th>
-                    <th>프로필</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="list : ${meetingDetailDto.userMeetingDto}"
-                    th:if="${!list.userType.name().equals('WAIT')}">
-                    <td th:text="${list.userName}"></td>
-                    <td th:text="${list.userType.getUserTypeName()}"></td>
-                    <td>
-                        <a th:href="@{/users/{userId}(userId=${list.userId})}"
-                           class="btn btn-success btn-sm btn-block mt-3">정보</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="tab-pane fade" id="userProfile" role="tabpanel" aria-labelledby="userProfile-tab">
+                <h5>참여자 명단</h5>
+                <table class="table table-striped details-table">
+                    <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>대기자</th>
+                        <th>프로필</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="list : ${meetingDetailDto.userMeetingDto}"
+                        th:if="${!list.userType.name().equals('WAIT')}">
+                        <td th:text="${list.userName}"></td>
+                        <td th:text="${list.userType.getUserTypeName()}"></td>
+                        <td>
+                            <a th:href="@{/users/{userId}(userId=${list.userId})}"
+                               class="btn btn-success btn-sm btn-block mt-3">정보</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="tab-pane fade" id="userChat" role="tabpanel" aria-labelledby="userChat-tab">
-            <div class="tab-content">
-                <div class="row" id="chatList">
-                </div>
+            <div class="tab-pane fade" id="userChat" role="tabpanel" aria-labelledby="userChat-tab">
+                <div class="tab-content">
+                    <div class="row" id="chatList">
+                    </div>
 
-                <div class="row" id="chatInput">
-                    <div class="col-12 justify-content-end align-items-end">
-                        <!-- Chat input or other content -->
-                        <div class="input-group">
-                            <input type="text" id="send-input" class="form-control"
-                                   placeholder="Type your message here...">
-                            <button id="send-button" class="btn btn-primary" type="button">Send</button>
+                    <div class="row" id="chatInput">
+                        <div class="col-12 justify-content-end align-items-end">
+                            <!-- Chat input or other content -->
+                            <div class="input-group">
+                                <input type="text" id="send-input" class="form-control"
+                                       placeholder="Type your message here...">
+                                <button id="send-button" class="btn btn-primary" type="button">Send</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-    </div>
     </div>
 </main>
+
 
 <!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -576,23 +574,23 @@
         const meetingId = $('[name="meetingId"]').val();
 
         const params = {
-            meetingId : meetingId,
-            content : content.value
+            meetingId: meetingId,
+            content: content.value
         }
 
         $.ajax({
-            url : `/posts/${meetingId}/comments`,
-            type : 'post',
-            contentType : 'application/json; charset=utf-8',
-            dataType : 'json',
-            data : JSON.stringify(params),
-            async : false,
-            success : function (response) {
+            url: `/posts/${meetingId}/comments`,
+            type: 'post',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify(params),
+            async: false,
+            success: function (response) {
                 alert('댓글이 등록되었습니다.');
                 content.value = '';
                 findAllComment();
             },
-            error : function (request, status, error) {
+            error: function (request, status, error) {
                 console.log(error)
             }
         })
@@ -609,14 +607,14 @@
         const meetingId = $('[name="meetingId"]').val();
 
         $.ajax({
-            url : `/posts/${meetingId}/comments`,
-            type : 'get',
-            dataType : 'json',
-            async : false,
-            success : function (response) {
+            url: `/posts/${meetingId}/comments`,
+            type: 'get',
+            dataType: 'json',
+            async: false,
+            success: function (response) {
 
                 // 1. 조회된 데이터가 없는 경우
-                if ( !response.length ) {
+                if (!response.length) {
                     document.querySelector('.cm_list').innerHTML = '<div class="cm_none"><p>등록된 댓글이 없습니다.</p></div>';
                     return false;
                 }
@@ -645,7 +643,7 @@
                 // 4. class가 "cm_list"인 요소를 찾아 HTML을 렌더링
                 document.querySelector('.cm_list').innerHTML = commentHtml;
             },
-            error : function (request, status, error) {
+            error: function (request, status, error) {
                 console.log(error)
             }
         })
@@ -653,22 +651,22 @@
 
     function deleteCommentById(reMeetingId) {
 
-        if ( !confirm('선택하신 댓글을 삭제할까요?') ) {
+        if (!confirm('선택하신 댓글을 삭제할까요?')) {
             return false;
         }
 
         const meetingId = $('[name="meetingId"]').val();
 
         $.ajax({
-            url : `/posts/${meetingId}/comments/${reMeetingId}`,
-            type : 'delete',
-            dataType : 'json',
-            async : false,
-            success : function (response) {
+            url: `/posts/${meetingId}/comments/${reMeetingId}`,
+            type: 'delete',
+            dataType: 'json',
+            async: false,
+            success: function (response) {
                 alert('삭제되었습니다.');
                 findAllComment();
             },
-            error : function (request, status, error) {
+            error: function (request, status, error) {
                 console.log(error)
             }
         })
