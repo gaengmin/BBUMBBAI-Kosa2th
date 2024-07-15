@@ -593,7 +593,6 @@
                 };
                 console.log(chatMessage);
                 websocket.send(JSON.stringify(chatMessage));
-                loadSendMessage(chatMessage.userId, chatMessage.userName, chatMessage.message, chatMessage.sendDateTime, connectionInfo.userId);
                 input.value = "";
             } else {
                 console.log("WebSocket is not open. readyState: " + websocket.readyState);
