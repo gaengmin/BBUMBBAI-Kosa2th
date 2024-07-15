@@ -4,21 +4,71 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kosa.project.repository.mapper.UserMapper">
 
-        <insert id="insertUser" parameterType="org.kosa.project.service.dto.UserRegisterForm">
-            insert into users(email, phone_number, user_name, password, birth, myself_memo, profile_img_url)
-            values (#{email},#{phoneNumber}, #{userName}, #{password}, #{birthDate}, #{introduce}, #{profileImgUrl})
-        </insert>
+    <resultMap id="UserMeetingListDtoPageResultMap" type="org.kosa.project.controller.Page">
+        <result property="currentPage" column="currentPage"/>
+        <result property="pagePerSize" column="pagePerSize"/>
+        <result property="totalDataSize" column="totalDataSize"/>
+        <collection property="elements" ofType="org.kosa.project.service.dto.user.UserMeetingListDto"
+                    resultMap="UserMeetingListDtoResultMap"/>
+    </resultMap>
 
-        <select id="findUserProfileById" resultType="org.kosa.project.service.dto.UserProfileDto" parameterType="java.lang.Long">
-            select user_id as userId, email, user_name as userName, phone_number as phoneNumber, myself_memo as introduction, profile_img_url as profileImgUrl
-            from users
-            where user_id = #{userId}
-        </select>
+    <resultMap id="UserMeetingListDtoResultMap" type="org.kosa.project.service.dto.user.UserMeetingListDto">
+        <id property="userId" column="user_id"/>
+        <result property="meetingId" column="meeting_id"/>
+        <result property="subject" column="subject"/>
+        <result property="meetingStatus" column="status"/>
+        <result property="userName" column="user_name"/>
+        <result property="userType" column="user_type"/>
+        <result property="regDate" column="reg_dt"/>
+    </resultMap>
 
-        <select id="findUserByEmail" resultType="org.kosa.project.service.dto.UserDetailDto" parameterType="String">
-            select email,password,user_id as userID, user_name as userName
-            from users
-            where email = #{email}
-        </select>
+    <insert id="insertUser" parameterType="org.kosa.project.service.dto.user.UserRegisterForm">
+        insert into users(email, phone_number, user_name, password, birth, myself_memo, profile_img_url)
+        values (#{email}, #{phoneNumber}, #{userName}, #{password}, #{birthDate}, #{introduce}, #{profileImgUrl})
+    </insert>
+
+    <select id="findUserProfileById" resultType="org.kosa.project.service.dto.user.UserProfileDto"
+            parameterType="java.lang.Long">
+        select user_id         as userId,
+               email,
+               user_name       as userName,
+               phone_number    as phoneNumber,
+               myself_memo     as introduction,
+               profile_img_url as profileImgUrl
+        from users
+        where user_id = #{userId}
+    </select>
+
+    <select id="findUserByEmail" resultType="org.kosa.project.service.dto.user.UserDto" parameterType="String">
+        select user_id as userId, email, user_name as userName, password
+        from users
+        where email = #{email}
+    </select>
+
+
+    <select id="userMeetingJoinList" resultMap="UserMeetingListDtoPageResultMap">
+        select *
+        from (select m.MEETING_ID,
+        m.SUBJECT,
+        m.STATUS,
+        u.USER_NAME,
+        um.USER_TYPE,
+        m.REG_DT,
+        count(*) over () as totalDataSize,
+        (select #{pageable.currentPage} from dual) as currentPage,
+        (select #{pageable.pagePerSize} from dual) as pagePerSize,
+        row_number() over (order by m.reg_dt) as rnum
+        from MEETING m
+        join MARKET.USER_MEETING UM on m.MEETING_ID = UM.MEETING_ID
+        join MARKET.USERS U on UM.USER_ID = U.USER_ID
+        where um.USER_ID = #{userId}
+        <if test="userType != null and userType != ''">
+            and UM.USER_TYPE = #{userType}
+        </if>
+        )
+        where rnum between ((#{pageable.currentPage} - 1) * #{pageable.pagePerSize}) + 1 and #{pageable.currentPage} *
+        #{pageable.pagePerSize}
+    </select>
+
 </mapper>
 

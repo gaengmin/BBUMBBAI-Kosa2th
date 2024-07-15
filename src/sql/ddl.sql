@@ -1,7 +1,7 @@
 -- Drop existing tables if they exist
 DROP TABLE CHAT CASCADE CONSTRAINTS;
 DROP TABLE ROOM CASCADE CONSTRAINTS;
-DROP TABLE RE_MEETING CASCADE CONSTRAINTS;
+DROP TABLE MEETING_COMMENT CASCADE CONSTRAINTS;
 DROP TABLE USER_MEETING CASCADE CONSTRAINTS;
 DROP TABLE MEETING CASCADE CONSTRAINTS;
 DROP TABLE REGION CASCADE CONSTRAINTS;
@@ -25,8 +25,7 @@ CREATE TABLE USER_MEETING (
                               user_meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                               user_id NUMBER,
                               meeting_id NUMBER,
-                              user_type VARCHAR2(30),
-                              user_confirm varchar2(1) default 0
+                              user_type VARCHAR2(30)
 );
 
 -- Create MEETING table
@@ -47,8 +46,8 @@ CREATE TABLE MEETING (
 
 
 -- Create RE_MEETING table
-CREATE TABLE RE_MEETING (
-                            re_meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+CREATE TABLE MEETING_COMMENT (
+                            meeting_comment_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                             meeting_id NUMBER,
                             user_id NUMBER,
                             context CLOB,
@@ -98,12 +97,11 @@ ALTER TABLE USER_MEETING
 
 ALTER TABLE MEETING
     ADD CONSTRAINT fk_meeting_region FOREIGN KEY (region_id) REFERENCES REGION(region_id);
+ALTER TABLE MEETING_COMMENT
+    ADD CONSTRAINT fk_meeting_comment_meeting FOREIGN KEY (meeting_id) REFERENCES MEETING(meeting_id);
 
-ALTER TABLE RE_MEETING
-    ADD CONSTRAINT fk_re_meeting_meeting FOREIGN KEY (meeting_id) REFERENCES MEETING(meeting_id);
-
-ALTER TABLE RE_MEETING
-    ADD CONSTRAINT fk_re_meeting_user FOREIGN KEY (user_id) REFERENCES USERS(user_id);
+ALTER TABLE MEETING_COMMENT
+    ADD CONSTRAINT fk_meeting_comment_user FOREIGN KEY (user_id) REFERENCES USERS(user_id);
 
 ALTER TABLE ROOM
     ADD CONSTRAINT fk_room_meeting FOREIGN KEY (meeting_id) REFERENCES MEETING(meeting_id);

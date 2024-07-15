@@ -1,10 +1,12 @@
 package org.kosa.project.service.Enum;
 
+import lombok.Getter;
 import org.kosa.project.service.MeetingService;
-import org.kosa.project.service.dto.UserMeetingCheckDto;
+import org.kosa.project.service.dto.user.UserMeetingCheckDto;
 import org.kosa.project.service.exception.meeting.MeetingUserNotLoginException;
 
-public enum UserMeetingType {
+@Getter
+public enum UserMeetingStrategy {
     LEADER("모임장") {
         @Override
         public void handleAction(MeetingService meetingService, UserMeetingCheckDto checkDto) {
@@ -48,12 +50,8 @@ public enum UserMeetingType {
 
     private final String userTypeName;
 
-    UserMeetingType(String userTypeName) {
-        this.userTypeName = userTypeName;
-    }
-
-    public String getUserTypeName() {
-        return userTypeName;
+    UserMeetingStrategy(String strategy) {
+        this.userTypeName = strategy;
     }
 
     public abstract void handleAction(MeetingService meetingService, UserMeetingCheckDto checkDto);
