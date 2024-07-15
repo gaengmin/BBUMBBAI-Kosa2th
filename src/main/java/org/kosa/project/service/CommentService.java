@@ -25,6 +25,12 @@ public class CommentService {
         return commentMapper.findById(reMeetingId);
     }
 
+    @Transactional
+    public Long updateComment(final CommentRequestDto params) {
+        commentMapper.update(params);
+        return params.getMeetingCommentId();
+    }
+
     public List<CommentResponseDto> findAllComments(final Long meetingId) {
         return commentMapper.findAll(meetingId);
     }

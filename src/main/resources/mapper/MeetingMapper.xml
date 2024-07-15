@@ -69,7 +69,13 @@
 
     <!--Meeting생성시 save / select / userMeeting테이블까지 저장-->
     <insert id="save" parameterType="org.kosa.project.controller.MeetingRegisterRequest">
-        INSERT INTO MEETING (user_id, category, subject, context, total_member, file_name, DEADLINE_TIME)
+        INSERT INTO MEETING (user_id,
+                             category,
+                             subject,
+                             context,
+                             total_member,
+                             file_name,
+                             deadline_time)
         VALUES (#{userId}, #{category}, #{subject}, #{context}, #{totalMember}, #{fileUploadUrl}, #{deadLineTime})
     </insert>
 
