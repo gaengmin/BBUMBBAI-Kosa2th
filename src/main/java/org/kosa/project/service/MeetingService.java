@@ -34,6 +34,7 @@ public class MeetingService {
 
         UserMeetingCheckDto userMeetingCheckDto = new UserMeetingCheckDto(userId, UserMeetingStrategy.LEADER, meetingId);
         meetingRepository.userMeetingSave(userMeetingCheckDto);
+        meetingRepository.createMeetingRoom(meetingId);
     }
 
     /**

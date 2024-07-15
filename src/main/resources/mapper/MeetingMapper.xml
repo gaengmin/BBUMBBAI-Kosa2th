@@ -73,6 +73,11 @@
         VALUES (#{userId}, #{category}, #{subject}, #{context}, #{totalMember}, #{fileUploadUrl}, #{deadLineTime})
     </insert>
 
+    <insert id="createMeetingRoom">
+        insert into room (meeting_id)
+        values (#{meetingId})
+    </insert>
+
     <select id="selectLastInsertId" resultType="long">
         SELECT meeting_id
         FROM MEETING
@@ -206,7 +211,7 @@
         where u.user_id = #{userId} and um.meeting_id = #{meetingId}
     </select>
 
-    <select id="findRoomWithAllChatListByMeetingAndUser" resultMap="RoomPermissionDtoResultMap">
+        <select id="findRoomWithAllChatListByMeetingAndUser" resultMap="RoomPermissionDtoResultMap">
         select u.user_id as user_id, u.user_name as user_name, c.room_id as room_id, us.user_id as writeUserId, us.user_name as writeUserName, c.message, c.message_send_date as writeTime
         from chat c
                  left join (select user_id, user_name from users where user_id = #{userId}) u on 1 = 1
@@ -222,4 +227,6 @@
         insert into chat (room_id, user_id, message, message_send_date)
         values (#{roomId}, #{userId}, #{message}, #{sendDateTime})
     </insert>
+
+
 </mapper>

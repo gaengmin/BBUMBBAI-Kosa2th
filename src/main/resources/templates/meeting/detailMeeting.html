@@ -468,6 +468,7 @@
         console.log("sendDate = " + sendDate);
 
         let dateHandler = (date) => {
+            console.log(date);
             if (Array.isArray(date)) {
                 const [year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0] = date;
                 return new Date(year, month - 1, day, hour, minute, second, millisecond);

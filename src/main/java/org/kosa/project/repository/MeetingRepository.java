@@ -70,4 +70,8 @@ public class MeetingRepository {
     public RoomPermissionDto findRoomWithAllChatListByMeetingAndUser(Long meetingId, Long userId) {
         return meetingMapper.findRoomWithAllChatListByMeetingAndUser(meetingId, userId);
     }
+
+    public void createMeetingRoom(long meetingId) {
+        meetingMapper.createMeetingRoom(meetingId);
+    }
 }

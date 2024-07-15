@@ -67,6 +67,7 @@ public class MeetingRestController {
         }
         System.out.println("MeetingRestController.saveChatMessage");
         chattingService.saveChat(chatMessage);
+        System.out.println(roomId);
         return "ok";
     }
 
@@ -76,7 +77,7 @@ public class MeetingRestController {
             @RequestBody UserMeetingCheckDto userMeetingCheckDto, //body -> model
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        // setter
+        // setter;
         UserMeetingStrategy userType = userMeetingCheckDto.getUserType();
         userType.handleAction(meetingService, userMeetingCheckDto);
 

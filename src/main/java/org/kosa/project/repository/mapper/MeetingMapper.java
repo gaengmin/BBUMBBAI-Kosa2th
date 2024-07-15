@@ -43,4 +43,6 @@ public interface MeetingMapper {
     RoomPermissionDto findRoomWithAllChatListByMeetingAndUser(@Param("meetingId") Long meetingId, @Param("userId") Long userId);
 
     Long saveChat(SaveChatMessageDto chatMessage);
+
+    void createMeetingRoom(long meetingId);
 }
