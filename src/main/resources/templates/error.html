@@ -7,7 +7,9 @@
 
 <head th:replace="~{head :: headerFragment}"></head>
 <body>
-    <div th:replace="~{nav :: navFragment}"></div>
-    <th th:text="${error}"></th>
+<div th:replace="~{nav :: navFragment}"></div>
+<th th:text="${error}"></th>
+<!-- 푸터 포함 -->
+<div th:replace="~{footer :: footerFragment}"></div>
 </body>
 </html>

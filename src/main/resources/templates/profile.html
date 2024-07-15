@@ -6,7 +6,7 @@
 </head>
 <body>
 <div th:replace="~{nav :: navFragment}"></div>
-<main class="container centered-main">
+<main class="container centered-main mt-4">
 
     <header class="row d-flex align-items-start justify-content-center">
         <div class="col flex-shrink-0">
@@ -14,8 +14,10 @@
                  style="width: 30rem; height: 30rem;">
         </div>
 
-
         <div class="col align-self-center" style="width:30rem;">
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">PROFILE</label>
+            </div>
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">이메일</label>
                 <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"
@@ -34,8 +36,8 @@
         </div>
     </header>
 </main>
-<!--로그인 ID와 프로필이 같을 때, 내가 참여한 정보 나올 수 있게. -->
-<div class="container centered-main" th:if="${#authentication.getPrincipal().userId}==${userProfileDto.userId}">
+
+<div class="container centered-main mt-5" th:if="${#authentication.getPrincipal().userId}==${userProfileDto.userId}">
     <div class="d-flex justify-content-center accordion" style="width:61rem;">
         <div class="col accordion-item">
             <h2 class="accordion-header">
