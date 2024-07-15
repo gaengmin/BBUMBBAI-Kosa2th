@@ -65,7 +65,7 @@ public class MeetingRestController {
             System.out.println(roomId);
             return null;
         }
-        System.out.println("MeetingRestController.saveChatMessage");
+        System.out.println(chatMessage);
         chattingService.saveChat(chatMessage);
         System.out.println(roomId);
         return "ok";

@@ -494,33 +494,40 @@
     });
 
 
+
+
     function loadSendMessage(userId, userName, message, sendDate, loginUserId) {
         console.log("userId = " + userId);
         console.log("username = " + userName);
         console.log("message = " + message);
         console.log("sendDate = " + sendDate);
 
-        let dateHandler = (date) => {
-            console.log(date);
-            if (Array.isArray(date)) {
-                const [year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0] = date;
-                return new Date(year, month - 1, day, hour, minute, second, millisecond);
-            }
-            return new Date(date);
+        let arrayToDate = (arrDate) => {
+            const [year, month, day, hours, minutes, seconds] = arrDate;
+            return new Date(year, month - 1, day, hours, minutes, seconds);
         }
 
-        let timeString = new Intl.DateTimeFormat('ko-KR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false // 24시간 형식
-        }).format(dateHandler(sendDate));
+        let convertKoreaTime = (isoDate) => {
+            const convertDate = Array.isArray(isoDate) ? arrayToDate(isoDate) : new Date(isoDate);
+            convertDate.setTime(convertDate.getTime() + (9 * 60 * 60 * 1000))
+            // UTC 시간으로 변환
+            const formatter = new Intl.DateTimeFormat('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZone: 'Asia/Seoul'
+            });
+            console.log("format : " + formatter.format(convertDate));
+            return formatter.format(convertDate);
+        }
 
 
         const chatList = document.getElementById('chatList');
+
         const chatItem = document.createElement('div');
         chatItem.className = `col-12 chat-item${userId == loginUserId ? ' self' : ''}`;
 
@@ -537,7 +544,7 @@
 
         const chatTime = document.createElement('div');
         chatTime.className = 'chat-time';
-        chatTime.textContent = timeString;
+        chatTime.textContent = convertKoreaTime(sendDate);
 
         chatBubble.appendChild(chatHeader);
         chatBubble.appendChild(chatMessage);
@@ -553,7 +560,6 @@
     }
 
     let websocket;
-
     function nettyConnect(connectionInfo) {
         websocket = new WebSocket(`ws://localhost:8082/websocket?userId=${connectionInfo.userId}&roomId=${connectionInfo.roomId}`);
 
@@ -563,7 +569,7 @@
 
         websocket.onmessage = function (event) {
             let chatMessage = JSON.parse(event.data)
-            console.log(chatMessage);
+            console.log("chatMessage : " + chatMessage);
             loadSendMessage(chatMessage.userId, chatMessage.userName, chatMessage.message, chatMessage.sendDateTime, connectionInfo.userId);
         };
 
@@ -579,7 +585,8 @@
             if (websocket.readyState === WebSocket.OPEN) {
                 let input = document.getElementById("send-input");
                 let message = input.value;
-                let currentDate = new Date();
+                let currentDate = new Date().toISOString();
+                console.log("currentDate = " + currentDate);
                 let chatMessage = {
                     userId: connectionInfo.userId,
                     roomId: connectionInfo.roomId,
@@ -587,6 +594,7 @@
                     message: message,
                     sendDateTime: currentDate
                 };
+                console.log(chatMessage);
                 websocket.send(JSON.stringify(chatMessage));
                 loadSendMessage(chatMessage.userId, chatMessage.userName, chatMessage.message, chatMessage.sendDateTime, connectionInfo.userId);
                 input.value = "";
@@ -596,12 +604,9 @@
         }
 
         $('#send-button').click(sendNettyMessage);
+
     }
-
-
 </script>
-
-
 
 
 <script>
@@ -632,7 +637,6 @@
         }
 
         $.ajax({
-
             url : `/posts/${meetingId}/comments`,
             type : 'post',
             contentType : 'application/json; charset=utf-8',
@@ -682,8 +686,6 @@
                 let commentHtml = '';
                 let activeButton = false;
                 // 3. 댓글 HTML 추가
-
-
                 response.forEach(row => {
 
                     activeButton = row.userId == loginUserId;
