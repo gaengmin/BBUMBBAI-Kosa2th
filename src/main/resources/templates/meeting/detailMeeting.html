@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="kor" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{head :: headerFragment}"/>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <style>
@@ -372,7 +372,8 @@
     </div>
 </main>
 
-
+<!-- 푸터 포함 -->
+<div th:replace="~{footer :: footerFragment}"></div>
 <!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -516,8 +517,7 @@
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
-                hour12: false,
-                timeZone: 'Asia/Seoul'
+                hour12: false
             });
             console.log("format : " + formatter.format(convertDate));
             return formatter.format(convertDate);
@@ -593,7 +593,6 @@
                 };
                 console.log(chatMessage);
                 websocket.send(JSON.stringify(chatMessage));
-                loadSendMessage(chatMessage.userId, chatMessage.userName, chatMessage.message, chatMessage.sendDateTime, connectionInfo.userId);
                 input.value = "";
             } else {
                 console.log("WebSocket is not open. readyState: " + websocket.readyState);
