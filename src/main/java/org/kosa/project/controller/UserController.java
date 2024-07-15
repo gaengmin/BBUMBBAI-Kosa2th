@@ -2,8 +2,6 @@ package org.kosa.project.controller;
 
 import org.kosa.project.config.annotation.UserFileServiceQualifier;
 import org.kosa.project.service.UserMeetingListService;
-import org.kosa.project.service.dto.meeting.MeetingSummaryDto;
-import org.kosa.project.service.dto.search.SearchConditionDto;
 import org.kosa.project.service.dto.user.UserMeetingListDto;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.kosa.project.service.UserService;
@@ -11,6 +9,7 @@ import org.kosa.project.service.dto.user.UserProfileDto;
 import org.kosa.project.service.dto.user.UserRegisterForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,7 +35,7 @@ public class UserController {
 
     @PostMapping("/join")
     public String join(@ModelAttribute UserRegisterForm userRegisterForm) {
-        // 1. 파일을 저장
+        //1. 파일을 저장
         MultipartFile imgFile = userRegisterForm.getProfileImg();
         String profileImageUrl = fileUploadService.saveFile(imgFile);
 
