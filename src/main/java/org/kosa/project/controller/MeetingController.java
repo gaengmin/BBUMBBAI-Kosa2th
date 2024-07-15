@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.kosa.project.config.annotation.MeetingFileServiceQualifier;
 import org.kosa.project.security.CustomUserDetails;
 import org.kosa.project.service.Enum.Category;
+import org.kosa.project.service.Enum.MeetingStatus;
 import org.kosa.project.service.Enum.UserMeetingStrategy;
 import org.kosa.project.service.MeetingService;
 import org.kosa.project.service.dto.meeting.MeetingDetailDto;
@@ -48,6 +49,9 @@ public class MeetingController {
         Page<MeetingSummaryDto> detailList = meetingService.meetingList(condition, page, PAGE_PER_SIZE);
         model.addAttribute("detailList", detailList);
         model.addAttribute("condition", condition);
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("statuses", MeetingStatus.values());
+        System.out.println("getMeetingList -> " + condition + "and Category ->"+Category.values());
         return "meeting/list";
     }
 

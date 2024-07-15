@@ -32,6 +32,14 @@
         order by r.MEETING_COMMENT_ID
     </select>
 
+    <update id="update" parameterType="org.kosa.project.service.dto.comment.CommentRequestDto">
+        UPDATE meeting_comment
+        SET
+          context = #{content}
+        WHERE
+            meeting_comment_id = #{meetingCommentId}
+    </update>
+
     <delete id="deleteById" parameterType="long">
         delete
         from MEETING_COMMENT
