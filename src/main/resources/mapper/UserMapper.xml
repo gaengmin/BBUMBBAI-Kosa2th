@@ -45,6 +45,12 @@
         where email = #{email}
     </select>
 
+    <select id="findUserByEmailCheck" resultType="String">
+        select EMAIL
+        from
+            USERS
+        where EMAIL = #{email}
+    </select>
 
     <select id="userMeetingJoinList" resultMap="UserMeetingListDtoPageResultMap">
         select *

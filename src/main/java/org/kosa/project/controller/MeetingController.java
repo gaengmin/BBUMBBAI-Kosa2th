@@ -13,8 +13,6 @@ import org.kosa.project.service.dto.search.SearchConditionDto;
 import org.kosa.project.service.dto.meeting.MeetingSummaryDto;
 import org.kosa.project.service.dto.user.UserMeetingDto;
 import org.kosa.project.service.fileupload.FileUploadService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

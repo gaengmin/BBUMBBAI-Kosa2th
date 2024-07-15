@@ -45,6 +45,7 @@ CREATE TABLE MEETING (
 );
 
 
+
 -- Create RE_MEETING table
 CREATE TABLE MEETING_COMMENT (
                             meeting_comment_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

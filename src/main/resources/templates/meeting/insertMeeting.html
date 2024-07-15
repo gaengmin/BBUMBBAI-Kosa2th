@@ -53,9 +53,7 @@
 
             <div class="mb-3">
                 <label for="deadLineTime" class="form-label">모임 날짜</label>
-                <input type="datetime-local" id="deadLineTime" th:field="*{deadLineTime}" min="2" max="12"
-                       required>
-
+                <input type="datetime-local" id="deadLineTime" th:field="*{deadLineTime}" required>
             </div>
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary mb-3">뿜빠이 생성</button>
@@ -67,6 +65,24 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous">
+</script>
+<script>
+    function setMinDateTime() {
+        var now = new Date();
+        now.setHours(now.getHours() + 3);  // 현재 시간에서 3시간 추가
+
+        var year = now.getFullYear();
+        var month = String(now.getMonth() + 1).padStart(2, '0');  // 월은 0부터 시작하므로 +1
+        var day = String(now.getDate()).padStart(2, '0');
+        var hours = String(now.getHours()).padStart(2, '0');
+        var minutes = String(now.getMinutes()).padStart(2, '0');
+
+        var minDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+        document.getElementById('deadLineTime').min = minDateTime;
+        document.getElementById('deadLineTime').value = minDateTime;
+    }
+
+    window.onload = setMinDateTime;
 </script>
 <!--<script>
     const mapContainer = document.getElementById('map'),

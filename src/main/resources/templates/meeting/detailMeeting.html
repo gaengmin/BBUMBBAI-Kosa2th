@@ -207,7 +207,6 @@
                     <div class="col-md-6">
                         지도
                         <div class="ratio-5-3" id="map" style="width:80%;"></div>
->>>>>>> User_List_Functiion
                     </div>
                 </div>
 
@@ -225,8 +224,7 @@
                             <!-- 불필요한 공백 제거 -->
                         </div>
                         <div class="mb-3">
-                            <span th:text="|약속 시간 : ${meetingDetailDto.deadLineTime}|"></span>
-                            <!-- 불필요한 공백 제거 -->
+                            <span th:text="|약속 시간 : ${#temporals.format(meetingDetailDto.deadLineTime, 'yy년 MM월 dd일 HH시 mm분')}|"></span>                            <!-- 불필요한 공백 제거 -->
                         </div>
                         <div class="mb-3">
                             <span th:text="|모집 상태 : ${meetingDetailDto.meetingStatus.getStatusType()}|"></span>
@@ -302,7 +300,7 @@
                         <th>LEVEL</th>
                         <th>프로필</th>
                         <th>거부</th>
-                        <th th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">참여</th>
+                        <th th:if="${meetingDetailDto.meetingStatus.equals('FINISH')}">참여</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -319,7 +317,7 @@
                                th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '1')|"
                                class="btn btn-dark btn-sm btn-block mt-3">내보내기</a>
                         </td>
-                        <td th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">
+                        <td th:if="${meetingDetailDto.meetingStatus.equals('FINISH')}">
                             <a href="#"
                                th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '2')|"
                                class="btn btn-dark btn-sm btn-block mt-3">허가하기</a>
@@ -524,7 +522,6 @@
             console.log("format : " + formatter.format(convertDate));
             return formatter.format(convertDate);
         }
-
 
         const chatList = document.getElementById('chatList');
 

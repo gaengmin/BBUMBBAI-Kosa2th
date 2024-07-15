@@ -1,36 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head th:replace="~{head :: headerFragment}"/>
-
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <body>
-    <div th:replace="~{nav :: navFragment}"></div>
-
-
-    <main class="d-flex align-items-center justify-content-center vh-100">
-        <div class="col-12 col-md-8 col-lg-6">
-            <form method="post" th:action="@{/login}" th:object="${loginform}">
-                <div class="mb-3">
-                    <label class="form-label" for="email">이메일</label>
-                    <input class="form-control" type="email" id="email" th:field="*{email}" required/>
-                    <div class="invalid-feedback">
-                        이메일을 입력해주세요.
-                    </div>
+<head th:replace="~{head :: headerFragment}" />
+<div th:replace="~{nav :: navFragment}"></div>
+<main class="d-flex align-items-center justify-content-center vh-100">
+    <div class="col-12 col-md-8 col-lg-6">
+        <form method="post" th:action="@{/login}" th:object="${loginform}" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="email">이메일</label>
+                <input class="form-control" type="email" id="email" th:field="*{email}" required/>
+                <div class="invalid-feedback">
+                    이메일을 입력해주세요.
                 </div>
-
-                <div class="mb-3">
-                    <label class="form-label" for="password">패스워드</label>
-                    <input class="form-control" type="password" id="password" th:field="*{password}" required/>
-                    <div class="invalid-feedback">
-                        이메일을 입력해주세요.
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary" type="submit" th:onclick="|window.location.href='@{/}'|">로그인</button>
-                        <button class="btn btn-secondary" type="button" th:onclick="|window.location.href='@{/users/join}'|">회원 가입</button>
-                    </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">패스워드</label>
+                <input class="form-control" type="password" id="password" th:field="*{password}" required/>
+                <div class="invalid-feedback">
+                    패스워드를 입력해주세요.
                 </div>
-            </form>
-        </div>
-    </main>
+            </div>
+            <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.
+            </div>
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" type="submit">로그인</button>
+                <button class="btn btn-secondary" type="button" th:onclick="|window.location.href='@{/users/join}'|">회원 가입</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 </body>
 </html>
