@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class ChatMessageDto {
-    private Long meetingId;
     private Long writeUserId;
     private String writeUserName;
     private String message;

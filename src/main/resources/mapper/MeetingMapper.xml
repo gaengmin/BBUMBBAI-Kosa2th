@@ -211,18 +211,16 @@
         where u.user_id = #{userId} and um.meeting_id = #{meetingId}
     </select>
 
-        <select id="findRoomWithAllChatListByMeetingAndUser" resultMap="RoomPermissionDtoResultMap">
-        select u.user_id as user_id, u.user_name as user_name, c.room_id as room_id, us.user_id as writeUserId, us.user_name as writeUserName, c.message, c.message_send_date as writeTime
-        from chat c
+    <select id="findRoomWithAllChatListByMeetingAndUser" resultMap="RoomPermissionDtoResultMap">
+        select u.user_name, u.user_id, r.room_id, (select user_name from users where user_id = c.user_id) as writeUserName , c.USER_ID as writeUserId, c.message, c.message_send_date as writeTime
+        from meeting m
+                 join room r on r.MEETING_ID = m.MEETING_ID
+                 left join chat c on c.room_id = r.room_id
                  left join (select user_id, user_name from users where user_id = #{userId}) u on 1 = 1
-                 left join users us on c.user_id = us.user_id
-        where room_id = (
-            select ROOM_ID as room_id
-            from room
-            where meeting_id = #{meetingId}
-        )
-        order by message_send_date
+        where m.meeting_id = #{meetingId}
+        order by MESSAGE_SEND_DATE
     </select>
+
     <insert id="saveChat" parameterType="org.kosa.project.service.dto.SaveChatMessageDto" useGeneratedKeys="true" keyColumn="chat_id" keyProperty="chatId">
         insert into chat (room_id, user_id, message, message_send_date)
         values (#{roomId}, #{userId}, #{message}, #{sendDateTime})
