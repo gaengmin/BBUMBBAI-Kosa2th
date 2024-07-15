@@ -129,25 +129,26 @@
                 <div id="message"></div>
                 <form method="post" th:action="@{/api/meeting/detailMeeting}" class="me-auto" id="meetingForm">
                     <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
+                    <input type="hidden" name="loginUserId" th:value="${userIdentify}"/>
                     <div th:switch="${userType.name()}">
-                        <!-- 로그인-->
+                        <!— 로그인 —>
                         <button type="button" th:case="'NOT_LOGIN'" name="userType" value="NOT_LOGIN"
                                 class="btn btn-primary btn-sm btn-block mt-3" onclick="redirectToLogin()">로그인
                         </button>
                         <button type="button" th:case="'LEADER'" name="userType" value="LEADER"
                                 class="btn btn-primary btn-sm btn-block mt-3" onclick="submitForm('LEADER')">수정하기
                         </button>
-                        <!-- FOLLOWER 버튼 -->
+                        <!— FOLLOWER 버튼 —>
                         <button type="button" th:case="'FOLLOWER'" name="userType" value="FOLLOWER"
                                 class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
                                 onclick="submitForm('FOLLOWER')">참석 중인 모임 나가기
                         </button>
-                        <!-- wait 버튼 -->
+                        <!— wait 버튼 —>
                         <button type="button" th:case="'WAIT'" name="userType" value="WAIT"
                                 class="btn btn-primary btn-sm btn-block mt-3 bg-danger border-none no-outline"
                                 onclick="submitForm('WAIT')">대기 중인 모임 나가기
                         </button>
-                        <!-- NOT_FOLLOWER 버튼 -->
+                        <!— NOT_FOLLOWER 버튼 —>
                         <div th:case="'NOT_FOLLOWER'">
                             <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
                                 <button type="button" name="userType" value="NOT_FOLLOWER"
@@ -256,6 +257,38 @@
 
                             <button type="button" class="btn btn-primary" onclick="submitComment()">댓글 달기</button>
                         </form>
+                    </div>
+
+                    <div class="modal fade" id="commentUpdateModal" tabindex="-1" role="dialog" aria-labelledby="commentUpdateModalLabel" aria-hidden="true" data-bs-backdrop="static">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="commentUpdateModalLabel">댓글 수정</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeCommentUpdatePopup();">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table">
+                                        <colgroup>
+                                            <col style="width:30%;" /><col style="width:70%;" />
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <div>
+                                                <label>내용<span class="text-danger">(필수 입력)</span></label>
+                                                <textarea id="modalContent" name="modalContent" class="form-control" cols="90" rows="10" placeholder="수정할 내용을 입력해 주세요."></textarea>
+                                            </div>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="commentUpdateBtn" class="btn btn-primary" onclick="">수정</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeCommentUpdatePopup();">취소</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -567,12 +600,8 @@
 
 
 </script>
-<<<<<<< HEAD
-<!--<script th:inline="javascript">-->
-<!--    var latitude =  37.5665;-->
-<!--    var longitude = 126.9780;-->
-<!--    var meetingName = '모임 이름';-->
-=======
+
+
 
 
 <script>
@@ -603,16 +632,21 @@
         }
 
         $.ajax({
-            url: `/posts/${meetingId}/comments`,
-            type: 'post',
-            contentType: 'application/json; charset=utf-8',
-            dataType: 'json',
-            data: JSON.stringify(params),
-            async: false,
-            success: function (response) {
-                alert('댓글이 등록되었습니다.');
-                content.value = '';
-                findAllComment();
+
+            url : `/posts/${meetingId}/comments`,
+            type : 'post',
+            contentType : 'application/json; charset=utf-8',
+            dataType : 'json',
+            data : JSON.stringify(params),
+            async : false,
+            success : function (response) {
+                if (content.value==''){
+                    alert("내용을 입력해 주세요.")
+                } else {
+                    alert('댓글이 등록되었습니다.');
+                    content.value = '';
+                    findAllComment();
+                }
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -629,6 +663,7 @@
     function findAllComment() {
 
         const meetingId = $('[name="meetingId"]').val();
+        const loginUserId =  $('[name="loginUserId"]').val();
 
         $.ajax({
             url: `/posts/${meetingId}/comments`,
@@ -645,29 +680,97 @@
 
                 // 2. 렌더링 할 HTML을 저장할 변수
                 let commentHtml = '';
+                let activeButton = false;
                 // 3. 댓글 HTML 추가
 
 
                 response.forEach(row => {
+
+                    activeButton = row.userId == loginUserId;
+
+                    if (activeButton) {
                     commentHtml += `
                         <div class="list-group-item">
                                 <h6 class="mb-1">${row.userName}</h6>
-                                <h6 class="mb-1">${row.meetingCommentId}</h6>
                                 <p class="mb-1">${row.content}</p>
                                 <small>${row.regDate}</small>
-                                <div sec:authorize access="isAuthenticated()">
-                                <button type="button" class="btns"><span class="icons icon_modify">수정</span></button>
+                                <button type="button" onclick="openCommentUpdatePopup(${row.meetingCommentId});" class="btns"><span class="icons icon_modify">수정</span></button>
                                 <button type="button" onclick="deleteCommentById(${row.meetingCommentId});" class="btns"><span class="icons icon_del">삭제</span></button>
-                                <!--<button class="btn btn-outline-secondary" type="button" onclick="deleteCommentById(${row.meetingCommentId});" >삭제</button>-->
-                                </div>
                         </div>
-                    `;
+                    `;}
+                    if (!activeButton) {
+                        commentHtml += `
+                        <div class="list-group-item">
+                                <h6 class="mb-1">${row.userName}</h6>
+                                <p class="mb-1">${row.content}</p>
+                                <small>${row.regDate}</small>
+                        </div>
+                    `;}
                 })
 
                 // 4. class가 "cm_list"인 요소를 찾아 HTML을 렌더링
                 document.querySelector('.cm_list').innerHTML = commentHtml;
             },
             error: function (request, status, error) {
+                console.log(error)
+            }
+        })
+    }
+
+    function openCommentUpdatePopup(meetingCommentId) {
+
+        const meetingId = $('[name="meetingId"]').val();
+
+        $.ajax({
+            url : `/posts/${meetingId}/comments/${meetingCommentId}`,
+            type : 'get',
+            dataType : 'json',
+            async : false,
+            success : function (response) {
+                document.getElementById('commentUpdateBtn').setAttribute('onclick', `updateComment(${meetingCommentId})`);
+                $('#commentUpdateModal').modal('show');
+            },
+            error : function (request, status, error) {
+                console.log(error)
+            }
+        })
+    }
+
+
+    // 댓글 수정 팝업 close
+    function closeCommentUpdatePopup() {
+        document.querySelectorAll('#modalContent').forEach(element => element.value = '');
+        $('#commentUpdateModal').modal('hide');
+    }
+
+    function updateComment(meetingCommentId) {
+
+        const content = document.getElementById('modalContent');
+        const meetingId = $('[name="meetingId"]').val();
+
+        const params = {
+            meetingCommentId : meetingCommentId,
+            meetingId : meetingId,
+            content : content.value
+        }
+
+        $.ajax({
+            url : `/posts/${meetingId}/comments/${meetingCommentId}`,
+            type : 'patch',
+            contentType : 'application/json; charset=utf-8',
+            dataType : 'json',
+            data : JSON.stringify(params),
+            async : false,
+            success : function (response) {
+            if (content.value ==''){
+                alert("내용을 입력해 주세요.")
+            } else {
+                alert('수정되었습니다.');
+                closeCommentUpdatePopup();
+                findAllComment();
+            }
+            },
+            error : function (request, status, error) {
                 console.log(error)
             }
         })
@@ -697,42 +800,36 @@
     }
 
 </script>
+<!--<script type="text/javascript"
+        th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.map.api.key')}}"></script>
 
-<!--<script type="text/javascript"-->
-<!--        th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.map.api.key')}}"></script>-->
+<script th:inline="javascript">
+    var latitude = /*[[${meetingDetailDto.latitude}]]*/ 37.5665;
+    var longitude = /*[[${meetingDetailDto.longitude}]]*/ 126.9780;
+    var meetingName = /*[[${meetingDetailDto.subject}]]*/ '모임 이름';
 
-<!--<script th:inline="javascript">-->
-<!--    var latitude = /*[[${meetingDetailDto.latitude}]]*/ 37.5665;-->
-<!--    var longitude = /*[[${meetingDetailDto.longitude}]]*/ 126.9780;-->
-<!--    var meetingName = /*[[${meetingDetailDto.subject}]]*/ '모임 이름';-->
+    var mapContainer = document.getElementById('map'),
+        mapOption = {
+            center: new kakao.maps.LatLng(latitude, longitude),
+            level: 3
+        };
 
-<!--    var mapContainer = document.getElementById('map'),-->
-<!--        mapOption = {-->
-<!--            center: new kakao.maps.LatLng(latitude, longitude),-->
-<!--            level: 3-->
-<!--        };-->
+    var map = new kakao.maps.Map(mapContainer, mapOption);
 
-<!--    var map = new kakao.maps.Map(mapContainer, mapOption);-->
+    var markerPosition = new kakao.maps.LatLng(latitude, longitude);
 
-<!--    var markerPosition = new kakao.maps.LatLng(latitude, longitude);-->
+    var marker = new kakao.maps.Marker({
+        position: markerPosition
+    });
 
-<!--    var marker = new kakao.maps.Marker({-->
-<!--        position: markerPosition-->
-<!--    });-->
+    marker.setMap(map);
 
-<!--    marker.setMap(map);-->
-
-<!--    var infowindow = new kakao.maps.InfoWindow({-->
-<!--        content: '<div style="padding:5px;">' + meetingName + '</div>'-->
-<!--    });-->
-<!--    infowindow.open(map, marker);-->
-<!--    var infowindow = new kakao.maps.InfoWindow({-->
-<!--        content: '<div style="padding:5px;">' + meetingName + '</div>'-->
-<!--    });-->
-<!--    infowindow.open(map, marker);-->
-<!--    /*]]>*/-->
-<!--    /*]]>*/-->
-<!--</script>-->
+    var infowindow = new kakao.maps.InfoWindow({
+        content: '<div style="padding:5px;">' + meetingName + '</div>'
+    });
+    infowindow.open(map, marker);
+    /*]]>*/
+</script>-->
 <script>
     window.onload = function () {
         var rightColumn = document.getElementById('right-column');
@@ -745,5 +842,6 @@
         window.onresize = adjustTextareaHeight;
     };
 </script>
+
 </body>
 </html>

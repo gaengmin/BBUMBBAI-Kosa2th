@@ -34,4 +34,16 @@ public class CommentRestController {
         return commentService.deleteCommentById(reMeetingId);
     }
 
+    @GetMapping("/{meetingId}/comments/{meetingCommentId}")
+    public CommentResponseDto findCommentById(@PathVariable final Long meetingId, @PathVariable final Long meetingCommentId) {
+        return commentService.findCommentById(meetingCommentId);
+    }
+
+
+    @PatchMapping("/{meetingId}/comments/{meetingCommentId}")
+    public CommentResponseDto updateComment(@PathVariable final Long meetingId, @PathVariable final Long meetingCommentId, @RequestBody final CommentRequestDto params) {
+        commentService.updateComment(params);
+        return commentService.findCommentById(meetingCommentId);
+    }
+
 }
