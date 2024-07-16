@@ -6,9 +6,9 @@
 
     <insert id="submit" parameterType="org.kosa.project.service.dto.comment.CommentRequestDto" useGeneratedKeys="true" keyProperty="meetingCommentId" keyColumn="MEETING_COMMENT_ID">
         insert into MEETING_COMMENT(
-                               meeting_id,
-                               user_id,
-                               context
+            meeting_id,
+            user_id,
+            context
         )
         values (#{meetingId}, #{userId}, #{content})
     </insert>
@@ -19,23 +19,26 @@
         where MEETING_COMMENT_ID = #{value}
     </select>
 
-    <select id="findAll" parameterType="long" resultType="org.kosa.project.service.dto.comment.CommentResponseDto">
-        select r.MEETING_COMMENT_ID as meetingCommentId,
-               r.meeting_id as meetingId,
-               r.user_id as userId,
-               u.user_name as userName,
-               r.context as content,
-               to_char(r.reg_dt, 'yy-mm-dd hh24:mi') as regDate
-        from MEETING_COMMENT r
-                 join users u on u.user_id = r.user_id
-        where r.meeting_id = #{value}
-        order by r.MEETING_COMMENT_ID
+    <select id="findAll" parameterType="java.util.Map" resultType="org.kosa.project.service.dto.comment.CommentResponseDto">
+        select *
+        from (select m.meeting_comment_id as meetingCommentId,
+                     m.meeting_id as meetingId,
+                     m.user_id as userId,
+                     u.user_name as userName,
+                     m.context as content,
+                     to_char(m.reg_dt, 'yy-mm-dd hh24:mi') as regDate,
+                     ceil(ROW_NUMBER() OVER (ORDER BY m.meeting_comment_id DESC)/10) AS page
+              from MEETING_COMMENT m
+                       join users u on u.user_id = m.user_id
+              where m.meeting_id = #{meetingId})
+        where page = #{page}
+        order by meetingCommentId desc
     </select>
 
     <update id="update" parameterType="org.kosa.project.service.dto.comment.CommentRequestDto">
         UPDATE meeting_comment
         SET
-          context = #{content}
+            context = #{content}
         WHERE
             meeting_comment_id = #{meetingCommentId}
     </update>
@@ -45,5 +48,13 @@
         from MEETING_COMMENT
         where MEETING_COMMENT_ID = #{reMeetingId}
     </delete>
+
+    <select id="count" parameterType="long" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            meeting_comment
+        WHERE meeting_id = #{value}
+    </select>
 
 </mapper>

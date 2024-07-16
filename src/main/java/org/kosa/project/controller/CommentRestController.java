@@ -8,7 +8,9 @@ import org.kosa.project.service.dto.comment.CommentResponseDto;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +27,16 @@ public class CommentRestController {
     }
 
     @GetMapping("/{meetingId}/comments")
-    public List<CommentResponseDto> findAllComments(@PathVariable Long meetingId) {
-        return commentService.findAllComments(meetingId);
+    public Map<String, Object> findAllComments(@RequestParam("meetingId") Long meetingId, @RequestParam(value = "page",defaultValue = "1") int page) {
+        List<CommentResponseDto> comments = commentService.findAllComments(meetingId, page);
+        int totalPages = (int) Math.ceil((double) commentService.countAllComments(meetingId)/10);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("comments", comments);
+        response.put("page", page);
+        response.put("totalPage", totalPages);
+
+        return response;
     }
 
     @DeleteMapping("/{meetingId}/comments/{reMeetingId}")
