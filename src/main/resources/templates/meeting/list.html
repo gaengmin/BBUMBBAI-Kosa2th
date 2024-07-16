@@ -47,6 +47,8 @@
                         <div class="card-body">
                             <h5 class="card-title"
                                 th:text="|카테고리 : ${meetingList.getCategory().getDisplayName()}|"></h5>
+                            <h6 class="card-title"
+                                th:text="|현재상태 : ${meetingList.getMeetingStatus().getStatusType()}|"></h6>
                             <h5 class="card-title" th:text="${meetingList.getSubject}"></h5>
                             <p class="card-text"
                                th:text="'모 집 인 원 : '+${meetingList.getTotalMember()}+' / 현 재 원 : '+${meetingList.getPresentMember()}"/>
