@@ -44,12 +44,14 @@ public class MeetingController {
     }
 
     private String getMeetingList(SearchConditionDto condition, Integer page, Model model) {
+        System.out.println(condition);
+
         Page<MeetingSummaryDto> detailList = meetingService.meetingList(condition, page, PAGE_PER_SIZE);
         model.addAttribute("detailList", detailList);
         model.addAttribute("condition", condition);
         model.addAttribute("categories", Category.values());
         model.addAttribute("statuses", MeetingStatus.values());
-        System.out.println("getMeetingList -> " + condition);
+        System.out.println("getMeetingList -> " + condition+" Category -> "+condition.getCategory());
         return "meeting/list";
     }
 

@@ -155,18 +155,27 @@
         row_number() over (order by meeting_id desc, reg_dt desc) as rnum
         from meeting
         where meeting_id > 0
-        <if test="condition.keyword != null and condition.keyword !=''">
-            <if test='condition.searchType == "all"'>
-                and subject like '%' || #{condition.keyword} || '%' or context like '%' || #{condition.keyword} || '%'
+            <if test='condition.keyword != null'>
+                <if test='condition.searchType == "all"'>
+                    and subject like '%' || #{condition.keyword} || '%' or context like '%' || #{condition.keyword} || '%'
+                </if>
+                <if test='condition.searchType == "subject"'>
+                    and subject like '%' || #{condition.keyword} || '%'
+                </if>
+                <if test='condition.searchType == "keyword"'>
+                    and context like '%' || #{condition.keyword} || '%'
+                </if>
             </if>
-            <if test='condition.searchType == "subject"'>
-                and subject like '%' || #{condition.keyword} || '%'
+
+            <if test="condition.category !=null">
+            <foreach item="cate" index="index" collection="condition.category.value()">
+                <if test='condition.category.name() != "ENTIRE"'>
+                    and category like '%' || #{condition.category} || '%'
+                </if>
+            </foreach>
             </if>
-            <if test='condition.searchType == "keyword"'>
-                and context like '%' || #{condition.keyword} || '%'
-            </if>
-        </if>
-        )
+
+        )x
         where rnum between ((#{pageable.currentPage} - 1) * #{pageable.pagePerSize}) + 1 and #{pageable.currentPage} *
         #{pageable.pagePerSize}
     </select>
