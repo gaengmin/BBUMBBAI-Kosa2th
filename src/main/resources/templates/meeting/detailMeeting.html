@@ -99,27 +99,22 @@
                     <div class="col-md-12" id="left-column">
                         <div class="mb-3">
                             <span th:text="|카테고리 - ${meetingDetailDto.category.getDisplayName()}|"></span>
-                            <!-- 불필요한 공백 제거 -->
                         </div>
                         <div class="mb-3">
-                            <span th:text="|모임 생성일 - ${meetingDetailDto.regDate}|"></span> <!-- 불필요한 공백 제거 -->
+                            <span th:text="|모임 생성일 - ${meetingDetailDto.regDate}|"></span>
                         </div>
                         <div class="mb-3">
                             <span th:text="|모집 현황 : ${meetingDetailDto.presentMember} / ${meetingDetailDto.totalMember} |"></span>
-                            <!-- 불필요한 공백 제거 -->
                         </div>
                         <div class="mb-3">
                             <span th:text="|약속 시간 : ${#temporals.format(meetingDetailDto.deadLineTime, 'yy년 MM월 dd일 HH시 mm분')}|"></span>
-                            <!-- 불필요한 공백 제거 -->
                         </div>
                         <div class="mb-3">
                             <span th:text="|모집 상태 : ${meetingDetailDto.meetingStatus.getStatusType()}|"></span>
-
                         </div>
-                        <div id="meetingDetailContext" class="form-control mb-3" style="height: auto;">
+                        <div id="meetingDetailContext" class="form-control mb-3" style="height: max-content">
                             <div th:utext="${meetingDetailDto.context}"></div>
                         </div>
-
                     </div>
                     <div class="row">
                         <div class="col-md-12">
