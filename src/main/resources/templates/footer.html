@@ -1,23 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<!-- 부트스트랩 CSS 포함 -->
 <body>
-<div th:fragment="footerFragment">
-    <footer class="bg-light text-dark mt-5 p-4">
+    <footer class="bg-light text-dark mt-5" th:fragment="footerFragment">
         <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5>회사 정보</h5>
-                    <p>회사 소개 및 연락처 정보</p>
-                </div>
-            </div>
-            <div class="text-center mt-3">
+            <div class="text-center mt-5">
                 <p>&copy; 2024 BBUMBBAE. All rights reserved.</p>
             </div>
         </div>
     </footer>
-</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 </body>
-</html>

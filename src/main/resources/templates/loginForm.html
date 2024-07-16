@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th=http://www.thymeleaf.org>
+<head th:replace="~{header :: headerFragment}">
+    <title>뿜빠이</title></head>
 <body>
-<head th:replace="~{head :: headerFragment}" />
 <div th:replace="~{nav :: navFragment}"></div>
 <main class="d-flex align-items-center justify-content-center vh-100">
     <div class="col-12 col-md-8 col-lg-6">
