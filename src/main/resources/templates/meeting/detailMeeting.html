@@ -96,7 +96,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-8" id="left-column">
+                    <div class="col-md-12" id="left-column">
                         <div class="mb-3">
                             <span th:text="|카테고리 - ${meetingDetailDto.category.getDisplayName()}|"></span>
                             <!-- 불필요한 공백 제거 -->
@@ -105,7 +105,7 @@
                             <span th:text="|모임 생성일 - ${meetingDetailDto.regDate}|"></span> <!-- 불필요한 공백 제거 -->
                         </div>
                         <div class="mb-3">
-                            <span th:text="|모집 인원 : ${meetingDetailDto.totalMember} / 현재 원 : ${meetingDetailDto.presentMember}|"></span>
+                            <span th:text="|모집 현황 : ${meetingDetailDto.presentMember} / ${meetingDetailDto.totalMember} |"></span>
                             <!-- 불필요한 공백 제거 -->
                         </div>
                         <div class="mb-3">
@@ -121,71 +121,78 @@
                         </div>
 
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER' or userType.name() =='WAIT'}">
+                                <div class="cm-write">
+                                    <fieldset>
+                                        <div class="cm-input">
+                                            <label>댓글</label>
+                                            <p><textarea class="form-control" id="comment" name="content" rows="3"
+                                                         placeholder="댓글을 입력하세요"></textarea></p>
+                                        </div>
+                                    </fieldset>
+                                </div>
 
-                    <div class="col-md-4">
-                        <form th:if="${userType.name() == 'LEADER' or userType.name() == 'FOLLOWER'}">
-                            <div class="cm-write">
-                                <fieldset>
-                                    <div class="cm-input">
-                                        <label>댓글</label>
-                                        <p><textarea class="form-control" id="comment" name="content" rows="3"
-                                                     placeholder="댓글을 입력하세요"></textarea></p>
+                                <div class="fr justify-content-center">
+                                    <button type="button" class="btn btn-primary" onclick="submitComment()">댓글 달기
+                                    </button>
+                                </div>
+                            </form>
+
+                            <p>
+                            <div class="cm_list">
+
+                            </div>
+                            </p>
+
+                            <ul class="pagination justify-content-center" id="pagination"></ul>
+                        </div>
+
+                        <div class="modal fade" id="commentUpdateModal" tabindex="-1" role="dialog"
+                             aria-labelledby="commentUpdateModalLabel" aria-hidden="true" data-bs-backdrop="static">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="commentUpdateModalLabel">댓글 수정</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                                onclick="closeCommentUpdatePopup();">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
-                                </fieldset>
-                            </div>
-
-                            <div class="fr justify-content-center">
-                                <button type="button" class="btn btn-primary" onclick="submitComment()">댓글 달기</button>
-                            </div>
-                        </form>
-
-                        <p>
-                        <div class="cm_list">
-
-                        </div>
-                        </p>
-
-                        <ul class="pagination justify-content-center" id="pagination"></ul>
-                    </div>
-
-                    <div class="modal fade" id="commentUpdateModal" tabindex="-1" role="dialog"
-                         aria-labelledby="commentUpdateModalLabel" aria-hidden="true" data-bs-backdrop="static">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="commentUpdateModalLabel">댓글 수정</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                                            onclick="closeCommentUpdatePopup();">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <table class="table">
-                                        <colgroup>
-                                            <col style="width:30%;"/>
-                                            <col style="width:70%;"/>
-                                        </colgroup>
-                                        <tbody>
-                                        <tr>
-                                            <div>
-                                                <label>내용<span class="text-danger">(필수 입력)</span></label>
-                                                <textarea id="modalContent" name="modalContent" class="form-control"
-                                                          cols="90" rows="10" placeholder="수정할 내용을 입력해 주세요."></textarea>
-                                            </div>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" id="commentUpdateBtn" class="btn btn-primary" onclick="">수정
-                                    </button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                            onclick="closeCommentUpdatePopup();">취소
-                                    </button>
+                                    <div class="modal-body">
+                                        <table class="table">
+                                            <colgroup>
+                                                <col style="width:30%;"/>
+                                                <col style="width:70%;"/>
+                                            </colgroup>
+                                            <tbody>
+                                            <tr>
+                                                <div>
+                                                    <label>내용<span class="text-danger">(필수 입력)</span></label>
+                                                    <textarea id="modalContent" name="modalContent" class="form-control"
+                                                              cols="90" rows="10"
+                                                              placeholder="수정할 내용을 입력해 주세요."></textarea>
+                                                </div>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" id="commentUpdateBtn" class="btn btn-primary" onclick="">
+                                            수정
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                                onclick="closeCommentUpdatePopup();">취소
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div th:replace="~{footer :: footerFragment}"></div>
+
                 </div>
             </div>
 
@@ -748,15 +755,35 @@
         th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.map.api.key')}  + '&libraries=services'}"></script>
 
 <script th:inline="javascript">
-    var latitude = [[${meetingDetailDto.latitude}]]
-    var longitude = [[${meetingDetailDto.longitude}]]
+    let latitude = [[${meetingDetailDto.latitude}]]
+    let longitude = [[${meetingDetailDto.longitude}]]
 
-    console.log(latitude, longitude);
-    var mapContainer = document.getElementById('map');
-    var mapOption = {
+    let mapContainer = document.getElementById('map');
+    let mapOption = {
         center: new kakao.maps.LatLng(latitude, longitude),
         level: 3
     };
+
+    let geocoder = new kakao.maps.services.Geocoder();
+    let coord = new kakao.maps.LatLng(latitude, longitude);
+    let callback = function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            let address = result[0].address.address_name;
+            var iwContent = `<div style="font-size: 0.8rem; width:150% ">${address}</div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+                iwPosition = new kakao.maps.LatLng(latitude, longitude); //인포윈도우 표시 위치입니다
+
+            // 인포윈도우를 생성합니다
+            var infowindow = new kakao.maps.InfoWindow({
+                position : iwPosition,
+                content : iwContent
+            });
+
+            // 마커 위에 인포윈도우를 표시합니다. 두번째 파라미터인 marker를 넣어주지 않으면 지도 위에 표시됩니다
+            infowindow.open(map, marker);
+        }
+    };
+
+    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
 
     var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
@@ -771,9 +798,13 @@
     // 마커가 지도 위에 표시되도록 설정합니다
     marker.setMap(map);
 
+
+
+
+
 </script>
 
 <!-- 푸터 포함 -->
-<div th:replace="~{footer :: footerFragment}"></div>
+
 </body>
 </html>
