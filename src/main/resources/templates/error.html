@@ -5,10 +5,10 @@
     <title>Title</title>
 </head>
 
-<head th:replace="~{head :: headerFragment}"></head>
+<div th:replace="~{header :: headerFragment}"></div>
 <body>
 <div th:replace="~{nav :: navFragment}"></div>
-<th th:text="${error}"></th>
+<div th:text="${error}"></div>
 <!-- 푸터 포함 -->
 <div th:replace="~{footer :: footerFragment}"></div>
 </body>

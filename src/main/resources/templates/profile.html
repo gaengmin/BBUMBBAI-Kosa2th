@@ -1,9 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{head :: headerFragment}">
-    <title>dd</title>
-</head>
+<html lang="ko" xmlns:th=http://www.thymeleaf.org>
+<head th:replace="~{header :: headerFragment}">
+    <title>뿜빠이</title></head>
 <body>
 <div th:replace="~{nav :: navFragment}"></div>
 <main class="container centered-main mt-4">
@@ -16,7 +14,7 @@
 
         <div class="col align-self-center" style="width:30rem;">
             <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">PROFILE</label>
+                <label for="exampleFormControlInput1" class="form-label">MY PAGE</label>
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">이메일</label>
@@ -62,51 +60,57 @@
                             </select>
                         </div>
                     </form>
+                    <!-- joinList가 null이 아닌 경우 테이블과 페이지네이션을 렌더링 -->
+                    <div th:if="${joinList != null and not #lists.isEmpty(joinList.keyword)}">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">제목</th>
+                                <th scope="col">역할</th>
+                                <th scope="col">뿜빠이 상태</th>
+                                <th scope="col">바로가기</th>
+                            </tr>
+                            </thead>
+                            <tbody th:each="joinLists : ${joinList.keyword}">
+                            <tr>
+                                <th scope="row"></th>
+                                <td th:text="${joinLists.subject}"></td>
+                                <td th:text="${joinLists.getUserType().userTypeName}"></td>
+                                <td th:text="${joinLists.getMeetingStatus().getStatusType()}"></td>
+                                <td><a th:href="@{/meeting/detailMeeting(meetingId=${joinLists.meetingId})}"
+                                       class="btn btn-primary">모임</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="container">
+                            <ul class="pagination justify-content-center">
+                                <!-- Previous Page Link -->
+                                <li class="page-item" th:classappend="${joinList.isFirst() ? ' disabled' : ''}">
+                                    <a class="page-link rounded-pill"
+                                       th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${joinList.number - 1})}">&laquo;
+                                        이전</a>
+                                </li>
+                                <!-- Page Number Links -->
+                                <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, joinList.totalPages)}"
+                                    th:classappend="${pageNum == joinList.number + 1 ? ' active' : ''}">
+                                    <a class="page-link rounded-pill"
+                                       th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${pageNum})}"
+                                       th:classappend="${pageNum == joinList.number + 1 ? ' bg-primary text-white' : ''}">[[${pageNum}]]</a>
+                                </li>
+                                <!-- Next Page Link -->
+                                <li class="page-item" th:classappend="${joinList.isLast() ? ' disabled' : ''}">
+                                    <a class="page-link rounded-pill"
+                                       th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${joinList.number + 1})}">다음
+                                        &raquo;</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">제목</th>
-                            <th scope="col">역 할</th>
-                            <th scope="col">뿜빠이상태</th>
-                            <th scope="col">바로가기</th>
-                        </tr>
-                        </thead>
-                        <tbody th:if="${not #lists.isEmpty(joinList.keyword)}"
-                               th:each="joinLists : ${joinList.keyword}">
-                        <tr>
-                            <th scope="row"></th>
-                            <td th:text="${joinLists.subject}"></td>
-                            <td th:text="${joinLists.getUserType().userTypeName}"></td>
-                            <td th:text="${joinLists.getMeetingStatus().getStatusType()}"></td>
-                            <td><a th:href="@{/meeting/detailMeeting(meetingId=${joinLists.meetingId})}"
-                                   class="btn btn-primary">모임</a></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div class="container">
-                        <ul class="pagination justify-content-center">
-                            <!-- Previous Page Link -->
-                            <li class="page-item" th:classappend="${joinList.first ? ' disabled' : ''}">
-                                <a class="page-link rounded-pill"
-                                   th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${joinList.number - 1})}">&laquo;
-                                    이전</a>
-                            </li>
-                            <!-- Page Number Links -->
-                            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, joinList.totalPages)}"
-                                th:classappend="${pageNum == joinList.number + 1 ? ' active' : ''}">
-                                <a class="page-link rounded-pill"
-                                   th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${pageNum})}"
-                                   th:classappend="${pageNum == joinList.number + 1 ? ' bg-primary text-white' : ''}">[[${pageNum}]]</a>
-                            </li>
-                            <!-- Next Page Link -->
-                            <li class="page-item" th:classappend="${joinList.last ? ' disabled' : ''}">
-                                <a class="page-link rounded-pill"
-                                   th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${joinList.number + 1})}">다음
-                                    &raquo;</a>
-                            </li>
-                        </ul>
+                    <!-- joinList가 null이거나 joinList.keyword가 비어 있는 경우 메시지 표시 -->
+                    <div th:if="${joinList == null or #lists.isEmpty(joinList.keyword)}">
+                        <p>참여한 모임이 없습니다.</p>
                     </div>
 
                 </div> <!-- end accordion-body -->
@@ -114,5 +118,6 @@
         </div> <!-- end accordion-item -->
     </div> <!-- end accordion -->
 </div>
+<div th:replace="~{footer :: footerFragment}"></div>
 </body>
 </html>
