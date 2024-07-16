@@ -49,7 +49,7 @@ public class MeetingController {
         model.addAttribute("condition", condition);
         model.addAttribute("categories", Category.values());
         model.addAttribute("statuses", MeetingStatus.values());
-        System.out.println("getMeetingList -> " + condition + "and Category ->"+Category.values());
+        System.out.println("getMeetingList -> " + condition);
         return "meeting/list";
     }
 

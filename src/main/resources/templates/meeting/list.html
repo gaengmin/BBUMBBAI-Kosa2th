@@ -17,6 +17,17 @@
                     뿜빠이생성
                 </button>
             </div>
+
+            <form class="d-flex w-70 mx-auto rounded-pill bg-white" method="get" th:action="@{/meeting/list}">
+                <select class="form-select rounded-pill border-none no-outline " style="width:100px" name="category" id="category">
+                    <option value="all">전체보기</option>
+                    <option th:each="category : ${categories}" th:value="${category}" th:text="${category.getDisplayName()}"></option>
+                </select>
+                <button class="btn no-outline rounded-circle" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+
             <th:block th:if="${detailList}">
                 <div class="mt-3">
                     <ul class="pagination justify-content-center">

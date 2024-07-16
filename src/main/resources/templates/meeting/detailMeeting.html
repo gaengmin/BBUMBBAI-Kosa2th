@@ -15,7 +15,7 @@
                 <form method="post" th:action="@{/api/meeting/detailMeeting}" class="me-auto" id="meetingForm">
                     <input type="hidden" name="meetingId" th:value="${meetingDetailDto.meetingId}"/>
                     <input type="hidden" name="loginUserId" th:value="${userIdentify}"/>
-                    <input type="hidden" name="page" value="5"/>
+
                     <div th:switch="${userType.name()}">
                         <!— 로그인 —>
                         <button type="button" th:case="'NOT_LOGIN'" name="userType" value="NOT_LOGIN"
@@ -498,20 +498,7 @@
 </script>
 
 
-<!--<script>
-    window.onload = function () {
-        var rightColumn = document.getElementById('right-column');
-        var meetingDetailContext = document.getElementById('meetingDetailContext');
 
-        function adjustTextareaHeight() {
-            var rightColumnHeight = rightColumn.offsetHeight;
-            meetingDetailContext.style.height = rightColumnHeight + 'px';
-        }
-
-        adjustTextareaHeight();
-        window.onresize = adjustTextareaHeight;
-    };
-</script>-->
 
 <script>
     // 댓글 저장
@@ -602,17 +589,17 @@
 
                     if (activeButton) {
                         commentHtml += `
-                        <div class="list-group-item">
+                        <div class="list-group-item border">
                                 <h6 class="mb-1">${row.userName}</h6>
                                 <p class="mb-1">${row.content}</p>
                                 <small>${row.regDate}</small>
-                                <button type="button" onclick="openCommentUpdatePopup(${row.meetingCommentId});" class="btns"><span class="icons icon_modify">수정</span></button>
-                                <button type="button" onclick="deleteCommentById(${row.meetingCommentId});" class="btns"><span class="icons icon_del">삭제</span></button>
+                                <button type="button" onclick="openCommentUpdatePopup(${row.meetingCommentId});" class="btns bg-body  border-none no-outline small"><span class="icons icon_modify">수정</span></button>
+                                <button type="button" onclick="deleteCommentById(${row.meetingCommentId});" class="btns bg-body  border-none no-outline small"><span class="icons icon_del">삭제</span></button>
                         </div>
                     `;
                     } else {
                         commentHtml += `
-                        <div class="list-group-item">
+                        <div class="list-group-item border">
                                 <h6 class="mb-1">${row.userName}</h6>
                                 <p class="mb-1">${row.content}</p>
                                 <small>${row.regDate}</small>
@@ -780,21 +767,21 @@
     /*]]>*/
 </script>-->
 
-<script>
 
-
+<!--<script>
     window.onload = function () {
         var rightColumn = document.getElementById('right-column');
         var meetingDetailContext = document.getElementById('meetingDetailContext');
+
         function adjustTextareaHeight() {
             var rightColumnHeight = rightColumn.offsetHeight;
             meetingDetailContext.style.height = rightColumnHeight + 'px';
         }
-        adjustTextareaHeight();
-        window.onresize = adjustTextareaHeight;
-    };
 
-</script>
+        adjustTextareaHeight();adjustTextareaHeight
+        window.onresize = ;
+    };
+</script>-->
 
 </body>
 </html>

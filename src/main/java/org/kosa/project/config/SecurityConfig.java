@@ -69,7 +69,7 @@ public class SecurityConfig {
     }
 
     private String[] permitAllUrlPatterns() {
-        return new String[]{"/*", "/css/**", "/api/**", "/meeting/*", "/js/**", "/imgs/**", "/users/join", "/users/**", "/home"};
+        return new String[]{"/*", "/css/**", "/api/**", "/meeting/*", "/js/**", "/posts/**", "/imgs/**", "/users/join", "/users/**", "/home"};
     }
 
     public CorsConfigurationSource configurationSource() {
