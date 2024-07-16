@@ -61,6 +61,8 @@
         <result property="meetingStatus" column="status"/>
         <result property="regDate" column="reg_dt"/>
         <result property="deadLineTime" column="DEADLINE_TIME"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude" />
 
         <collection property="userMeetingDto" ofType="org.kosa.project.service.dto.user.UserMeetingDto"
                     resultMap="UserMeetingDtoResultMap"/>
@@ -75,8 +77,11 @@
                              context,
                              total_member,
                              file_name,
-                             deadline_time)
-        VALUES (#{userId}, #{category}, #{subject}, #{context}, #{totalMember}, #{fileUploadUrl}, #{deadLineTime})
+                             deadline_time,
+                             longitude,
+                             latitude)
+        VALUES (#{userId}, #{category}, #{subject}, #{context}, #{totalMember}, #{fileUploadUrl}, #{deadLineTime},
+                #{longitude}, #{latitude})
     </insert>
 
     <insert id="createMeetingRoom">
@@ -198,7 +203,9 @@
                um.user_id,
                u.user_name,
                um.meeting_id as um_meeting_id,
-               um.user_type
+               um.user_type,
+               m.LATITUDE,
+               m.LONGITUDE
         FROM meeting m
                  LEFT JOIN user_meeting um ON m.meeting_id = um.meeting_id
                  LEFT JOIN users u ON um.user_id = u.user_id

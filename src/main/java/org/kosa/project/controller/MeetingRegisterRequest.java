@@ -8,12 +8,14 @@ import java.time.LocalDateTime;
 
 @Slf4j
 public record MeetingRegisterRequest(Long userId, Category category, String subject,
-                                     String context, Integer totalMember, MultipartFile image, LocalDateTime deadLineTime) {
+                                     String context, Integer totalMember, MultipartFile image, LocalDateTime deadLineTime,
+                                     Double latitude, Double longitude) {
     String validate() {
         if (category == null) {
             log.error("Category is null");
             return "redirect:/meeting/insertMeeting";
         }
+
         if (image.getContentType() == null || !image.getContentType().startsWith("image/")) {
             log.error("이미지 파일이 아님 {}", image.getContentType());
             return "redirect:uploadStatus";
