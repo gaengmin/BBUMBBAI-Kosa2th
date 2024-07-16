@@ -196,7 +196,6 @@
     <select id="meetingDetails" parameterType="long" resultMap="MeetingDetailDtoResultMap">
         SELECT m.meeting_id  as meeting_id,
                um.user_id,
-               m.region_id,
                m.category,
                m.subject,
                m.context,

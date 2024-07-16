@@ -200,7 +200,7 @@
                         <th>LEVEL</th>
                         <th>프로필</th>
                         <th>거부</th>
-                        <th th:if="${meetingDetailDto.meetingStatus.equals('FINISH')}">참여</th>
+                        <th th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">참여</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -217,7 +217,7 @@
                                th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '1')|"
                                class="btn btn-dark btn-sm btn-block mt-3">내보내기</a>
                         </td>
-                        <td th:if="${meetingDetailDto.meetingStatus.equals('FINISH')}">
+                        <td th:if="${!meetingDetailDto.meetingStatus.equals('FINISH')}">
                             <a href="#"
                                th:attr="onclick=|memberConfirm('WAIT', '${list.userId}', '${meetingDetailDto.meetingId}', '2')|"
                                class="btn btn-dark btn-sm btn-block mt-3">허가하기</a>
@@ -441,12 +441,12 @@
 
         chatTime.textContent = convertKoreaTime(sendDate);
 
-
         chatBubble.appendChild(chatHeader);
         chatBubble.appendChild(chatMessage);
         chatBubble.appendChild(chatTime);
         chatItem.appendChild(chatBubble);
         chatList.appendChild(chatItem);
+        chatList.scrollTop = chatList.scrollHeight;
     }
 
     function loadPreviousMessages(previousChatMessages, loginUserId) {
@@ -458,6 +458,10 @@
     let websocket;
 
     function nettyConnect(connectionInfo) {
+
+        if (websocket != null) {
+            return ;
+        }
         websocket = new WebSocket(`ws://localhost:8082/websocket?userId=${connectionInfo.userId}&roomId=${connectionInfo.roomId}`);
 
         websocket.onopen = function () {

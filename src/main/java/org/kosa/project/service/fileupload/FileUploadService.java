@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 @Service
 public abstract class FileUploadService {
@@ -30,13 +32,13 @@ public abstract class FileUploadService {
         String newFileName = uuid + extension;
         String savePath = uploadDir + PATH_SEPARATOR + getTargetUrl();
 
-        System.out.println("fileSavePath: "+savePath);
+        System.out.println("fileSavePath: " + savePath);
         // 1-2. 디렉터리가 없다면 이를 생성한다.
         DirectoryUtil.createDirectoriesIfNotExists(savePath);
 
         // 1-3. 파일을 path에 저장한다.
         String fileSavePath = savePath + PATH_SEPARATOR + newFileName;
-        System.out.println("fileSavePath:"+fileSavePath);
+        System.out.println("fileSavePath:" + fileSavePath);
         File file = new File(fileSavePath);
         try {
             imgFile.transferTo(file);
@@ -46,7 +48,6 @@ public abstract class FileUploadService {
 
         return newFileName;
     }
-
 
 
 //    public String saveFile(MultipartFile image, String imageRootDir) {
