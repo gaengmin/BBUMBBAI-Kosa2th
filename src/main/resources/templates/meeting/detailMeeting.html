@@ -736,52 +736,7 @@
     }
 
 </script>
-<!--<script type="text/javascript"
-        th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${@environment.getProperty('kakao.map.api.key')}}"></script>
 
-<script th:inline="javascript">
-    var latitude = /*[[${meetingDetailDto.latitude}]]*/ 37.5665;
-    var longitude = /*[[${meetingDetailDto.longitude}]]*/ 126.9780;
-    var meetingName = /*[[${meetingDetailDto.subject}]]*/ '모임 이름';
-
-    var mapContainer = document.getElementById('map'),
-        mapOption = {
-            center: new kakao.maps.LatLng(latitude, longitude),
-            level: 3
-        };
-
-    var map = new kakao.maps.Map(mapContainer, mapOption);
-
-    var markerPosition = new kakao.maps.LatLng(latitude, longitude);
-
-    var marker = new kakao.maps.Marker({
-        position: markerPosition
-    });
-
-    marker.setMap(map);
-
-    var infowindow = new kakao.maps.InfoWindow({
-        content: '<div style="padding:5px;">' + meetingName + '</div>'
-    });
-    infowindow.open(map, marker);
-    /*]]>*/
-</script>-->
-
-
-<!--<script>
-    window.onload = function () {
-        var rightColumn = document.getElementById('right-column');
-        var meetingDetailContext = document.getElementById('meetingDetailContext');
-
-        function adjustTextareaHeight() {
-            var rightColumnHeight = rightColumn.offsetHeight;
-            meetingDetailContext.style.height = rightColumnHeight + 'px';
-        }
-
-        adjustTextareaHeight();adjustTextareaHeight
-        window.onresize = ;
-    };
-</script>-->
 
 </body>
 </html>
