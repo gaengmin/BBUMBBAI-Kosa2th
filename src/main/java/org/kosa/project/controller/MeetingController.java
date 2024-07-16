@@ -69,6 +69,8 @@ public class MeetingController {
         if (userDetails != null) {
             model.addAttribute("userIdentify", userDetails.getUserId());
         }
+
+        System.out.println(meetingDetailDto.toString());
         UserMeetingStrategy userMeetingStrategy = getCurrentLoginUserMeetingType(userDetails, meetingDetailDto.getUserMeetingDto());
         model.addAttribute("meetingDetailDto", meetingDetailDto);
         model.addAttribute("userType", userMeetingStrategy);
@@ -92,13 +94,14 @@ public class MeetingController {
 
     @GetMapping("/insertMeeting")
     public String insertMeeting(Model model) {
-        model.addAttribute("meetingRegisterRequest", new MeetingRegisterRequest(1L, Category.BOB_FRIEND, null, null, 0, null, null));
+        model.addAttribute("meetingRegisterRequest", new MeetingRegisterRequest(1L, Category.BOB_FRIEND, null, null, 0, null, null, null, null));
         model.addAttribute("categories", Category.values()); //Enum 카테고리 데이터 넘기기
         return "meeting/insertMeeting";
     }
 
     @PostMapping("/insertMeeting")
     public String insertMeetingData(@ModelAttribute MeetingRegisterRequest request, @AuthenticationPrincipal CustomUserDetails user) {
+        System.out.println(request);
         long userId = user.getUserId();
         String response = request.validate();
         String fileUploadUrl = fileUploadService.saveFile(request.image());
