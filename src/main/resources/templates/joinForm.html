@@ -13,11 +13,12 @@
                     <label class="form-label" for="email">이메일</label>
                     <input class="form-control" th:field="*{email}" type="email" id="email" required/>
                     <div id="emailFeedback" class="text-danger"></div>
+                    <div th:class="valid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="password">패스워드</label>
                     <input class="form-control" th:field="*{password}" type="password" id="password" required/>
-                    <div class="invalid-feedback">
+                    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback">
                         패스워드를 입력해주세요.
                     </div>
                 </div>
@@ -25,6 +26,7 @@
                     <label class="form-label" for="password_confirm">패스워드 확인</label>
                     <input class="form-control" type="password" id="password_confirm" required/>
                     <div id="passwordFeedback" class="text-danger"></div>
+                    <div th:class="valid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                 </div>
 
                 <div class="mb-3">
@@ -37,6 +39,7 @@
                 <div class="mb-3">
                     <label class="form-label" for="phone_number">전화번호</label>
                     <input class="form-control" th:field="*{phoneNumber}" type="text" id="phone_number"/>
+                    <div th:class="valid-feedback" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="myself-memo">자기소개</label>
@@ -69,7 +72,7 @@
 
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script th:src="@{js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{../static/js/bootstrap.bundle.min.js}"></script>
 <script>
     $(document).ready(function () {
         var isEmailValid = false;

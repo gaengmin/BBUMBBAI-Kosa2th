@@ -4,7 +4,6 @@ DROP TABLE ROOM CASCADE CONSTRAINTS;
 DROP TABLE MEETING_COMMENT CASCADE CONSTRAINTS;
 DROP TABLE USER_MEETING CASCADE CONSTRAINTS;
 DROP TABLE MEETING CASCADE CONSTRAINTS;
-DROP TABLE REGION CASCADE CONSTRAINTS;
 DROP TABLE USERS CASCADE CONSTRAINTS;
 
 -- Create USERS table
@@ -32,7 +31,6 @@ CREATE TABLE USER_MEETING (
 CREATE TABLE MEETING (
                          meeting_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
                          user_id NUMBER,
-                         region_id NUMBER,
                          category VARCHAR2(20),
                          subject VARCHAR2(200),
                          context CLOB,
@@ -41,7 +39,9 @@ CREATE TABLE MEETING (
                          present_member NUMBER default 1,
                          status VARCHAR2(20) default 'CONTINUE',
                          deadline_time timestamp,
-                         reg_dt DATE DEFAULT SYSDATE
+                         reg_dt DATE DEFAULT SYSDATE,
+                         longitude number,
+                         latitude number
 );
 
 
@@ -55,17 +55,6 @@ CREATE TABLE MEETING_COMMENT (
                             reg_dt DATE DEFAULT SYSDATE
 );
 
--- Create REGION table
-CREATE TABLE REGION (
-                        region_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-                        region_1depth_name VARCHAR2(10),
-                        region_2depth_name VARCHAR2(10),
-                        region_3depth_name VARCHAR2(10),
-                        region_4depth_name VARCHAR2(10),
-                        code VARCHAR2(10),
-                        longitude NUMBER,
-                        latitude NUMBER
-);
 -- Create ROOM table
 CREATE TABLE ROOM (
                       room_id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -96,8 +85,7 @@ ALTER TABLE USER_MEETING
         FOREIGN KEY (meeting_id)
             REFERENCES MEETING(meeting_id);
 
-ALTER TABLE MEETING
-    ADD CONSTRAINT fk_meeting_region FOREIGN KEY (region_id) REFERENCES REGION(region_id);
+
 ALTER TABLE MEETING_COMMENT
     ADD CONSTRAINT fk_meeting_comment_meeting FOREIGN KEY (meeting_id) REFERENCES MEETING(meeting_id);
 

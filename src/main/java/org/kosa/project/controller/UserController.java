@@ -10,8 +10,10 @@ import org.kosa.project.service.dto.user.UserRegisterForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/users")
@@ -34,7 +36,14 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(@ModelAttribute UserRegisterForm userRegisterForm) {
+    public String join(@ModelAttribute @Validated UserRegisterForm userRegisterForm, BindingResult bindingResult, Model model) {
+        System.out.println(userRegisterForm);
+        if (bindingResult.hasErrors()) {
+            System.out.println(bindingResult);
+            model.addAttribute("userRegisterForm", userRegisterForm);
+            return "joinForm";
+        }
+
         //1. 파일을 저장
         MultipartFile imgFile = userRegisterForm.getProfileImg();
         String profileImageUrl = fileUploadService.saveFile(imgFile);
