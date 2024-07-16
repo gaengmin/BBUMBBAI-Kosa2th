@@ -51,7 +51,6 @@
     <resultMap id="MeetingDetailDtoResultMap" type="org.kosa.project.service.dto.meeting.MeetingDetailDto">
         <id property="meetingId" column="meeting_id"/>
         <result property="userId" column="user_id"/>
-        <result property="regionId" column="region_id"/>
         <result property="category" column="category"/>
         <result property="subject" column="subject"/>
         <result property="context" column="context"/>
@@ -146,7 +145,6 @@
         select *
         from (select meeting_id,
         user_id,
-        region_id,
         category,
         subject,
         context,

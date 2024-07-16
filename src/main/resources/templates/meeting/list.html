@@ -18,7 +18,7 @@
                 </button>
             </div>
 
-            <th:block th:if="${detailList}">
+            <th:block th:if="${detailList}!=null">
                 <div class="mt-3">
                     <ul class="pagination justify-content-center">
                         <!-- Previous Page Link -->
@@ -57,6 +57,8 @@
                         </div>
                     </div>
                 </div>
+            </th:block>
+            <th:block th:if="${detailList}==null">
             </th:block>
         </div>
     </div>
