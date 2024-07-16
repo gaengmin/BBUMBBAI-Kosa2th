@@ -5,11 +5,21 @@
 
 <head th:replace="~{header :: headerFragment}">
     <style>
-        .map_wrap {position:relative;width:100%;height:350px;}
-        #centerAddr {display:block;margin-top:2px;font-weight: normal;}
+        .map_wrap {
+            position: relative;
+            width: 100%;
+            height: 350px;
+        }
+
+        #centerAddr {
+            display: block;
+            margin-top: 2px;
+            font-weight: normal;
+        }
+
         .bAddr {
-            width:200px;
-            height:200px;
+            width: 200px;
+            height: 200px;
             padding: 5px;
             text-overflow: ellipsis;
             overflow: hidden;
@@ -174,31 +184,30 @@
     }
 
 
-function updateLocation(lat, lng) {
-    const latlng = new kakao.maps.LatLng(lat, lng);
-    marker.setPosition(latlng);
-    map.setCenter(latlng);
-    document.getElementById('latitude').value = lat;
-    document.getElementById('longitude').value = lng;
-}
-
-
-function setMarker(position) {
-    console.log("position : " + position);
-    // 마커를 생성합니다.
-    if (marker == null) {
-        marker = new kakao.maps.Marker({
-            position: position
-        });
-        marker.setMap(map);
+    function updateLocation(lat, lng) {
+        const latlng = new kakao.maps.LatLng(lat, lng);
+        marker.setPosition(latlng);
+        map.setCenter(latlng);
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
     }
-    marker.setPosition(position);
-    // hidden 값으로 지정한
-    $('#latitude').val(position.getLat());
-    $('#longitude').val(position.getLng());
-    console.log(position.getLat()+" , "+position.getLng());
-}
 
+
+    function setMarker(position) {
+        console.log("position : " + position);
+        // 마커를 생성합니다.
+        if (marker == null) {
+            marker = new kakao.maps.Marker({
+                position: position
+            });
+            marker.setMap(map);
+        }
+        marker.setPosition(position);
+        // hidden 값으로 지정한
+        $('#latitude').val(position.getLat());
+        $('#longitude').val(position.getLng());
+        console.log(position.getLat() + " , " + position.getLng());
+    }
 
 
     // if (navigator.geolocation) {
@@ -218,17 +227,17 @@ function setMarker(position) {
     //     alert('이 브라우저에서는 Geolocation이 지원되지 않습니다.');
     // }
 
-        kakao.maps.event.addListener(map, 'dragend', function() {
+    kakao.maps.event.addListener(map, 'dragend', function () {
 
-            // 지도 중심좌표를 얻어옵니다
-            var latlng = map.getCenter();
+        // 지도 중심좌표를 얻어옵니다
+        var latlng = map.getCenter();
 
-            var message = '변경된 지도 중심좌표는 ' + latlng.getLat() + ' 이고, ';
-            message += '경도는 ' + latlng.getLng() + ' 입니다';
-            console.log(message);
-            // var resultDiv = document.getElementById('result');
-            // resultDiv.innerHTML = message;
-        });
+        var message = '변경된 지도 중심좌표는 ' + latlng.getLat() + ' 이고, ';
+        message += '경도는 ' + latlng.getLng() + ' 입니다';
+        console.log(message);
+        // var resultDiv = document.getElementById('result');
+        // resultDiv.innerHTML = message;
+    });
 </script>
 </body>
 </html>
