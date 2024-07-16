@@ -1,84 +1,37 @@
 package org.kosa.project.service.dto.user;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
 @NoArgsConstructor
 @ToString
+@Getter
+@Setter
 public class UserRegisterForm {
+
+    @Email(message = "이메일 양식을 입력해주세요.")
     private String email;
+
+    @Range(min = 8, max = 30, message = "비밀번호는 최소 8자, 최대 30자까지 입력 가능합니다.")
     private String password;
+
     private String userName;
+
+    @NotBlank(message = "전화번호는 필수입니다.")
+    @Pattern(regexp = "^[0-9]{3,4}-[0-9]{3,4}-[0-9]{3,4}", message = "올바른 전화번호 패턴이 아닙니다.")
     private String phoneNumber;
+
     private String introduce;
     private LocalDate birthDate;
     private String profileImgUrl;
     private MultipartFile profileImg;
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public String getIntroduce() {
-        return introduce;
-    }
-
-    public void setIntroduce(String introduce) {
-        this.introduce = introduce;
-    }
-
-    public String getProfileImgUrl() {
-        return profileImgUrl;
-    }
-
-    public void setProfileImgUrl(String profileImgUrl) {
-        this.profileImgUrl = profileImgUrl;
-    }
-
-    public MultipartFile getProfileImg() {
-        return profileImg;
-    }
-
-    public void setProfileImg(MultipartFile profileImg) {
-        this.profileImg = profileImg;
-    }
 }
 
