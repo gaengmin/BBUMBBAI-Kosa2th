@@ -36,13 +36,7 @@
                         </button>
                         <!— NOT_FOLLOWER 버튼 —>
                         <div th:case="'NOT_FOLLOWER'">
-                            <div th:if="${meetingDetailDto.meetingStatus.getStatusType().equals('일정 종료')}">
-                                <button type="button" class="btn btn-secondary btn-sm btn-block mt-3"
-                                        onclick="history.back()">
-                                        일정이 종료된 모임
-                                    </button>
-                            </div>
-                            <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
+                            <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
                                 <button type="button" name="userType" value="NOT_FOLLOWER"
                                         class="btn btn-primary btn-sm btn-block mt-3"
                                         onclick="submitForm('NOT_FOLLOWER')">
@@ -54,7 +48,12 @@
                                         onclick="history.back()">모집 마감
                                 </button>
                             </div>
-
+                         <!--   <div th:unless="${meetingDetailDto.meetingStatus.getStatusType().equals('일정 종료')}">
+                                <button type="button" class="btn btn-secondary btn-sm btn-block mt-3"
+                                        onclick="history.back()">
+                                    일정이 종료된 모임
+                                </button>
+                            </div>-->
                         </div>
                     </div>
                 </form>
@@ -461,6 +460,8 @@
     }
 
     function loadPreviousMessages(previousChatMessages, loginUserId) {
+        const chatList = document.getElementById('chatList');
+        chatList.innerHTML = '';
         previousChatMessages.forEach(chat => {
             loadSendMessage(chat.writeUserId, chat.writeUserName, chat.message, chat.writeTime, loginUserId);
         });

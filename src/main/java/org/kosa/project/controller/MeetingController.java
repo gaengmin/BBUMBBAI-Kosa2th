@@ -61,7 +61,6 @@ public class MeetingController {
     // /meeting/comment
     // /meeting/{meetingId}/comments post
     // -> /meeting/{meetingId}/detail
-
     // -> /meeting/detailsMeeting?meetingId=?/comment
     @GetMapping("/detailMeeting")
     public String detailMeeting(@RequestParam Long meetingId, Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -104,18 +103,19 @@ public class MeetingController {
     }
 
     @PostMapping("/insertMeeting")
-    public String insertMeetingData(@ModelAttribute @Validated MeetingRegisterRequest request, BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails user) {
+    public String insertMeetingData(@ModelAttribute @Validated MeetingRegisterRequest request, BindingResult bindingResult,
+                                    Model model,
+                                    @AuthenticationPrincipal CustomUserDetails user) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", Category.values());
+            model.addAttribute("meetingRegisterRequest", request);
             return "meeting/insertMeeting";
         }
-        System.out.println(request);
         long userId = user.getUserId();
         String response = request.validate();
         String fileUploadUrl = fileUploadService.saveFile(request.image());
         meetingService.save(convertToMeetingRegisterDto(request, fileUploadUrl, userId));
         return response;
     }
-
-
 }
 
