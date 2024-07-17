@@ -4,7 +4,8 @@
     <title>뿜빠이</title></head>
 <body>
 <div th:replace="~{nav :: navFragment}"></div>
-<main class="mt-5 pt-5" >
+
+<main class="mt-5 pt-2" >
     <div class="container">
         <!-- justify-content-center / d-flex justify-content-center 를 씀으로써 카드폼 가운데 정렬 -->
         <div class="row justify-content-center">
@@ -66,7 +67,7 @@
     </div>
 </main>
 <!-- 푸터 포함 -->
-<footer><div th:replace="~{footer :: footerFragment}"></div></footer>
 
+<div th:replace="~{footer :: footerFragment}"></div>
 </body>
 </html>

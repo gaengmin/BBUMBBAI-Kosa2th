@@ -37,5 +37,3 @@ build/
 src/test/java/org/kosa/project/repository/mapper/MeetingTest.java
 src/main/resources/application.properties
 src/main/resources/application-windows.properties
-
-/src/main/resources/static/imgs
