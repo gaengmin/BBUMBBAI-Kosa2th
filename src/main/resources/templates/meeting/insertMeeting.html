@@ -54,8 +54,8 @@
             <div class="mb-3">
                 <label for="map">모임 위치</label>
                 <div id="map" style="width:100%; height:500px; position: relative;"></div>
-                <input type="hidden" id="latitude" th:field="*{latitude}">
-                <input type="hidden" id="longitude" th:field="*{longitude}">
+                <input type="hidden" id="latitude" th:field="*{latitude}" required>
+                <input type="hidden" id="longitude" th:field="*{longitude}" required>
 
             </div>
 

@@ -75,7 +75,6 @@ public class MeetingService {
     public void exitMeetingService(UserMeetingCheckDto userMeetingCheckDto) {
         UserMeetingStrategy nowUserType = userMeetingCheckDto.getUserType();
         long meetingId = userMeetingCheckDto.getMeetingId();
-
         if (nowUserType.equals(UserMeetingStrategy.WAIT)) {
             meetingRepository.exitMeeting(userMeetingCheckDto);
         } else if (nowUserType.equals(UserMeetingStrategy.FOLLOWER)) {

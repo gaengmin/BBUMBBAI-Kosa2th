@@ -1,5 +1,6 @@
 package org.kosa.project.service.fileupload;
 
+import net.coobird.thumbnailator.Thumbnails;
 import org.kosa.project.util.DirectoryUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -42,11 +47,14 @@ public abstract class FileUploadService {
         File file = new File(fileSavePath);
         try {
             imgFile.transferTo(file);
+            Thread.sleep(500);
+            DirectoryUtil.refreshDirectory(Paths.get(savePath));
+            return newFileName;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-
-        return newFileName;
     }
 
 
