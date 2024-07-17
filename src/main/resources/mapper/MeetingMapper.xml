@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kosa.project.repository.mapper.MeetingMapper">
-    <resultMap id="MeetingSummaryDtoPageResultMap" type="org.kosa.project.controller.Page">
+    <resultMap id="MeetingSummaryDtoPageResultMap" type="org.kosa.project.service.dto.search.Page">
         <result property="currentPage" column="currentPage"/>
         <result property="pagePerSize" column="pagePerSize"/>
         <result property="totalDataSize" column="totalDataSize"/>

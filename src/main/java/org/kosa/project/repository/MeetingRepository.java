@@ -1,8 +1,8 @@
 package org.kosa.project.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.kosa.project.controller.Page;
-import org.kosa.project.controller.Pageable;
+import org.kosa.project.service.dto.search.Page;
+import org.kosa.project.service.dto.search.Pageable;
 import org.kosa.project.repository.mapper.MeetingMapper;
 import org.kosa.project.service.dto.RoomPermissionDto;
 import org.kosa.project.service.dto.meeting.MeetingDetailDto;
@@ -10,7 +10,6 @@ import org.kosa.project.service.dto.meeting.MeetingRegisterDto;
 import org.kosa.project.service.dto.meeting.MeetingSummaryDto;
 import org.kosa.project.service.dto.search.SearchConditionDto;
 import org.kosa.project.service.dto.user.UserMeetingCheckDto;
-import org.kosa.project.service.dto.user.UserMeetingListDto;
 import org.springframework.stereotype.Repository;
 import org.kosa.project.service.dto.user.UserMeetingDto;
 

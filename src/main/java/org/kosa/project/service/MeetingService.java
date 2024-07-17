@@ -2,8 +2,8 @@ package org.kosa.project.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.kosa.project.controller.Page;
-import org.kosa.project.controller.Pageable;
+import org.kosa.project.service.dto.search.Page;
+import org.kosa.project.service.dto.search.Pageable;
 import org.kosa.project.repository.MeetingRepository;
 import org.kosa.project.service.Enum.UserMeetingStrategy;
 import org.kosa.project.service.dto.RoomPermissionDto;
