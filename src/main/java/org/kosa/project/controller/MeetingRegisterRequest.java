@@ -19,7 +19,7 @@ public record MeetingRegisterRequest(Long userId, Category category, String subj
 
         if (image.getContentType() == null || !image.getContentType().startsWith("image/")) {
             log.error("이미지 파일이 아님 {}", image.getContentType());
-            return "redirect:uploadStatus";
+            return "redirect:/meeting/insertMeeting";
         }
 
         return "redirect:/meeting/list";

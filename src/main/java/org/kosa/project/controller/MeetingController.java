@@ -106,7 +106,6 @@ public class MeetingController {
     @PostMapping("/insertMeeting")
     public String insertMeetingData(@ModelAttribute @Validated MeetingRegisterRequest request, BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails user) {
         if (bindingResult.hasErrors()) {
-            System.out.println("에러발생");
             return "meeting/insertMeeting";
         }
         System.out.println(request);
