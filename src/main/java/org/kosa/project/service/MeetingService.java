@@ -97,4 +97,8 @@ public class MeetingService {
         // 3. roomId를 통한 전체 채팅 내역 조회
         return meetingRepository.findRoomWithAllChatListByMeetingAndUser(meetingId, userId);
     }
+
+    public void updateMeetingEndTime(){
+        meetingRepository.updateMeetingEndTime();
+    }
 }

@@ -239,5 +239,11 @@
         values (#{roomId}, #{userId}, #{message}, #{sendDateTime})
     </insert>
 
+    <update id="updateMeetingEndTime">
+        UPDATE MEETING
+        SET STATUS = 'TIME_END'
+        WHERE DEADLINE_TIME &lt; SYSTIMESTAMP
+                              AND (STATUS = 'FINISH' OR STATUS = 'CONTINUE')
+    </update>
 
 </mapper>

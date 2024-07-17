@@ -74,4 +74,8 @@ public class MeetingRepository {
     public void createMeetingRoom(long meetingId) {
         meetingMapper.createMeetingRoom(meetingId);
     }
+
+    public void updateMeetingEndTime() {
+        meetingMapper.updateMeetingEndTime();
+    }
 }

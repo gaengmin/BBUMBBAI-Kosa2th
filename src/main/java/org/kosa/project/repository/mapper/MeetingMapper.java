@@ -45,4 +45,6 @@ public interface MeetingMapper {
     Long saveChat(SaveChatMessageDto chatMessage);
 
     void createMeetingRoom(long meetingId);
+
+    void updateMeetingEndTime();
 }

@@ -16,6 +16,8 @@ import org.kosa.project.service.fileupload.FileUploadService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -102,7 +104,11 @@ public class MeetingController {
     }
 
     @PostMapping("/insertMeeting")
-    public String insertMeetingData(@ModelAttribute MeetingRegisterRequest request, @AuthenticationPrincipal CustomUserDetails user) {
+    public String insertMeetingData(@ModelAttribute @Validated MeetingRegisterRequest request, BindingResult bindingResult, @AuthenticationPrincipal CustomUserDetails user) {
+        if (bindingResult.hasErrors()) {
+            System.out.println("에러발생");
+            return "meeting/insertMeeting";
+        }
         System.out.println(request);
         long userId = user.getUserId();
         String response = request.validate();
