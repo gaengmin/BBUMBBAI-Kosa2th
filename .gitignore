@@ -33,10 +33,7 @@ build/
 ### VS Code ###
 .vscode/
 .mvn/
-/imgs/meeting
+/src/main/resources/static/imgs/meeting
 src/test/java/org/kosa/project/repository/mapper/MeetingTest.java
 src/main/resources/application.properties
 src/main/resources/application-windows.properties
-
-/imgs
-/src/main/resources/static/imgs

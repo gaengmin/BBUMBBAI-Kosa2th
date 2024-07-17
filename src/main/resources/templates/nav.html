@@ -15,7 +15,7 @@
             <!-- 중앙 검색 폼 -->
             <form class="d-flex w-70 mx-auto rounded-pill bg-white" method="get" th:action="@{/meeting/list}">
                 <select class="form-select rounded-pill border-none no-outline " style="width:100px" name="category" id="category">
-                    <option th:each="category : ${categories}" th:value="${category}" th:text="${category.getDisplayName()}"></option>
+                    <option th:each="category : ${T(org.kosa.project.service.Enum.Category).values()}" th:value="${category}" th:text="${category.getDisplayName()}"></option>
                 </select>
                 <select class="form-select rounded-pill border-none no-outline " style="width:100px" name="searchType" id="searchType">
                     <option value="all" selected>통합</option>
