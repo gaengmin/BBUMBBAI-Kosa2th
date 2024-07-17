@@ -32,7 +32,7 @@ public class MeetingController {
     private final MeetingService meetingService;
     private final FileUploadService fileUploadService;
 
-    private static final Integer PAGE_PER_SIZE = 3;
+    private static final Integer PAGE_PER_SIZE = 6;
     public MeetingController(MeetingService meetingService, @MeetingFileServiceQualifier FileUploadService fileUploadService) {
         this.meetingService = meetingService;
         this.fileUploadService = fileUploadService;
