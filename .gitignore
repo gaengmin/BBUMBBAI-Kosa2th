@@ -39,3 +39,4 @@ src/main/resources/application.properties
 src/main/resources/application-windows.properties
 
 /imgs
+/src/main/resources/static/imgs

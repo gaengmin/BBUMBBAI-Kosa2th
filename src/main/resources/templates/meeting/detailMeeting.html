@@ -42,17 +42,21 @@
                                         일정이 종료된 모임
                                     </button>
                             </div>
-                            <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
-                                <button type="button" name="userType" value="NOT_FOLLOWER"
-                                        class="btn btn-primary btn-sm btn-block mt-3"
-                                        onclick="submitForm('NOT_FOLLOWER')">
-                                    모임참여하기
-                                </button>
-                            </div>
-                            <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
-                                <button type="button" class="btn btn-warning btn-sm btn-block mt-3"
-                                        onclick="history.back()">모집 마감
-                                </button>
+                            <div th:unless="${meetingDetailDto.meetingStatus.getStatusType().equals('일정 종료')}">
+                                <div th:if="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
+                                    <button type="button" name="userType" value="NOT_FOLLOWER"
+                                            class="btn btn-primary btn-sm btn-block mt-3"
+                                            onclick="submitForm('NOT_FOLLOWER')">
+                                        모임참여하기
+                                    </button>
+                                </div>
+
+                                <div th:unless="${meetingDetailDto.totalMember - meetingDetailDto.presentMember > 0}">
+                                    <button type="button" class="btn btn-warning btn-sm btn-block mt-3"
+                                            onclick="history.back()">모집 마감
+                                    </button>
+                                </div>
+
                             </div>
 
                         </div>
