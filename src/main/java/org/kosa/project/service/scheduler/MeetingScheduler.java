@@ -15,8 +15,8 @@ public class MeetingScheduler {
     }
 
     //    @Scheduled(cron = "0 0 * * * *") //매시간마다 실행
-    @Scheduled(cron = "0 * * * * *") // 매 분마다 실행
-
+    //@Scheduled(cron = "0 * * * * *") // 매 분마다 실행
+    @Scheduled(cron = "0 */5 * * * *") // 매 5분마다 실행
     public void updateMeetingEndTime() {
         System.out.println("실행");
         meetingService.updateMeetingEndTime();
