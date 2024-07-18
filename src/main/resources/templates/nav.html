@@ -15,14 +15,18 @@
             <!-- 중앙 검색 폼 -->
             <form class="d-flex w-70 mx-auto rounded-pill bg-white" method="get" th:action="@{/meeting/list}">
                 <select class="form-select rounded-pill border-none no-outline " style="width:100px" name="category" id="category">
-                    <option th:each="category : ${T(org.kosa.project.service.Enum.Category).values()}" th:value="${category}" th:text="${category.getDisplayName()}"></option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category}"
+                            th:text="${category.getDisplayName()}"
+                            th:selected="${category==condition.category}">
+                    </option>
                 </select>
                 <select class="form-select rounded-pill border-none no-outline " style="width:100px" name="searchType" id="searchType">
-                    <option value="all" id = "allCondtion" >통합</option>
-                    <option value="subject" id = "subjectCondtion">제목</option>
-                    <option value="content" id = "contentCondtion">내용</option>
+                    <option value="all" id = "allCondtion" th:selected="${condition.searchType}=='all'">통합</option>
+                    <option value="subject" id = "subjectCondtion" th:selected="${condition.searchType}=='subject'">제목</option>
+                    <option value="content" id = "contentCondtion" th:selected="${condition.searchType}=='content'">내용</option>
                 </select>
-                <input class="form-control w-100 mx-auto pl-3 flex-grow-1 rounded-pill border-none no-outline" name="keyword" type="search" placeholder="검색어를 입력해 주세요.">
+                <input class="form-control w-100 mx-auto pl-3 flex-grow-1 rounded-pill border-none no-outline" name="keyword" th:value ="${param.keyword}" type="search" placeholder="검색어를 입력해 주세요.">
                 <input type="hidden" name="page" value="1">
                 <button class="btn no-outline rounded-circle" type="submit">
                     <i class="bi bi-search"></i>
@@ -53,7 +57,7 @@
 
         if(selectedCondition === "allCondition"){
             $('#allCondition').attr('selected','selected');
-        } else if(selectedCondition === "subjectCondition"){
+        } else if(selectedYear === "subjectCondition"){
             $('#subjectCondition').attr('selected','selected');
         } else{
             $('#contentCondition').attr('selected','selected');

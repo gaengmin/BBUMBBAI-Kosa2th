@@ -46,14 +46,12 @@ public class MeetingController {
     }
 
     private String getMeetingList(SearchConditionDto condition, Integer page, Model model) {
-        System.out.println(condition);
 
         Page<MeetingSummaryDto> detailList = meetingService.meetingList(condition, page, PAGE_PER_SIZE);
         model.addAttribute("detailList", detailList);
         model.addAttribute("condition", condition);
         model.addAttribute("categories", Category.values());
         model.addAttribute("statuses", MeetingStatus.values());
-        System.out.println("getMeetingList -> " + condition+" Category -> "+condition.getCategory());
         return "meeting/list";
     }
 
@@ -67,16 +65,17 @@ public class MeetingController {
         //나중에 예외처리 할 것이 뭐냐면? param값이 없는 값이 없다고 표시
         //        model.addAttribute("userTypes", userTypes);*/
         MeetingDetailDto meetingDetailDto = meetingService.meetingDetails(meetingId);
+        SearchConditionDto condition = new SearchConditionDto();
         // 현재 로그인 한 유저의 현재 미팅에 대한 참여 정보를 확인하고 싶다.
 
         if (userDetails != null) {
             model.addAttribute("userIdentify", userDetails.getUserId());
         }
 
-        System.out.println(meetingDetailDto.toString());
         UserMeetingStrategy userMeetingStrategy = getCurrentLoginUserMeetingType(userDetails, meetingDetailDto.getUserMeetingDto());
         model.addAttribute("meetingDetailDto", meetingDetailDto);
         model.addAttribute("userType", userMeetingStrategy);
+        model.addAttribute("condition", condition);
 
         return "meeting/detailMeeting";
     }
