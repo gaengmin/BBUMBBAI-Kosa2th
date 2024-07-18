@@ -168,7 +168,7 @@
                 <if test='condition.searchType == "subject"'>
                     and subject like '%' || #{condition.keyword} || '%'
                 </if>
-                <if test='condition.searchType == "keyword"'>
+                <if test='condition.searchType == "content"'>
                     and context like '%' || #{condition.keyword} || '%'
                 </if>
             </if>)
