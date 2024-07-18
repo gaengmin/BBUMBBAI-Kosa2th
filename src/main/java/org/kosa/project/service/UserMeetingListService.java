@@ -1,8 +1,8 @@
 package org.kosa.project.service;
 
 import lombok.RequiredArgsConstructor;
-import org.kosa.project.controller.Page;
-import org.kosa.project.controller.Pageable;
+import org.kosa.project.service.dto.search.Page;
+import org.kosa.project.service.dto.search.Pageable;
 import org.kosa.project.repository.UserRepository;
 import org.kosa.project.service.dto.user.UserMeetingListDto;
 import org.springframework.stereotype.Service;

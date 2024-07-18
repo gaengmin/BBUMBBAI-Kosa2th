@@ -2,6 +2,7 @@ package org.kosa.project.controller;
 
 import org.kosa.project.config.annotation.UserFileServiceQualifier;
 import org.kosa.project.service.UserMeetingListService;
+import org.kosa.project.service.dto.search.Page;
 import org.kosa.project.service.dto.user.UserMeetingListDto;
 import org.kosa.project.service.fileupload.FileUploadService;
 import org.kosa.project.service.UserService;
@@ -13,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/users")
@@ -60,7 +60,7 @@ public class UserController {
     public String userProfile1(@PathVariable Long userId,  String userType, Model model,
                                @RequestParam(defaultValue = "1") Integer page) {
         UserProfileDto userProfileDto = userService.getProfile(userId);
-        Page <UserMeetingListDto> userMeetingJoinList = userMeetingListService.userMeetingJoinList(userId, userType, page, 5);
+        Page<UserMeetingListDto> userMeetingJoinList = userMeetingListService.userMeetingJoinList(userId, userType, page, 5);
         model.addAttribute("userProfileDto", userProfileDto);
         model.addAttribute("joinList", userMeetingJoinList);
         model.addAttribute("userType", userType);

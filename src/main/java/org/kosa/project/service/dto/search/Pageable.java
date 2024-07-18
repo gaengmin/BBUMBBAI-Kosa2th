@@ -1,4 +1,4 @@
-package org.kosa.project.controller;
+package org.kosa.project.service.dto.search;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
