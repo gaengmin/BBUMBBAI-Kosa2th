@@ -5,7 +5,7 @@
 <body>
 <div th:replace="~{nav :: navFragment}"></div>
 
-<main class="mt-5 pt-2" >
+<main class="mt-5 pt-2">
     <div class="container">
         <!-- justify-content-center / d-flex justify-content-center 를 씀으로써 카드폼 가운데 정렬 -->
         <div class="row justify-content-center">
@@ -24,17 +24,20 @@
                     <ul class="pagination justify-content-center">
                         <!-- Previous Page Link -->
                         <li class="page-item" th:class="${detailList.isFirst() ? 'disabled' : ''}">
-                            <a class="page-link rounded-pill" th:href="@{/meeting/list(page=${detailList.currentPage - 1})}">&laquo; 이전</a>
+                            <a class="page-link rounded-pill"
+                               th:href="@{/meeting/list(page=${detailList.currentPage - 1})}">&laquo; 이전</a>
                         </li>
                         <!-- Page Number Links -->
                         <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, detailList.getTotalPages())}"
                             th:classappend="${pageNum == detailList.currentPage ? ' active' : ''}">
-                            <a class="page-link rounded-pill" th:href="@{/meeting/list(content=${condition.keyword}, page=${pageNum})}"
+                            <a class="page-link rounded-pill"
+                               th:href="@{/meeting/list(content=${condition.keyword}, page=${pageNum})}"
                                th:classappend="${pageNum == detailList.currentPage ? ' bg-primary text-white' : ''}">[[${pageNum}]]</a>
                         </li>
                         <!-- Next Page Link -->
                         <li class="page-item" th:class="${detailList.isLast() ? 'disabled' : ''}">
-                            <a class="page-link rounded-pill" th:href="@{/meeting/list(page=${detailList.currentPage + 1})}">다음 &raquo;</a>
+                            <a class="page-link rounded-pill"
+                               th:href="@{/meeting/list(page=${detailList.currentPage + 1})}">다음 &raquo;</a>
                         </li>
                     </ul>
                 </div>
@@ -48,8 +51,17 @@
                         <div class="card-body">
                             <h5 class="card-title"
                                 th:text="|카테고리 : ${meetingList.getCategory().getDisplayName()}|"></h5>
-                            <h6 class="card-title"
-                                th:text="|현재상태 : ${meetingList.getMeetingStatus().getStatusType()}|"></h6>
+                            <div th:if="${meetingList.getMeetingStatus().getStatusType() == '모집 중'}"
+                                 class="badge bg-success"
+                                 th:text="|현재상태 : ${meetingList.getMeetingStatus().getStatusType()}|"></div>
+
+                            <div th:if="${meetingList.getMeetingStatus().getStatusType() == '일정 종료'}"
+                                 class="badge bg-warning text-dark"
+                                 th:text="|현재상태 : ${meetingList.getMeetingStatus().getStatusType()}|"></div>
+
+                            <div th:if="${meetingList.getMeetingStatus().getStatusType() == '모집 완료'}"
+                                 class="badge bg-warning text-dark"
+                                 th:text="|현재상태 : ${meetingList.getMeetingStatus().getStatusType()}|"></div>
                             <h5 class="card-title" th:text="${meetingList.getSubject}"></h5>
                             <p class="card-text"
                                th:text="'모 집 인 원 : '+${meetingList.getTotalMember()}+' / 현 재 원 : '+${meetingList.getPresentMember()}"/>

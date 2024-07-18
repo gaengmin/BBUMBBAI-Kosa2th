@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<div th:replace="~{header :: headerFragment}"></div>
+<body>
+<div th:replace="~{nav :: navFragment}"></div>
+<!-- 콘텐츠 영역 -->
+<div class="container d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+    <div class="row">
+        <div class="col text-center">
+            <h4>동시 로그인이 확인 되었습니다.<br>재로그인 확인 부탁드립니다.</h4>
+            <a class="btn btn-danger me-4" th:href="@{/login}">Login</a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{footer :: footerFragment}"></div>
+</body>
+</html>

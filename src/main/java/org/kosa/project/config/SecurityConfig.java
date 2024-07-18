@@ -1,17 +1,16 @@
 package org.kosa.project.config;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.kosa.project.security.RequiredAuthorizationUrlMatcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -36,15 +35,17 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .formLogin(login -> login
                         .loginPage("/login")
-                        .usernameParameter("email")
+                        .usernameParameter("email") // user, password
                         .passwordParameter("password")
                         .permitAll()
                 )
                 .requestCache(cache -> cache.requestCache(new HttpSessionRequestCache()))
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable) //
                 .sessionManagement(session -> session
                         .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true))
+                        .maxSessionsPreventsLogin(false)
+                        .expiredUrl("/exception/expire")
+                ) //세션 만료 시 리디렉션
                 .cors(cors -> cors.configurationSource(configurationSource()))
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
@@ -68,9 +69,16 @@ public class SecurityConfig {
         return referer.substring(referer.lastIndexOf(host) + host.length());
     }
 
-    private String[] permitAllUrlPatterns() {
-        return new String[]{"/*", "/static/**" ,"/css/**", "/api/**", "/meeting/*", "/js/**", "/posts/**", "/imgs/**", "/users/join", "/users/**", "/home"};
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
+
+
+    private String[] permitAllUrlPatterns() {
+        // /meeting/1
+        return new String[]{"/*", "/static/**" ,"/css/**", "/api/**", "/meeting/*", "/js/**", "/posts/**", "/imgs/**", "/users/join", "/users/**", "/home", "/exception/expire"};
+    } // *, /users/1, /users/**/ n
 
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -85,9 +93,12 @@ public class SecurityConfig {
 
     }
 
+
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
 }

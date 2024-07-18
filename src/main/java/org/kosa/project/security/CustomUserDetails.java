@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @ToString
@@ -18,6 +19,19 @@ public class CustomUserDetails implements UserDetails {
     private final long userId;
     private final String email;
     private final String password;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomUserDetails that = (CustomUserDetails) o;
+        return userId == that.userId && Objects.equals(userName, that.userName) && Objects.equals(email, that.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName, userId, email);
+    }
 
     public CustomUserDetails(String userName, long userId, String email, String password) {
         this.userName = userName;

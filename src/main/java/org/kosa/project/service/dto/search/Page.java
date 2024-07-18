@@ -19,7 +19,8 @@ public class Page<T> {
 
     private int totalDataSize;
 
-    public List<T> getKeyword() { return elements;
+    public List<T> getKeyword() {
+        return elements;
     } //현재 페이지의 데이터 목록을 반환합니다.
 
     public int getTotalElements() {
@@ -27,7 +28,7 @@ public class Page<T> {
     } //전체 데이터 수를 반환합니다.
 
     public int getTotalPages() {
-        return (int)Math.ceil((double)totalDataSize / pagePerSize);
+        return (int) Math.ceil((double) totalDataSize / pagePerSize);
     } //전체 페이지 수를 반환합니다.
 
     public int getNumber() {
