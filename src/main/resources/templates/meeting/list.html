@@ -59,7 +59,7 @@
                                  class="badge bg-warning text-dark"
                                  th:text="|현재상태 : ${meetingList.getMeetingStatus().getStatusType()}|"></div>
 
-                            <div th:if="${meetingList.getMeetingStatus().getStatusType() == '모집 완료'}"
+                            <div th:if="${meetingList.getMeetingStatus().getStatusType() == '마감 완료'}"
                                  class="badge bg-warning text-dark"
                                  th:text="|현재상태 : ${meetingList.getMeetingStatus().getStatusType()}|"></div>
                             <h5 class="card-title" th:text="${meetingList.getSubject}"></h5>
@@ -73,8 +73,18 @@
                     </div>
                 </div>
             </th:block>
-            <th:block th:if="${detailList}==null">
-            </th:block>
+            <div class="container d-flex flex-column justify-content-center align-items-center">
+                <div class="row mt-5" >
+                    <th:block th:if="${detailList}==null">
+                        <div class="col text-center">
+                            <h4>검색 된 데이터가 없습니다.</h4>
+                            <br>
+                            <br>
+                        </div>
+                    </th:block>
+
+                </div>
+            </div>
         </div>
     </div>
 </main>

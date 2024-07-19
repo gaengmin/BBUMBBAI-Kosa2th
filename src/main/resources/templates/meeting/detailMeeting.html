@@ -478,7 +478,7 @@
         if (websocket != null) {
             return;
         }
-        websocket = new WebSocket(`ws://localhost:8082/websocket?userId=${connectionInfo.userId}&roomId=${connectionInfo.roomId}`);
+        websocket = new WebSocket(`ws://192.168.230.29:8082/websocket?userId=${connectionInfo.userId}&roomId=${connectionInfo.roomId}`);
 
         websocket.onopen = function () {
             console.log("WebSocket connection opened");

@@ -155,7 +155,10 @@
         count(*) over() as totalDataSize,
         (select #{pageable.currentPage} from dual) as currentPage,
         (select #{pageable.pagePerSize} from dual) as pagePerSize,
-        row_number() over (order by meeting_id desc, reg_dt desc) as rnum
+        row_number() over (order by case status when 'CONTINUE' then 1
+                                                when 'FINISH'  then 2
+                                                when 'TIME_END' then 3
+                                                end, DEADLINE_TIME) as rnum
         from meeting
         where meeting_id > 0
             <if test='condition.keyword != null' >
@@ -172,7 +175,6 @@
                     and context like '%' || #{condition.keyword} || '%'
                 </if>
             </if>)
-
         where rnum between ((#{pageable.currentPage} - 1) * #{pageable.pagePerSize}) + 1 and #{pageable.currentPage} *
         #{pageable.pagePerSize}
     </select>

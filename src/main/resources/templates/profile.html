@@ -88,21 +88,23 @@
                                 <!-- Previous Page Link -->
                                 <li class="page-item" th:classappend="${joinList.isFirst() ? ' disabled' : ''}">
                                     <a class="page-link rounded-pill"
-                                       th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${joinList.number - 1})}">&laquo;
+                                       th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${joinList.number - 1}, userType=${userType})}">&laquo;
                                         이전</a>
                                 </li>
                                 <!-- Page Number Links -->
                                 <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, joinList.totalPages)}"
-                                    th:classappend="${pageNum == joinList.number + 1 ? ' active' : ''}">
+                                    th:classappend="${pageNum == joinList.number ? ' active' : ''}">
                                     <a class="page-link rounded-pill"
-                                       th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${pageNum})}"
-                                       th:classappend="${pageNum == joinList.number + 1 ? ' bg-primary text-white' : ''}">[[${pageNum}]]</a>
+                                       th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${pageNum}, userType=${userType})}"
+                                       th:classappend="${pageNum == joinList.number ? ' bg-primary text-white' : ''}">[[${pageNum}]]
+                                    </a>
                                 </li>
                                 <!-- Next Page Link -->
                                 <li class="page-item" th:classappend="${joinList.isLast() ? ' disabled' : ''}">
                                     <a class="page-link rounded-pill"
-                                       th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${joinList.number + 1})}">다음
-                                        &raquo;</a>
+                                       th:href="@{/users/{userId}(userId=${userProfileDto.userId}, page=${joinList.number + 1}, userType=${userType})}">다음
+                                        &raquo;
+                                    </a>
                                 </li>
                             </ul>
                         </div>

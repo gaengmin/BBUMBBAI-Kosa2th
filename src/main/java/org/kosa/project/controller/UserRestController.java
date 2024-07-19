@@ -18,7 +18,6 @@ public class UserRestController {
     @PostMapping("/userEmailCheck")
     public ResponseEntity <Boolean> checkUserName(@RequestParam String email){
         String userEmail = userService.findUserByEmailCheck(email);
-
         boolean isEmailCheck = (userEmail==null);
         System.out.println(isEmailCheck +"  isEmailCheck");
         return ResponseEntity.ok(userEmail == null);
