@@ -61,12 +61,20 @@
 
 ## 기술 스택
 
-| **Category**   | **Tech Stack**                                         |
-|----------------|--------------------------------------------------------|
-| **Backend**    | Spring Boot 3.3.1, MyBatis, Oracle 21c, Netty           |
-| **Frontend**   | Thymeleaf, JavaScript, Bootstrap, jQuery                |
-| **Database**   | Oracle 21c                                              |
+### Backend
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.1-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![MyBatis](https://img.shields.io/badge/MyBatis-BD3F15?style=for-the-badge&logo=mybatis&logoColor=white)
+![Oracle](https://img.shields.io/badge/Oracle%2021c-F80000?style=for-the-badge&logo=oracle&logoColor=white)
+![Netty](https://img.shields.io/badge/Netty-000000?style=for-the-badge&logo=netty&logoColor=white)
 
+### Frontend
+![Thymeleaf](https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-%23F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+![jQuery](https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white)
+
+### Database
+![Oracle](https://img.shields.io/badge/Oracle%2021c-F80000?style=for-the-badge&logo=oracle&logoColor=white)
 ---
 
 ## 기능 목록
